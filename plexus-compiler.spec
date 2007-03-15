@@ -32,7 +32,7 @@
 
 Name:       plexus-compiler
 Version:    1.5.2
-Release:    2jpp.1%{?dist}
+Release:    2jpp.2%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 License:    MIT
@@ -225,8 +225,7 @@ install -pm 644 %{grname}-compilers/plexus-compiler-javac/target/%{name}-javac-%
   $RPM_BUILD_ROOT%{_javadir}/%{grname}/compiler-javac-%{version}.jar
 install -pm 644 %{grname}-compilers/plexus-compiler-jikes/target/%{name}-jikes-%{version}.jar \
   $RPM_BUILD_ROOT%{_javadir}/%{grname}/compiler-jikes-%{version}.jar
-(cd 
-    $RPM_BUILD_ROOT%{_javadir}/%{grname} && \
+(cd $RPM_BUILD_ROOT%{_javadir}/%{grname}
     for jar in *-%{version}*; do 
         ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; 
     done
@@ -277,6 +276,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Thu Mar 15 2007 Deepak Bhole <dbhole@redhat.com> - 0:1.5.2-2jpp.2
+- Fix bug in spec that prevented unversioned symlink creation
+
 * Thu Mar 08 2007 Deepak Bhole <dbhole@redhat.com> - 0:1.5.2-2jpp.1
 - Fix license
 - Disable aspectj compiler until we can put that into Fedora
