@@ -28,7 +28,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define _with_gcj_support 1
+%define _without_gcj_support 1
 %define gcj_support %{?_with_gcj_support:1}%{!?_with_gcj_support:%{?_without_gcj_support:0}%{!?_without_gcj_support:%{?_gcj_support:%{_gcj_support}}%{!?_gcj_support:0}}}
 
 
@@ -39,7 +39,7 @@
 
 Name:           modello
 Version:        1.0
-Release:        0.1.a8.4jpp.2%{?dist}
+Release:        0.1.a8.4jpp.3%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT  
@@ -244,6 +244,9 @@ fi
 
 
 %changelog
+* Tue Mar 20 2007 Matt Wringe <wringe@redhat.com> 0:1.0-0.1.a8.4jpp.3
+- disable gcj support
+
 * Tue Mar 13 2007 Matt Wringe <mwringe@redhat.com> 0:1.0-0.1.a8.4jpp.2
 - Change license to MIT to reflex the actual license specified in the
   source headers.
