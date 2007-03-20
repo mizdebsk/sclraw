@@ -1,0 +1,11 @@
+--- ./modello-plugins-sandbox/modello-plugin-hibernate-old/pom.xml.sav	2006-06-13 16:02:05.000000000 -0400
++++ ./modello-plugins-sandbox/modello-plugin-hibernate-old/pom.xml	2006-06-13 16:02:17.000000000 -0400
+@@ -5,7 +5,7 @@
+     <artifactId>modello-plugins-sandbox</artifactId>
+     <version>1.0-alpha-4-SNAPSHOT</version>
+   </parent>
+-  <artifactId>modello-plugin-hibernate</artifactId>
++  <artifactId>modello-plugin-hibernate-old</artifactId>
+   <version>1.0-alpha-4-SNAPSHOT</version>
+   <name>Modello Hibernate Plugin</name>
+   <dependencies>

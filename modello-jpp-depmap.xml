@@ -1,0 +1,41 @@
+<dependencies>
+  <dependency>
+	<maven>
+	  <groupId>wutka</groupId>
+	  <artifactId>dtdparser</artifactId>
+	  <version>1.21</version>
+	</maven>
+	<jpp>
+	  <groupId>JPP</groupId>
+	  <artifactId>dtdparser</artifactId>
+	  <version>1.21</version>
+	</jpp>
+  </dependency>
+
+  <!-- unnecessary jars -->
+  <dependency>
+	<maven>
+	  <groupId>hibernate</groupId>
+	  <artifactId>hibernate</artifactId>
+	  <version>2.0.3</version>
+	</maven>
+  </dependency>
+
+  <dependency>
+	<maven>
+	  <groupId>hsqldb</groupId>
+	  <artifactId>hsqldb</artifactId>
+	  <version>1.7.2.2</version>
+	</maven>
+  </dependency>
+
+  <dependency>
+	<maven>
+	  <groupId>postgresql</groupId>
+	  <artifactId>postgresql</artifactId>
+	  <version>7.4.1-jdbc3</version>
+	</maven>
+  </dependency>
+
+</dependencies>
+

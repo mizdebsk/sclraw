@@ -1,0 +1,3 @@
+#!/bin/sh
+export CLASSPATH=$(build-classpath modello/core modello/plugin-xpp3 modello/plugin-xml plexus/container-default plexus/utils classworlds)
+${JAVA_HOME}/bin/java org.codehaus.modello.ModelloCli $@
