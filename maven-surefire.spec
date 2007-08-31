@@ -33,6 +33,9 @@
 
 # If you don't want to build with maven, and use straight ant instead,
 # give rpmbuild option '--without maven'
+
+%define _without_maven 1
+
 %define with_maven %{!?_without_maven:1}%{?_without_maven:0}
 %define without_maven %{?_without_maven:1}%{!?_without_maven:0}
 
@@ -40,7 +43,7 @@
 
 Name:           maven-surefire
 Version:        1.5.3
-Release:        2jpp.2%{?dist}
+Release:        2jpp.3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        Apache Software License
@@ -308,6 +311,9 @@ fi
 
 
 %changelog
+* Fri Aug 31 2007 Deepak Bhole <dbhole@redhat.com> 0:1.5.3-2jpp.3
+- Build without maven (for initial ppc build)
+
 * Tue Mar 20 2007 Deepak Bhole <dbhole@redhat.com> 0:1.5.3-2jpp.2
 - Build with maven
 
