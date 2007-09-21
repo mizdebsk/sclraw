@@ -67,7 +67,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if ! %{gcj_support}
 BuildArch:      noarch
-%endif
+%else
 ExcludeArch:    ppc64
 %endif
 
