@@ -32,18 +32,18 @@
 
 %define gcj_support %{?_with_gcj_support:1}%{!?_with_gcj_support:%{?_without_gcj_support:0}%{!?_without_gcj_support:%{?_gcj_support:%{_gcj_support}}%{!?_gcj_support:0}}}
 
-%define namedversion 1.0-alpha-6
+%define namedversion 1.0-alpha-7
 
 Name:           plexus-archiver
 Version:        1.0
-Release:        0.1.a6.1jpp.1%{?dist}
+Release:        0.1.a7.1jpp.1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        Apache Software License 
 Group:          Development/Java
 URL:            http://plexus.codehaus.org/
 Source0:        plexus-archiver-src.tar.gz
-# svn export svn://svn.plexus.codehaus.org/plexus/tags/plexus-archiver-%{namedversion}
+# svn export svn://svn.plexus.codehaus.org/plexus/tags/plexus-archiver-%{namedversion} plexus-archiver
 # tar czvf plexus-archiver-src.tar.gz plexus-archiver
 Source1:        plexus-archiver-1.0-build.xml
 Source2:        plexus-archiver-1.0-project.xml
@@ -152,6 +152,9 @@ fi
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Fri Jan 04 2008 Deepak Bhole <dbhole@redhat.com> 1.0-0.1.a7.1jpp.1
+- Update to alpha 7
+
 * Thu Feb 15 2007 Matt Wrigne <mwringe@redhat.com> - 0:1.0-0.1.a6.1jpp.1
 - Fix rpmlint issues
 - Version package to new jpp versioning standards
