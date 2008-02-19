@@ -41,7 +41,7 @@
 
 Name:           maven-surefire
 Version:        1.5.3
-Release:        2jpp.4%{?dist}
+Release:        3jpp.4%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        Apache Software License
@@ -312,6 +312,9 @@ fi
 
 
 %changelog
+* Mon Feb 18 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 0:1.5.3-3jpp.4
+- Autorebuild for GCC 4.3
+
 * Fri Sep 21 2007 Deepak Bhole <dbhole@redhat.com> 1.5.3-2jpp.4
 - Build with maven
 - ExcludeArch ppc64
