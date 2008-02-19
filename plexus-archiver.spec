@@ -36,7 +36,7 @@
 
 Name:           plexus-archiver
 Version:        1.0
-Release:        0.1.a7.1jpp.1%{?dist}
+Release:        0.2.a7.1jpp.1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        Apache Software License 
@@ -152,6 +152,9 @@ fi
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 0:1.0-0.2.a7.1jpp.1
+- Autorebuild for GCC 4.3
+
 * Fri Jan 04 2008 Deepak Bhole <dbhole@redhat.com> 1.0-0.1.a7.1jpp.1
 - Update to alpha 7
 
