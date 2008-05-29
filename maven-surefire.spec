@@ -41,10 +41,10 @@
 
 Name:           maven-surefire
 Version:        1.5.3
-Release:        2jpp.5%{?dist}
+Release:        2jpp.6%{?dist}
 Epoch:          0
 Summary:        Test framework project
-License:        Apache Software License
+License:        ASL 2.0
 Group:          Development/Java
 URL:            http://maven.apache.org/surefire/
 
@@ -312,6 +312,9 @@ fi
 
 
 %changelog
+* Thu May 29 2008 Tom "spot" Callaway <tcallawa@redhat.com> 1.5.3-2jpp.6
+- fix license tag
+
 * Thu Feb 28 2008 Deepak Bhole <dbhole@redhat.com> 1.5.3-2jpp.5
 - Rebuild
 
