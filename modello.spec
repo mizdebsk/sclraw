@@ -39,7 +39,7 @@
 
 Name:           modello
 Version:        1.0
-Release:        0.1.a8.4jpp.3%{?dist}
+Release:        0.1.a8.4.4%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT  
@@ -113,8 +113,9 @@ Java model to [JPOX|http://www.jpox.org/] Mapping.
 %package javadoc
 Summary:        Javadoc for %{name}
 Group:          Development/Documentation
-Requires(post):   /bin/rm,/bin/ln
-Requires(postun): /bin/rm
+# for /bin/rm and /bin/ln
+Requires(post):   coreutils
+Requires(postun): coreutils
 
 %description javadoc
 Javadoc for %{name}.
@@ -244,6 +245,9 @@ fi
 
 
 %changelog
+* Wed Jul  9 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 0:1.0-0.1.a8.4.4
+- drop repotag
+
 * Tue Mar 20 2007 Matt Wringe <wringe@redhat.com> 0:1.0-0.1.a8.4jpp.3
 - disable gcj support
 
