@@ -32,7 +32,7 @@
 
 Name:       plexus-compiler
 Version:    1.5.2
-Release:    2jpp.2%{?dist}
+Release:    2.3%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 License:    MIT
@@ -276,6 +276,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Wed Jul  9 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 0:1.5.2-2.3
+- drop repotag
+
 * Thu Mar 15 2007 Deepak Bhole <dbhole@redhat.com> - 0:1.5.2-2jpp.2
 - Fix bug in spec that prevented unversioned symlink creation
 
