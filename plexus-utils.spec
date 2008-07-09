@@ -36,10 +36,10 @@
 
 Name:           plexus-utils
 Version:        1.2
-Release:        2jpp.1%{?dist}
+Release:        2.2%{?dist}
 Epoch:          0
 Summary:        Plexus Common Utilities
-License:        Apache Software License
+License:        ASL 1.1 and ASL 2.0 and MIT
 Group:          Development/Java
 URL:            http://plexus.codehaus.org/
 # svn export svn://svn.plexus.codehaus.org/plexus/tags/plexus-utils-1.2/
@@ -129,6 +129,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Jul  9 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 0:1.2-2.2
+- fix license tag
+- drop repotag
+
 * Mon Feb 20 2007 Deepak Bhole <dbhole@redhat.com> - 0:1.2-2jpp.1.fc7
 - Fix spec per Fedora guidelines
 
