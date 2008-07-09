@@ -41,7 +41,7 @@
 
 Name:           maven-surefire
 Version:        1.5.3
-Release:        2jpp.6%{?dist}
+Release:        2.7%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -122,8 +122,9 @@ Surefire is a test framework project.
 %package javadoc
 Summary:          Javadoc for %{name}
 Group:            Development/Documentation
-Requires(post):   /bin/rm,/bin/ln
-Requires(postun): /bin/rm
+# for /bin/rm and /bin/ln
+Requires(post):   coreutils
+Requires(postun): coreutils
 
 %description javadoc
 Javadoc for %{name}.
@@ -131,8 +132,9 @@ Javadoc for %{name}.
 %package booter-javadoc
 Summary:          Javadoc for %{name}
 Group:            Development/Documentation
-Requires(post):   /bin/rm,/bin/ln
-Requires(postun): /bin/rm
+# for /bin/rm and /bin/ln
+Requires(post):   coreutils
+Requires(postun): coreutils
 
 %description booter-javadoc
 Javadoc for %{name}.
@@ -312,6 +314,9 @@ fi
 
 
 %changelog
+* Wed Jul  9 2008 Tom "spot" Callaway <tcallawa@redhat.com> 1.5.3-2.7
+- drop repotag
+
 * Thu May 29 2008 Tom "spot" Callaway <tcallawa@redhat.com> 1.5.3-2jpp.6
 - fix license tag
 
