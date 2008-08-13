@@ -34,6 +34,8 @@
 # If you don't want to build with maven, and use straight ant instead,
 # give rpmbuild option '--without maven'
 
+%define _without_maven 1
+
 %define with_maven %{!?_without_maven:1}%{?_without_maven:0}
 %define without_maven %{?_without_maven:1}%{!?_without_maven:0}
 
@@ -41,7 +43,7 @@
 
 Name:           maven-surefire
 Version:        1.5.3
-Release:        2.7%{?dist}
+Release:        2.8%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -67,8 +69,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if ! %{gcj_support}
 BuildArch:      noarch
-%else
-ExcludeArch:    ppc64
 %endif
 
 BuildRequires:  ant
@@ -314,6 +314,9 @@ fi
 
 
 %changelog
+* Wed Aug 13 2008 Deepak Bhole <dbhole@redhat.com> 1.5.3-2.8
+- Build for ppc64
+
 * Wed Jul  9 2008 Tom "spot" Callaway <tcallawa@redhat.com> 1.5.3-2.7
 - drop repotag
 
