@@ -39,7 +39,7 @@
 
 Name:           modello
 Version:        1.0
-Release:        0.1.a8.4.4%{?dist}
+Release:        0.2.a8.4.4%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT  
@@ -245,6 +245,9 @@ fi
 
 
 %changelog
+* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.0-0.2.a8.4.4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Wed Jul  9 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 0:1.0-0.1.a8.4.4
 - drop repotag
 
