@@ -36,7 +36,7 @@
 
 Name:           plexus-utils
 Version:        1.2
-Release:        2.2%{?dist}
+Release:        3.2%{?dist}
 Epoch:          0
 Summary:        Plexus Common Utilities
 License:        ASL 1.1 and ASL 2.0 and MIT
@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.2-3.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Wed Jul  9 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 0:1.2-2.2
 - fix license tag
 - drop repotag
