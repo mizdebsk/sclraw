@@ -43,7 +43,7 @@
 
 Name:           maven-surefire
 Version:        1.5.3
-Release:        3.8%{?dist}
+Release:        4.8%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -314,6 +314,9 @@ fi
 
 
 %changelog
+* Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5.3-4.8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5.3-3.8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
