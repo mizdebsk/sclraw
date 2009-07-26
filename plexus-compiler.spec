@@ -32,7 +32,7 @@
 
 Name:       plexus-compiler
 Version:    1.5.2
-Release:    3.3%{?dist}
+Release:    4.3%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 License:    MIT
@@ -276,6 +276,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5.2-4.3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5.2-3.3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
