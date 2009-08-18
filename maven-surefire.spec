@@ -30,67 +30,78 @@
 
 %define _with_gcj_support 1
 %define gcj_support %{?_with_gcj_support:1}%{!?_with_gcj_support:%{?_without_gcj_support:0}%{!?_without_gcj_support:%{?_gcj_support:%{_gcj_support}}%{!?_gcj_support:0}}}
+%define gcj_support 0
 
 # If you don't want to build with maven, and use straight ant instead,
 # give rpmbuild option '--without maven'
-
-%define _without_maven 1
-
-%define with_maven %{!?_without_maven:1}%{?_without_maven:0}
-%define without_maven %{?_without_maven:1}%{!?_without_maven:0}
-
-%define maven_settings_file %{_builddir}/%{name}/settings.xml
+%define with_maven 1
+%define with_junit4 1
+%define without_junit4 0
 
 Name:           maven-surefire
-Version:        1.5.3
-Release:        4.8%{?dist}
+Version:        2.3
+Release:        7.1%{?dist}
 Epoch:          0
 Summary:        Test framework project
-License:        ASL 2.0
+License:        Apache Software License
 Group:          Development/Java
 URL:            http://maven.apache.org/surefire/
 
 # svn export
-#    http://svn.apache.org/repos/asf/maven/surefire/tags/surefire-1.5.3/ 
-#    surefire/
-# tar czf surefire-tar.gz surefire/
-# svn export 
-#    http://svn.apache.org/repos/asf/maven/surefire/tags/surefire-booter-1.5.3/
-#    surefire-booter/
-# tar czf surefire-booter-tar.gz surefire-booter/
-Source0:        %{name}-%{version}.tar.gz
-Source1:        %{name}-booter-%{version}.tar.gz
-
+#    http://svn.apache.org/repos/asf/maven/surefire/tags/surefire-2.3 maven-surefire
+# tar czf surefire-2.3-tar.gz maven-surefire/
+Source0:        %{name}-%{version}-src.tar.gz
+#Source1:        %{name}-settings.xml
 Source2:        %{name}-build.xml
 Source3:        %{name}-booter-build.xml
 Source4:        %{name}-jpp-depmap.xml
+
+Patch0:         %{name}-plexus12.patch
+Patch1:         %{name}-buildonlyjunit3.patch
+Patch2:         maven-surefire-buildskiptestng.patch
+Patch3:         maven-surefire-2.3-junit4-pom.patch
+
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if ! %{gcj_support}
 BuildArch:      noarch
 %endif
-
 BuildRequires:  ant
 BuildRequires:  ant-nodeps
 BuildRequires:  classworlds
 BuildRequires:  jpackage-utils >= 0:1.7.2
 BuildRequires:  junit >= 3.8.2
 BuildRequires:  plexus-utils
+%if %{with_junit4}
+BuildRequires:  junit4
+#BuildRequires:  testng
+%endif
 
 %if %{with_maven}
-BuildRequires:  maven2 >= 2.0.4-9
+BuildRequires:  maven2 >= 2.0.4
+#BuildRequires:  maven2-common-poms
 BuildRequires:  maven2-plugin-compiler
 BuildRequires:  maven2-plugin-install
 BuildRequires:  maven2-plugin-jar
 BuildRequires:  maven2-plugin-javadoc
 BuildRequires:  maven2-plugin-resources
-BuildRequires:  maven2-plugin-surefire
+BuildRequires:	maven2-plugin-site
+BuildRequires:  maven2-plugin-plugin
+BuildRequires:  plexus-containers-component-api >= 1.0-0.a34
+BuildRequires:  tomcat5
+BuildRequires:  tomcat5-servlet-2.4-api
+#BuildRequires:  excalibur-avalon-logkit
+#BuildRequires:  excalibur-avalon-framework
+BuildRequires:  maven-shared-plugin-testing-harness
+BuildRequires:  maven2-plugin-surefire < 2.3.1
+BuildRequires:  bsf
 %endif
 
 Requires:       classworlds
-Requires:       plexus-utils
+Requires:       maven2
 Requires:       junit
+Requires:       plexus-utils
 
 Requires(post):    jpackage-utils >= 0:1.7.2
 Requires(postun):  jpackage-utils >= 0:1.7.2
@@ -101,11 +112,66 @@ Requires(post):         java-gcj-compat
 Requires(postun):       java-gcj-compat
 %endif
 
+Obsoletes:      maven-surefire-booter <= 0:1.5.3
+Provides:       maven-surefire-booter = %{epoch}:%{version}-%{release}
+
 %description
 Surefire is a test framework project.
 
-%package booter
-Summary:                Booter for %{name}
+%package maven-plugin
+Summary:                Surefire plugin for maven
+Group:                  Development/Java
+Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Obsoletes:              maven2-plugin-surefire <= 0:2.0.4
+Provides :              maven2-plugin-surefire = %{epoch}:%{version}-%{release}
+
+%if %{gcj_support}
+BuildRequires:          java-gcj-compat-devel
+Requires(post):         java-gcj-compat
+Requires(postun):       java-gcj-compat
+%endif
+
+%description maven-plugin
+Maven surefire plugin for running tests via the surefire framework.
+
+%package report-maven-plugin
+Summary:                Surefire reports plugin for maven
+Group:                  Development/Java
+Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4
+Provides :              maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
+
+%if %{gcj_support}
+BuildRequires:          java-gcj-compat-devel
+Requires(post):         java-gcj-compat
+Requires(postun):       java-gcj-compat
+%endif
+
+%description report-maven-plugin
+Plugin for generating reports from surefire test runs.
+
+%package provider-junit
+Summary:                JUnit3 provider for Maven Surefire
+Group:                  Development/Java
+Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4O
+#Obsoletes:              maven-surefire-junit = 2.3.1
+Provides:              maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
+#Provides:              maven-surefire-junit = 2.3.1
+
+
+%if %{gcj_support}
+BuildRequires:          java-gcj-compat-devel
+Requires(post):         java-gcj-compat
+Requires(postun):       java-gcj-compat
+%endif
+
+%description provider-junit
+JUnit3 provider for Maven Surefire.
+
+%if %with junit4
+%package provider-junit4
+Summary:                JUnit4 provider for Maven Surefire
 Group:                  Development/Java
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
 
@@ -115,42 +181,53 @@ Requires(post):         java-gcj-compat
 Requires(postun):       java-gcj-compat
 %endif
 
-%description booter
-Surefire is a test framework project.
+%description provider-junit4
+JUnit4 provider for Maven Surefire.
+%endif
 
-%if %{with_maven}
+
 %package javadoc
 Summary:          Javadoc for %{name}
 Group:            Development/Documentation
-# for /bin/rm and /bin/ln
-Requires(post):   coreutils
-Requires(postun): coreutils
+Requires(post):   /bin/rm,/bin/ln
+Requires(postun): /bin/rm
 
 %description javadoc
 Javadoc for %{name}.
 
-%package booter-javadoc
-Summary:          Javadoc for %{name}
-Group:            Development/Documentation
-# for /bin/rm and /bin/ln
-Requires(post):   coreutils
-Requires(postun): coreutils
+%prep
+%setup -q -n %{name}
 
-%description booter-javadoc
-Javadoc for %{name}.
+#find / -name JPP.maven2-parent.pom
+
+#sed -i "s|<version>5</version>|<version>1</version>|" pom.xml
+#sed -i "s|<relativePath>../pom/maven/pom.xml</relativePath>||" pom.xml
+#rpm -ql maven2-common-poms
+
+#cat /etc/maven/maven2-versionless-depmap.xml
+
+
+
+# We use plexus 1.2. Delete deprecated files accordingly.
+rm -f surefire-booter/src/main/java/org/apache/maven/surefire/booter/shell/CommandShell.java
+rm -f surefire-booter/src/main/java/org/apache/maven/surefire/booter/shell/Shell.java
+rm -f surefire-booter/src/main/java/org/apache/maven/surefire/booter/shell/CmdShell.java
+rm -f surefire-booter/src/main/java/org/apache/maven/surefire/booter/Commandline.java
+
+%patch0 -b .sav
+%patch2 -b .sav
+%if %{without_junit4}
+%patch1 -b .sav
 %endif
 
-%prep
-%setup -q -c -n %{name}
+# Replace doxia package names
+for i in maven-surefire-report-plugin/src/main/java/org/apache/maven/plugins/surefire/report/SurefireReportGenerator.java \
+         maven-surefire-report-plugin/src/main/java/org/apache/maven/plugins/surefire/report/SurefireReportMojo.java; do
 
-tar xzf %{SOURCE1}
-
-cp -p %{SOURCE2} surefire/build.xml
-cp -p %{SOURCE3} surefire-booter/build.xml
-
-sed -i -e s:"static private void failSame(":"static public void failSame(":g surefire/src/main/java/org/apache/maven/surefire/battery/assertion/BatteryAssert.java
-sed -i -e s:"static private void failNotSame(":"static public void failNotSame(":g surefire/src/main/java/org/apache/maven/surefire/battery/assertion/BatteryAssert.java
-sed -i -e s:"static private void failNotEquals(":"static public void failNotEquals(":g surefire/src/main/java/org/apache/maven/surefire/battery/assertion/BatteryAssert.java
+    sed -i -e s:org.codehaus.doxia.sink.Sink:org.apache.maven.doxia.sink.Sink:g $i
+    sed -i -e s:org.codehaus.doxia.site.renderer.SiteRenderer:org.apache.maven.doxia.siterenderer.Renderer:g $i
+    sed -i -r -e s:\(\\s+\)SiteRenderer\(\\s+\):\\1Renderer\\2:g $i
+done
 
 %build
 
@@ -165,24 +242,36 @@ sed -i -e s:"static private void failNotEquals(":"static public void failNotEqua
 %endif
 
 
-for project in surefire surefire-booter; do
+%if %{with_maven}
 
-        pushd $project
+cat %{SOURCE4}
 
-                %if %{with_maven}
-                        mvn-jpp \
-                                -e \
-                                -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-                                -Dmaven2.jpp.depmap.file=%{SOURCE4} \
-                                install javadoc:javadoc
-                %else
+    mvn-jpp \
+        -e \
+        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+        -Dmaven2.jpp.depmap.file=%{SOURCE4} \
+        -Dmaven.test.skip=true \
+        install
+#        -s %{SOURCE1} \
 
-                        ant -Dmaven.mode.offline=true
-                        cp -p target/*jar ../lib/$project.jar
-                %endif
-        popd
+    for dir in maven-surefire-plugin \
+               maven-surefire-report-plugin \
+               surefire-api \
+               surefire-booter \
+               surefire-providers/surefire-junit; do
+        (cd $dir
+          mvn-jpp \
+              -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+              -Dmaven2.jpp.depmap.file=%{SOURCE4} \
+              javadoc:javadoc
+        )
+    done
 
-done
+
+%else
+    ant -Dmaven.mode.offline=true
+    cp -p target/*jar ../lib/$project.jar
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -190,19 +279,35 @@ rm -rf $RPM_BUILD_ROOT
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/maven-surefire
 install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
 
-for p in surefire \
-        surefire-booter; do
+install -pm 644 maven-surefire-plugin/target/maven-surefire-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/maven-plugin-%{version}.jar
+%add_to_maven_depmap org.apache.maven.surefire maven-surefire-plugin 2.3 JPP/maven-surefire maven-plugin
+install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven-surefire-maven-plugin.pom
+install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven2.plugins-surefire-plugin.pom
 
-        installname=`echo $p | sed -e s:^surefire-::g`
-        install -pm 644 $p/target/$p-%{version}.jar \
-          $RPM_BUILD_ROOT%{_javadir}/maven-surefire/$installname-%{version}.jar
+install -pm 644 maven-surefire-report-plugin/target/maven-surefire-report-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/report-maven-plugin-%{version}.jar
+%add_to_maven_depmap org.apache.maven.surefire maven-surefire-report-plugin 2.3 JPP/maven-surefire report-maven-plugin
+install -pm 644 maven-surefire-report-plugin/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven-surefire-report-maven-plugin.pom
 
-        %add_to_maven_depmap org.apache.maven.surefire $p 1.5.3 JPP/maven-surefire $installname
+install -pm 644 surefire-api/target/surefire-api-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/api-%{version}.jar
+%add_to_maven_depmap org.apache.maven.surefire surefire-api 2.3 JPP/maven-surefire api
+install -pm 644 surefire-api/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven-surefire-api.pom
 
-        install -pm 644 $p/pom.xml \
-          $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven-surefire-$installname.pom
+install -pm 644 surefire-booter/target/surefire-booter-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/booter-%{version}.jar
+%add_to_maven_depmap org.apache.maven.surefire surefire-booter 2.3 JPP/maven-surefire booter
+install -pm 644 surefire-booter/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven-surefire-booter.pom
 
-done
+install -pm 644 surefire-providers/surefire-junit/target/surefire-junit-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit-%{version}.jar
+%add_to_maven_depmap org.apache.maven.surefire surefire-junit 2.3 JPP/maven-surefire junit
+install -pm 644 surefire-providers/surefire-junit/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven-surefire-junit.pom
+
+%if %{with_junit4}
+install -pm 644 surefire-providers/surefire-junit4/target/surefire-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit4-%{version}.jar
+%add_to_maven_depmap org.apache.maven.surefire surefire-junit4 2.3 JPP/maven-surefire junit4
+install -pm 644 surefire-providers/surefire-junit4/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven-surefire-junit4.pom
+%endif
+
+%add_to_maven_depmap org.apache.maven.surefire providers 2.3 JPP/maven-surefire providers
+install -pm 644 surefire-providers/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven-surefire-providers.pom
 
 (cd $RPM_BUILD_ROOT%{_javadir}/maven-surefire && for jar in *-%{version}*; \
   do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
@@ -210,20 +315,38 @@ done
 %if %{with_maven}
 # javadoc
 
-for p in surefire \
-        surefire-booter;  do
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/maven-plugin
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/report-maven-plugin
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/api
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/booter
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/junit
+%if %{with_junit4}
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/junit4
+%endif
 
-        project=`basename $p | sed -e s:surefire-::g`
-
-        install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/maven-$p-%{version}
-
-        cp -pr $p/target/site/apidocs/* \
-          $RPM_BUILD_ROOT%{_javadocdir}/maven-$p-%{version}/
-
-        ln -s maven-$p-%{version} $RPM_BUILD_ROOT%{_javadocdir}/maven-$p 
-done
+cp -pr maven-surefire-plugin/target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/maven-plugin/
+cp -pr maven-surefire-report-plugin/target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/report-maven-plugin/
+cp -pr surefire-api/target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/api/
+cp -pr surefire-booter/target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/booter/
+cp -pr surefire-providers/surefire-junit/target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/junit/
+%if %{with_junit4}
+# FIXME: where are the junit4 javadocs?
+#cp -pr surefire-providers/surefire-junit4/target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/maven-surefire/junit4/
+%endif
 
 %endif
+
+# Create compatibility links
+ln -s %{_javadir}/maven-surefire/api.jar \
+      $RPM_BUILD_ROOT%{_javadir}/maven-surefire/surefire.jar
+
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/maven2/plugins
+ln -s %{_javadir}/maven-surefire/maven-surefire-plugin.jar \
+      $RPM_BUILD_ROOT%{_datadir}/maven2/plugins/surefire-plugin.jar
+
+ln -s %{_javadir}/maven-surefire/maven-surefire-report-plugin.jar \
+      $RPM_BUILD_ROOT%{_datadir}/maven2/plugins/surefire-report-plugin.jar
 
 %if %{gcj_support}
 %{_bindir}/aot-compile-rpm
@@ -259,61 +382,59 @@ then
 fi
 %endif
 
-%if %{gcj_support}
-%post booter
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun booter
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
 %files
 %defattr(-,root,root,-)
 %dir %{_javadir}/maven-surefire
-%{_javadir}/maven-surefire/surefire*
-%dir %{_datadir}/maven2
-%dir %{_datadir}/maven2/poms
-%{_datadir}/maven2/poms/JPP.maven-surefire-surefire.pom
+%{_javadir}/maven-surefire/api*
+%{_javadir}/maven-surefire/booter*
+%{_javadir}/maven-surefire/surefire.jar
+%{_datadir}/maven2/poms
 %{_mavendepmapfragdir}
-%{_libdir}/gcj/%{name}/booter*
 
 %if %{gcj_support}
 %dir %attr(-,root,root) %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/surefire-1.5.3.jar.*
+%attr(-,root,root) %{_libdir}/gcj/%{name}/api*
+%attr(-,root,root) %{_libdir}/gcj/%{name}/booter*
 %endif
 
-%files booter
-%defattr(-,root,root,-)
-%{_javadir}/maven-surefire/booter*
-%dir %{_datadir}/maven2
-%dir %{_datadir}/maven2/poms
-%{_datadir}/maven2/poms/JPP.maven-surefire-booter.pom
-
-%if %{with_maven}
+%files maven-plugin
+%{_javadir}/maven-surefire/maven-plugin*
+%dir %{_datadir}/maven2/plugins
+%{_datadir}/maven2/plugins/surefire-plugin.jar
 %if %{gcj_support}
-%dir %attr(-,root,root) %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/booter-1.5.3.jar.*
+%attr(-,root,root) %{_libdir}/gcj/%{name}/maven-plugin*
+%endif
+
+%files report-maven-plugin
+%{_javadir}/maven-surefire/report-maven-plugin*
+%dir %{_datadir}/maven2/plugins
+%{_datadir}/maven2/plugins/surefire-report-plugin.jar
+%if %{gcj_support}
+%attr(-,root,root) %{_libdir}/gcj/%{name}/report-maven-plugin*
+%endif
+
+%files provider-junit
+%{_javadir}/maven-surefire/junit[^4]*
+%if %{gcj_support}
+%attr(-,root,root) %{_libdir}/gcj/%{name}/junit[^4]*
+%endif
+
+%if %{with_junit4}
+%files provider-junit4
+%{_javadir}/maven-surefire/junit4*
+%if %{gcj_support}
+%attr(-,root,root) %{_libdir}/gcj/%{name}/junit4*
+%endif
 %endif
 
 %files javadoc
 %defattr(-,root,root,-)
 %doc %{_javadocdir}/*
 
-%files booter-javadoc
-%defattr(-,root,root,-)
-%doc %{_javadocdir}/*
-%endif
-
-
 %changelog
+* Tue Aug 18 2009 Alexander Kurtakov <akurtako@redhat.com> 0:2.3-7.1
+- Update to 2.3 - sync with jpackage.
+
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5.3-4.8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
@@ -358,4 +479,3 @@ fi
 
 * Mon Jun 19 2006 Deepak Bhole <dbhole@redhat.com> - 0:1.5.3-1jpp
 - Initial build
-
