@@ -28,10 +28,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define _with_gcj_support 1
-%define gcj_support %{?_with_gcj_support:1}%{!?_with_gcj_support:%{?_without_gcj_support:0}%{!?_without_gcj_support:%{?_gcj_support:%{_gcj_support}}%{!?_gcj_support:0}}}
-%define gcj_support 0
-
 # If you don't want to build with maven, and use straight ant instead,
 # give rpmbuild option '--without maven'
 %define with_maven 1
@@ -40,7 +36,7 @@
 
 Name:           maven-surefire
 Version:        2.3
-Release:        7.1%{?dist}
+Release:        7.2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        Apache Software License
@@ -64,9 +60,7 @@ Patch3:         maven-surefire-2.3-junit4-pom.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if ! %{gcj_support}
 BuildArch:      noarch
-%endif
 BuildRequires:  ant
 BuildRequires:  ant-nodeps
 BuildRequires:  classworlds
@@ -106,12 +100,6 @@ Requires:       plexus-utils
 Requires(post):    jpackage-utils >= 0:1.7.2
 Requires(postun):  jpackage-utils >= 0:1.7.2
 
-%if %{gcj_support}
-BuildRequires:          java-gcj-compat-devel
-Requires(post):         java-gcj-compat
-Requires(postun):       java-gcj-compat
-%endif
-
 Obsoletes:      maven-surefire-booter <= 0:1.5.3
 Provides:       maven-surefire-booter = %{epoch}:%{version}-%{release}
 
@@ -125,12 +113,6 @@ Requires:               maven-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire <= 0:2.0.4
 Provides :              maven2-plugin-surefire = %{epoch}:%{version}-%{release}
 
-%if %{gcj_support}
-BuildRequires:          java-gcj-compat-devel
-Requires(post):         java-gcj-compat
-Requires(postun):       java-gcj-compat
-%endif
-
 %description maven-plugin
 Maven surefire plugin for running tests via the surefire framework.
 
@@ -140,12 +122,6 @@ Group:                  Development/Java
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4
 Provides :              maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
-
-%if %{gcj_support}
-BuildRequires:          java-gcj-compat-devel
-Requires(post):         java-gcj-compat
-Requires(postun):       java-gcj-compat
-%endif
 
 %description report-maven-plugin
 Plugin for generating reports from surefire test runs.
@@ -159,13 +135,6 @@ Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4O
 Provides:              maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
 #Provides:              maven-surefire-junit = 2.3.1
 
-
-%if %{gcj_support}
-BuildRequires:          java-gcj-compat-devel
-Requires(post):         java-gcj-compat
-Requires(postun):       java-gcj-compat
-%endif
-
 %description provider-junit
 JUnit3 provider for Maven Surefire.
 
@@ -174,12 +143,6 @@ JUnit3 provider for Maven Surefire.
 Summary:                JUnit4 provider for Maven Surefire
 Group:                  Development/Java
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
-
-%if %{gcj_support}
-BuildRequires:          java-gcj-compat-devel
-Requires(post):         java-gcj-compat
-Requires(postun):       java-gcj-compat
-%endif
 
 %description provider-junit4
 JUnit4 provider for Maven Surefire.
@@ -282,7 +245,8 @@ install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
 install -pm 644 maven-surefire-plugin/target/maven-surefire-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/maven-plugin-%{version}.jar
 %add_to_maven_depmap org.apache.maven.surefire maven-surefire-plugin 2.3 JPP/maven-surefire maven-plugin
 install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven-surefire-maven-plugin.pom
-install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven2.plugins-surefire-plugin.pom
+# Do not install due to conflict with maven2-2.0.4
+#install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven2.plugins-surefire-plugin.pom
 
 install -pm 644 maven-surefire-report-plugin/target/maven-surefire-report-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/report-maven-plugin-%{version}.jar
 %add_to_maven_depmap org.apache.maven.surefire maven-surefire-report-plugin 2.3 JPP/maven-surefire report-maven-plugin
@@ -348,39 +312,14 @@ ln -s %{_javadir}/maven-surefire/maven-surefire-plugin.jar \
 ln -s %{_javadir}/maven-surefire/maven-surefire-report-plugin.jar \
       $RPM_BUILD_ROOT%{_datadir}/maven2/plugins/surefire-report-plugin.jar
 
-%if %{gcj_support}
-%{_bindir}/aot-compile-rpm
-%endif
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%if %{gcj_support}
 %post
-
 %update_maven_depmap
 
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
 %postun
-
 %update_maven_depmap
-
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
 
 %files
 %defattr(-,root,root,-)
@@ -391,40 +330,22 @@ fi
 %{_datadir}/maven2/poms
 %{_mavendepmapfragdir}
 
-%if %{gcj_support}
-%dir %attr(-,root,root) %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/api*
-%attr(-,root,root) %{_libdir}/gcj/%{name}/booter*
-%endif
-
 %files maven-plugin
 %{_javadir}/maven-surefire/maven-plugin*
 %dir %{_datadir}/maven2/plugins
 %{_datadir}/maven2/plugins/surefire-plugin.jar
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/maven-plugin*
-%endif
 
 %files report-maven-plugin
 %{_javadir}/maven-surefire/report-maven-plugin*
 %dir %{_datadir}/maven2/plugins
 %{_datadir}/maven2/plugins/surefire-report-plugin.jar
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/report-maven-plugin*
-%endif
 
 %files provider-junit
 %{_javadir}/maven-surefire/junit[^4]*
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/junit[^4]*
-%endif
 
 %if %{with_junit4}
 %files provider-junit4
 %{_javadir}/maven-surefire/junit4*
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/junit4*
-%endif
 %endif
 
 %files javadoc
@@ -432,6 +353,9 @@ fi
 %doc %{_javadocdir}/*
 
 %changelog
+* Wed Aug 19 2009 Alexander Kurtakov <akurtako@redhat.com> 0:2.3-7.2
+- Don't install JPP.maven2.plugins-surefire-plugin.pom to fix conflict with maven2 2.0.4.
+
 * Tue Aug 18 2009 Alexander Kurtakov <akurtako@redhat.com> 0:2.3-7.1
 - Update to 2.3 - sync with jpackage.
 
