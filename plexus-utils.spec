@@ -1,4 +1,4 @@
-# Copyright (c) 2000-2005, JPackage Project
+# Copyright (c) 2000-2007, JPackage Project
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,25 +28,21 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-# If you want to build with maven,
-# give rpmbuild option '--with maven'
+%define with_maven 0
 
-%define with_maven %{!?_with_maven:0}%{?_with_maven:1}
-%define without_maven %{?_with_maven:0}%{!?_with_maven:1}
+%define parent plexus
+%define subname utils
 
 Name:           plexus-utils
-Version:        1.2
-Release:        4.2%{?dist}
-Epoch:          0
+Version:        1.4.5
+Release:        1.2%{?dist}
 Summary:        Plexus Common Utilities
 License:        ASL 1.1 and ASL 2.0 and MIT
-Group:          Development/Java
+Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/
-# svn export svn://svn.plexus.codehaus.org/plexus/tags/plexus-utils-1.2/
-# tar xzf plexus-utils-1.2.tar.gz plexus-utils-1.2
-Source0:        plexus-utils-1.2.tar.gz
-Source1:        plexus-utils-1.2-build.xml
-# build it with maven2-generated ant build.xml
+Source0:        plexus-utils-%{version}.tar.gz
+# svn export http://svn.codehaus.org/plexus/plexus-utils/tags/plexus-utils-1.4.5/
+Source1:        plexus-utils-1.4.5-build.xml
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -56,15 +52,19 @@ BuildRequires:  jpackage-utils >= 0:1.6
 Requires:       jpackage-utils
 Requires(postun): jpackage-utils
 %if %{with_maven}
-BuildRequires:  maven2
+BuildRequires:  maven2 >= 0:2.0.4
+BuildRequires:  maven2-plugin-surefire
 %endif
 
+Requires(post):    jpackage-utils >= 0:1.7.2
+Requires(postun):  jpackage-utils >= 0:1.7.2
+
 %description
-The Plexus project seeks to create end-to-end developer tools for 
-writing applications. At the core is the container, which can be 
-embedded or for a full scale application server. There are many 
-reusable components for hibernate, form processing, jndi, i18n, 
-velocity, etc. Plexus also includes an application server which 
+The Plexus project seeks to create end-to-end developer tools for
+writing applications. At the core is the container, which can be
+embedded or for a full scale application server. There are many
+reusable components for hibernate, form processing, jndi, i18n,
+velocity, etc. Plexus also includes an application server which
 is like a J2EE application server, without all the baggage.
 
 %package javadoc
@@ -76,9 +76,8 @@ Requires(postun): jpackage-utils
 %description javadoc
 Javadoc for %{name}.
 
-
 %prep
-%setup -q -n plexus-utils-1.2
+%setup -q -n %{name}-%{version}
 cp %{SOURCE1} build.xml
 
 # Disable file utils test cases. See:
@@ -90,18 +89,15 @@ rm -f src/test/java/org/codehaus/plexus/util/interpolation/RegexBasedInterpolato
 
 %build
 %if %{with_maven}
-mkdir -p .maven/repository/maven/jars
-build-jar-repository .maven/repository/maven/jars \
-maven-jelly-tags
+export MAVEN_REPO_LOCAL=`pwd`/.m2/repository
 
-export MAVEN_HOME_LOCAL=$(pwd)/.maven
-maven \
-        -Dmaven.repo.remote=file:/usr/share/maven/repository \
-        -Dmaven.home.local=$MAVEN_HOME_LOCAL \
-        jar:install javadoc 
+mvn-jpp -e \
+    -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+    install javadoc:javadoc
 
 %else
-ant jar javadoc
+export CLASSPATH=target/classes:target/test-classes
+ant -Dbuild.sysclasspath=only jar javadoc
 %endif
 
 %install
@@ -110,18 +106,32 @@ rm -rf $RPM_BUILD_ROOT
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/plexus
 install -pm 644 target/%{name}-%{version}.jar \
   $RPM_BUILD_ROOT%{_javadir}/plexus/utils-%{version}.jar
+%add_to_maven_depmap org.codehaus.plexus %{name} %{version} JPP/%{parent} %{subname}
 (cd $RPM_BUILD_ROOT%{_javadir}/plexus && for jar in *-%{version}*; do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
+
+# pom
+install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
+install -pm 644 pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{parent}-%{subname}.pom
+
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr target/docs/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+%update_maven_depmap
+
+%postun
+%update_maven_depmap
+
 %files
 %defattr(-,root,root,-)
 %{_javadir}/*
+%{_datadir}/maven2
+%{_mavendepmapfragdir}
 
 %files javadoc
 %defattr(-,root,root,-)
@@ -129,6 +139,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Aug 19 2009 Andrew Overholt <overholt@redhat.com> 1.4.5-1.2
+- Update to 1.4.5 from JPackage and Deepak Bhole
+- Remove gcj bits
+
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.2-4.2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
@@ -138,6 +152,15 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Jul  9 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 0:1.2-2.2
 - fix license tag
 - drop repotag
+
+* Thu Aug 23 2007 Ralph Apel <r.apel@r-apel.de> - 0:1.4.5-1jpp
+- Upgrade to 1.4.5
+- Now build with maven2 by default
+
+* Wed Mar 21 2007 Ralph Apel <r.apel@r-apel.de> - 0:1.2-2jpp
+- Fix build classpath
+- Optionally build with maven2
+- Add gcj_support option
 
 * Mon Feb 20 2007 Deepak Bhole <dbhole@redhat.com> - 0:1.2-2jpp.1.fc7
 - Fix spec per Fedora guidelines
@@ -150,4 +173,3 @@ rm -rf $RPM_BUILD_ROOT
 
 * Mon Nov 07 2005 Ralph Apel <r.apel at r-apel.de> - 0:1.0.4-1jpp
 - First JPackage build
-
