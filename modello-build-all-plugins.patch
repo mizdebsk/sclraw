@@ -1,20 +1,22 @@
---- ./modello-plugins-sandbox/pom.xml.sav	2006-06-13 17:26:21.000000000 -0400
-+++ ./modello-plugins-sandbox/pom.xml	2006-06-13 17:26:33.000000000 -0400
-@@ -20,6 +20,7 @@
-     </dependency>
+diff -up ./modello-plugins-sandbox/pom.xml.sav ./modello-plugins-sandbox/pom.xml
+--- ./modello-plugins-sandbox/pom.xml.sav	2008-06-18 17:06:26.000000000 -0400
++++ ./modello-plugins-sandbox/pom.xml	2008-06-18 17:06:37.000000000 -0400
+@@ -21,6 +21,7 @@
    </dependencies>
    <modules>
-+    <module>modello-plugin-dom4j</module>
-     <module>modello-plugin-hibernate-old</module>
+     <module>modello-plugin-ojb</module>  
++    <module>modello-plugin-prevayler</module>  
+     <!--
      <module>modello-plugin-jdbc</module>
-     <module>modello-plugin-ojb</module>
---- ./pom.xml.sav	2006-01-11 22:40:51.000000000 -0500
-+++ ./pom.xml	2006-06-13 17:26:12.000000000 -0400
-@@ -161,6 +161,7 @@
-     <module>modello-core</module>
+     <module>modello-plugin-velocity</module>
+diff -up ./pom.xml.sav ./pom.xml
+--- ./pom.xml.sav	2008-06-18 17:06:01.000000000 -0400
++++ ./pom.xml	2008-06-18 17:06:18.000000000 -0400
+@@ -157,6 +157,7 @@
+     <module>modello-db-keywords</module>
      <module>modello-test</module>
      <module>modello-plugins</module>
-+	<module>modello-plugins-sandbox</module>
++    <module>modello-plugins-sandbox</module>
    </modules>
-   <dependencies>
-     <dependency>
+   <repositories>
+     <repository>

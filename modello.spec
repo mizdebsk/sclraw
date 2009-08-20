@@ -34,44 +34,38 @@
 
 %define repo_dir    .m2/repository
 
-%define namedversion 1.0-alpha-8
+%define namedversion 1.0-alpha-15
 %define maven_settings_file %{_builddir}/%{name}-%{namedversion}/settings.xml
 
 Name:           modello
 Version:        1.0
-Release:        0.3.a8.4.4%{?dist}
+Release:        0.4.a15.0.1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT  
 Group:          Development/Java
 URL:            http://modello.codehaus.org/
 Source0:        %{name}-%{namedversion}-src.tar.gz
-# svn export svn://svn.modello.codehaus.org/modello/tags/modello-1.0-alpha-8/
-# tar czf modello-1.0-alpha-8-src.tar.gz modello-1.0-alpha-8/
+# svn export https://svn.codehaus.org/modello/tags/modello-1.0-alpha-15/
+# tar czf modello-1.0-alpha-15-src.tar.gz modello-1.0-alpha-15/
 Source1:        modello.script
 
 Source2:                %{name}-jpp-depmap.xml
 
 Patch0:                 modello-hibernateold-artifactid-fix.patch
 Patch1:                 modello-build-all-plugins.patch
-%if %{gcj_support}
-BuildRequires:          java-gcj-compat-devel
-Requires(post):         java-gcj-compat
-Requires(postun):       java-gcj-compat
-%endif
-%if ! %{gcj_support}
+Patch2:                 modello-use-old-pdcontainer.patch
 BuildArch:      noarch
-%endif
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  ant >= 0:1.6
 BuildRequires:  jpackage-utils >= 0:1.7.2
 BuildRequires:  maven2 >= 2.0.4-9
+BuildRequires:  maven2-plugin-assembly
 BuildRequires:  maven2-plugin-compiler
 BuildRequires:  maven2-plugin-install
 BuildRequires:  maven2-plugin-jar
 BuildRequires:  maven2-plugin-javadoc
-BuildRequires:  maven2-plugin-release
 BuildRequires:  maven2-plugin-resources
 BuildRequires:  maven2-plugin-surefire
 BuildRequires:  maven2-plugin-plugin
@@ -113,17 +107,15 @@ Java model to [JPOX|http://www.jpox.org/] Mapping.
 %package javadoc
 Summary:        Javadoc for %{name}
 Group:          Development/Documentation
-# for /bin/rm and /bin/ln
-Requires(post):   coreutils
-Requires(postun): coreutils
 
 %description javadoc
 Javadoc for %{name}.
 
 %prep
 %setup -q -n %{name}-%{namedversion}
-%patch0 -b .sav
+#%patch0 -b .sav
 %patch1 -b .sav
+%patch2 -b .sav
 
 find . -name release-pom.xml -exec rm -f '{}' \;
 
@@ -143,10 +135,35 @@ mkdir -p $MAVEN_REPO_LOCAL
 
 mvn-jpp \
         -e \
-                -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-                -Dmaven2.jpp.depmap.file=%{SOURCE2} \
+        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+        -Dmaven2.jpp.depmap.file=%{SOURCE2} \
         -Dmaven.test.failure.ignore=true \
-        install javadoc:javadoc
+        install
+
+# Manual iteration should not be needed, but there is a bug in the javadoc 
+# plugin which makes this necessary. See: 
+# http://jira.codehaus.org/browse/MJAVADOC-157
+for dir in modello-*; do
+    pushd $dir
+        mvn-jpp \
+          -e \
+          -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+          -Dmaven2.jpp.depmap.file=%{SOURCE2} \
+          -Dmaven.test.failure.ignore=true \
+          javadoc:javadoc
+    popd
+done
+
+for dir in modello-plugins/modello-plugin-*; do
+    pushd $dir
+        mvn-jpp \
+          -e \
+          -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+          -Dmaven2.jpp.depmap.file=%{SOURCE2} \
+          -Dmaven.test.failure.ignore=true \
+          javadoc:javadoc
+    popd
+done
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -191,60 +208,43 @@ done
 # Do it again for sandbox plugins, which have a different version
 (cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-1.0-alpha-4-SNAPSHOT*; do ln -sf ${jar} `echo $jar| sed  "s|-1.0-alpha-4-SNAPSHOT||g"`; done)
 
+# Prevayler is in a sandbox and has a different version
+ln -s plugin-prevayler-1.0-alpha-12-SNAPSHOT.jar  $RPM_BUILD_ROOT%{_javadir}/%{name}/plugin-prevayler.jar
+
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 for target in $(find -type d -name target); do
-  install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/`basename \`dirname $target\` | sed -e s:modello-::g`
-  cp -pr $target/site/apidocs/* $jar $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/`basename \`dirname $target\` | sed -e s:modello-::g`
+  if [ -d $target/site/apidocs ]; then
+    install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/`basename \`dirname $target\` | sed -e s:modello-::g`
+    cp -pr $target/site/apidocs/* $jar $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/`basename \`dirname $target\` | sed -e s:modello-::g`
+  fi
 done
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-
-%if %{gcj_support}
-%{_bindir}/aot-compile-rpm
-%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%if %{gcj_support}
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
 %update_maven_depmap
 
 %postun
-%if %{gcj_support}
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
 %update_maven_depmap
-
 
 %files
 %defattr(-,root,root,-)
 %{_datadir}/maven2
-%dir %{_javadir}/%{name}
 %{_javadir}/%{name}
 %attr(755,root,root) %{_bindir}/*
 %{_mavendepmapfragdir}
-%if %{gcj_support}
-%attr(-,root,root) %dir %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/*.jar.*
-%endif
-%config(noreplace) /etc/maven/fragments/modello
-
 
 %files javadoc
 %defattr(-,root,root,-)
 %doc %{_javadocdir}/*
 
-
 %changelog
+* Thu Aug 20 2009 Andrew Overholt <overholt@redhat.com> 1.0-0.4.a15.0.1
+- Update to alpha 15 courtesy Deepak Bhole
+
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.0-0.3.a8.4.4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
