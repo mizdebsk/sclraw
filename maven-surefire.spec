@@ -36,7 +36,7 @@
 
 Name:           maven-surefire
 Version:        2.3
-Release:        7.4%{?dist}
+Release:        7.5%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        Apache Software License
@@ -87,8 +87,8 @@ BuildRequires:  tomcat5
 BuildRequires:  tomcat5-servlet-2.4-api
 #BuildRequires:  excalibur-avalon-logkit
 #BuildRequires:  excalibur-avalon-framework
-#BuildRequires:  maven-shared-plugin-testing-harness
-#BuildRequires:  maven2-plugin-surefire < 2.3.1
+BuildRequires:  maven-shared-plugin-testing-harness
+BuildRequires:  maven2-plugin-surefire < 2.3.1
 BuildRequires:  bsf
 %endif
 
@@ -352,6 +352,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Aug 31 2009 Alexander Kurtakov <akurtako@redhat.com> 0:2.3-7.5
+- Revert previous change.
+
 * Mon Aug 31 2009 Alexander Kurtakov <akurtako@redhat.com> 0:2.3-7.4
 - Disable not needed BRs.
 
