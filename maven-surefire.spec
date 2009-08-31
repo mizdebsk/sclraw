@@ -36,7 +36,7 @@
 
 Name:           maven-surefire
 Version:        2.3
-Release:        7.2%{?dist}
+Release:        7.3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        Apache Software License
@@ -245,8 +245,7 @@ install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
 install -pm 644 maven-surefire-plugin/target/maven-surefire-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/maven-plugin-%{version}.jar
 %add_to_maven_depmap org.apache.maven.surefire maven-surefire-plugin 2.3 JPP/maven-surefire maven-plugin
 install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven-surefire-maven-plugin.pom
-# Do not install due to conflict with maven2-2.0.4
-#install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven2.plugins-surefire-plugin.pom
+install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.maven2.plugins-surefire-plugin.pom
 
 install -pm 644 maven-surefire-report-plugin/target/maven-surefire-report-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/report-maven-plugin-%{version}.jar
 %add_to_maven_depmap org.apache.maven.surefire maven-surefire-report-plugin 2.3 JPP/maven-surefire report-maven-plugin
@@ -353,6 +352,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Aug 31 2009 Alexander Kurtakov <akurtako@redhat.com> 0:2.3-7.3
+- Install JPP.maven2.plugins-surefire-plugin.pom now that we have maven 2.0.8.
+
 * Wed Aug 19 2009 Alexander Kurtakov <akurtako@redhat.com> 0:2.3-7.2
 - Don't install JPP.maven2.plugins-surefire-plugin.pom to fix conflict with maven2 2.0.4.
 
