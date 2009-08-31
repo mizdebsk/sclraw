@@ -36,7 +36,7 @@
 
 Name:           maven-surefire
 Version:        2.3
-Release:        7.6%{?dist}
+Release:        7.7%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        Apache Software License
@@ -352,6 +352,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Aug 31 2009 Andrew Overholt <overholt@redhat.com> 0:2.3-7.7
+- Bump release to rebuild
+
 * Mon Aug 31 2009 Alexander Kurtakov <akurtako@redhat.com> 0:2.3-7.6
 - Really remove maven2-plugin-surefire BR.
 
