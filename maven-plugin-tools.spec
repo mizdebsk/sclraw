@@ -30,7 +30,7 @@
 
 Name:           maven-plugin-tools
 Version:        2.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 License:        ASL 2.0
@@ -55,6 +55,7 @@ BuildRequires:    maven2-plugin-surefire = 2.3
 BuildRequires:    maven-surefire-provider-junit = 2.3
 BuildRequires:    maven2-common-poms >= 1.0-2
 BuildRequires:    maven-doxia
+BuildRequires:    maven-doxia-sitetools
 BuildRequires:    classworlds
 BuildRequires:    plexus-container-default
 BuildRequires:    plexus-utils >= 1.4.5
@@ -178,6 +179,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Nov 23 2009 Alexander Kurtakov <akurtako@redhat.com> 0:2.1-6
+- BR maven-plugin-tools.
+
 * Mon Aug 31 2009 Alexander Kurtakov <akurtako@redhat.com> 0:2.1-5
 - Set minimum version for plexus-utils BR.
 - BR java-devel.
