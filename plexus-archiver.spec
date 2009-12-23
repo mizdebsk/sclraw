@@ -28,46 +28,47 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define _with_gcj_support 1
-
-%define gcj_support %{?_with_gcj_support:1}%{!?_with_gcj_support:%{?_without_gcj_support:0}%{!?_without_gcj_support:%{?_gcj_support:%{_gcj_support}}%{!?_gcj_support:0}}}
-
-%define namedversion 1.0-alpha-7
+%define namedversion 1.0-alpha-12
 
 Name:           plexus-archiver
 Version:        1.0
-Release:        0.4.a7.1.2%{?dist}
+Release:        0.4.a12.1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
 Group:          Development/Java
 URL:            http://plexus.codehaus.org/
-Source0:        plexus-archiver-src.tar.gz
-# svn export svn://svn.plexus.codehaus.org/plexus/tags/plexus-archiver-%{namedversion} plexus-archiver
-# tar czvf plexus-archiver-src.tar.gz plexus-archiver
+Source0:        plexus-archiver-%{namedversion}-src.tar.bz2
+# svn export http://svn.codehaus.org/plexus/plexus-components/tags/plexus-archiver-1.0-alpha-12/
+# tar cjvf plexus-archiver-1.0-alpha-12-src.tar.bz2 plexus-archiver-1.0-alpha-12/
 Source1:        plexus-archiver-1.0-build.xml
 Source2:        plexus-archiver-1.0-project.xml
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if ! %{gcj_support}
 BuildArch:      noarch
-%endif
 BuildRequires:  jpackage-utils >= 0:1.6
 BuildRequires:  ant >= 0:1.6
 BuildRequires:  classworlds >= 0:1.1
 BuildRequires:  plexus-container-default 
 BuildRequires:  plexus-utils 
+BuildRequires:  plexus-io
+BuildRequires: maven2
+BuildRequires: maven2-plugin-resources
+BuildRequires: maven2-plugin-compiler
+BuildRequires: maven2-plugin-jar
+BuildRequires: maven2-plugin-install
+BuildRequires: maven2-plugin-javadoc
+BuildRequires: maven-surefire-maven-plugin
+BuildRequires: maven-surefire-provider-junit
+BuildRequires: maven-shared-reporting-impl
+BuildRequires: maven-doxia-sitetools
+BuildRequires: plexus-maven-plugin
 Requires:       classworlds >= 0:1.1
 Requires:       plexus-container-default 
 Requires:       plexus-utils 
 Requires:       jpackage-utils
-
-%if %{gcj_support}
-BuildRequires:          java-gcj-compat-devel
-Requires(post):         java-gcj-compat
-Requires(postun):       java-gcj-compat
-%endif
+Requires:       plexus-io
 
 %description
 The Plexus project seeks to create end-to-end developer tools for 
@@ -87,64 +88,45 @@ Javadoc for %{name}.
 
 
 %prep
-%setup -q -n plexus-archiver
-cp %{SOURCE1} build.xml
-cp %{SOURCE2} project.xml
+%setup -q -n plexus-archiver-%{namedversion}
+
+mkdir external_repo
+ln -s %{_javadir} external_repo/JPP
 
 %build
-mkdir -p target/lib
-build-jar-repository -s -p target/lib \
-classworlds \
-plexus/container-default \
-plexus/utils \
-
-ant jar javadoc
+export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
+mvn-jpp \
+        -e \
+        -Dmaven2.jpp.mode=true \
+        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+        install javadoc:javadoc
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
 # jars
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/plexus
-install -pm 644 target/%{name}-%{version}-alpha-3.jar \
+install -pm 644 target/%{name}-%{namedversion}.jar \
   $RPM_BUILD_ROOT%{_javadir}/plexus/archiver-%{version}.jar
 (cd $RPM_BUILD_ROOT%{_javadir}/plexus && for jar in *-%{version}*; \
                   do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr target/docs/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name} 
-
-%if %{gcj_support}
-%{_bindir}/aot-compile-rpm
-%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%if %{gcj_support}
 %post
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
+%update_maven_depmap
 
-%if %{gcj_support}
 %postun
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
+%update_maven_depmap
 
 %files
 %defattr(-,root,root,-)
 %{_javadir}/*
-
-%if %{gcj_support}
-%dir %attr(-,root,root) %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/archiver-1.0.jar.*
-%endif
 
 %files javadoc
 %defattr(-,root,root,-)
@@ -152,6 +134,9 @@ fi
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Dec 23 2009 Alexander Kurtakov <akurtako@redhat.com> 0:1.0-0.4.a12.1
+- Update to alpha 12.
+
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.0-0.4.a7.1.2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
@@ -181,4 +166,3 @@ fi
 
 * Mon Nov 07 2005 Ralph Apel <r.apel at r-apel.de> - 0:1.0-0.a3.1jpp
 - First JPackage build
-
