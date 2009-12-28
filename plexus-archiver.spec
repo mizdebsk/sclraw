@@ -32,12 +32,12 @@
 
 Name:           plexus-archiver
 Version:        1.0
-Release:        0.4.a12.3%{?dist}
+Release:        0.4.a12.4%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
 Group:          Development/Java
-URL:            http://plexus.codehaus.org/
+URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
 Source0:        plexus-archiver-%{namedversion}-src.tar.bz2
 # svn export http://svn.codehaus.org/plexus/plexus-components/tags/plexus-archiver-1.0-alpha-12/
 # tar cjvf plexus-archiver-1.0-alpha-12-src.tar.bz2 plexus-archiver-1.0-alpha-12/
@@ -111,6 +111,13 @@ install -pm 644 target/%{name}-%{namedversion}.jar \
   $RPM_BUILD_ROOT%{_javadir}/plexus/archiver-%{version}.jar
 (cd $RPM_BUILD_ROOT%{_javadir}/plexus && for jar in *-%{version}*; \
                   do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
+                  
+%add_to_maven_depmap org.codehaus.plexus %{name} %{version} JPP/plexus archiver
+
+# pom
+install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
+install -pm 644 pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}.pom
+
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
@@ -128,6 +135,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %{_javadir}/*
+%{_datadir}/maven2
+%{_mavendepmapfragdir}
 
 %files javadoc
 %defattr(-,root,root,-)
@@ -135,6 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Mon Dec 28 2009 Alexander Kurtakov <akurtako@redhat.com> 0:1.0-0.4.a12.4
+- Install depmap and pom to override common poms.
+
 * Thu Dec 24 2009 Alexander Kurtakov <akurtako@redhat.com> 0:1.0-0.4.a12.3
 - Really ignore test failures.
 
