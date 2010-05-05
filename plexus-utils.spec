@@ -28,33 +28,36 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define with_maven 0
-
 %define parent plexus
 %define subname utils
 
 Name:           plexus-utils
-Version:        1.4.5
-Release:        1.2%{?dist}
+Version:        2.0.5
+Release:        1%{?dist}
 Summary:        Plexus Common Utilities
 License:        ASL 1.1 and ASL 2.0 and MIT
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/
 Source0:        plexus-utils-%{version}.tar.gz
-# svn export http://svn.codehaus.org/plexus/plexus-utils/tags/plexus-utils-1.4.5/
-Source1:        plexus-utils-1.4.5-build.xml
+# svn export http://svn.codehaus.org/plexus/plexus-utils/tags/plexus-utils-2.0.1/
+Patch0:         plexus-utils-remove-release-plugin.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  ant
 BuildRequires:  jpackage-utils >= 0:1.6
 Requires:       jpackage-utils
 Requires(postun): jpackage-utils
-%if %{with_maven}
-BuildRequires:  maven2 >= 0:2.0.4
+
+BuildRequires:  maven2
+BuildRequires:  maven2-plugin-compiler
+BuildRequires:  maven2-plugin-install
+BuildRequires:  maven2-plugin-jar
+BuildRequires:  maven2-plugin-javadoc
+BuildRequires:  maven2-plugin-resources
 BuildRequires:  maven2-plugin-surefire
-%endif
+BuildRequires:  maven-doxia-sitetools
+BuildRequires:  maven-surefire-provider-junit
 
 Requires(post):    jpackage-utils >= 0:1.7.2
 Requires(postun):  jpackage-utils >= 0:1.7.2
@@ -77,28 +80,16 @@ Requires(postun): jpackage-utils
 Javadoc for %{name}.
 
 %prep
-%setup -q -n %{name}-%{version}
-cp %{SOURCE1} build.xml
-
-# Disable file utils test cases. See:
-# https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=228419
-rm -f src/test/java/org/codehaus/plexus/util/FileUtilsTest.java
-
-# TODO: Find out why this test keeps freezing
-rm -f src/test/java/org/codehaus/plexus/util/interpolation/RegexBasedInterpolatorTest.java
+%setup -q
+%patch0 -p1
 
 %build
-%if %{with_maven}
-export MAVEN_REPO_LOCAL=`pwd`/.m2/repository
+export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
+mkdir -p $MAVEN_REPO_LOCAL
 
-mvn-jpp -e \
+mvn-jpp \
     -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
     install javadoc:javadoc
-
-%else
-export CLASSPATH=target/classes:target/test-classes
-ant -Dbuild.sysclasspath=only jar javadoc
-%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -130,8 +121,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %{_javadir}/*
-%{_datadir}/maven2
-%{_mavendepmapfragdir}
+%{_mavenpomdir}/*
+%{_mavendepmapfragdir}/*
 
 %files javadoc
 %defattr(-,root,root,-)
@@ -139,6 +130,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed May  5 2010 Mary Ellen Foster <mefoster at gmail.com> 2.0.5-1
+- Update to 2.0.5
+
+* Fri Feb 12 2010 Mary Ellen Foster <mefoster at gmail.com> 2.0.1-1
+- Update to 2.0.1
+- Build with maven
+
 * Wed Aug 19 2009 Andrew Overholt <overholt@redhat.com> 1.4.5-1.2
 - Update to 1.4.5 from JPackage and Deepak Bhole
 - Remove gcj bits
