@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Maven Plugin Tools
 
 Group:          Development/Libraries
@@ -22,9 +22,11 @@ BuildRequires: maven-compiler-plugin
 BuildRequires: maven2-plugin-resources
 BuildRequires: maven2-plugin-jar
 BuildRequires: maven2-plugin-source
+BuildRequires: maven2-plugin-plugin
 BuildRequires: plexus-maven-plugin
 BuildRequires: maven-javadoc-plugin
 BuildRequires: maven-doxia-sitetools
+BuildRequires: maven-doxia-tools
 BuildRequires: maven-surefire-maven-plugin
 BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-shared-reporting-impl
@@ -262,6 +264,9 @@ rm -rf %{buildroot}
 %{_javadir}/%{name}/plugin*
 
 %changelog
+* Tue May 18 2010 Alexander Kurtakov <akurtako@redhat.com> 0:2.6-3
+- More BRs.
+
 * Tue May 18 2010 Alexander Kurtakov <akurtako@redhat.com> 0:2.6-2
 - Fix BRs.
 
