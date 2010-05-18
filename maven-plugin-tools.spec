@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Plugin Tools
 
 Group:          Development/Libraries
@@ -20,7 +20,7 @@ BuildRequires: java-devel >= 1:1.6.0
 BuildRequires: maven2-plugin-install
 BuildRequires: maven-compiler-plugin
 BuildRequires: maven2-plugin-resources
-BuildRequires: maven-jar-plugin
+BuildRequires: maven2-plugin-jar
 BuildRequires: maven2-plugin-source
 BuildRequires: plexus-maven-plugin
 BuildRequires: maven-javadoc-plugin
@@ -262,6 +262,9 @@ rm -rf %{buildroot}
 %{_javadir}/%{name}/plugin*
 
 %changelog
+* Tue May 18 2010 Alexander Kurtakov <akurtako@redhat.com> 0:2.6-2
+- Fix BRs.
+
 * Tue May 18 2010 Alexander Kurtakov <akurtako@redhat.com> 2.6-0
 - Update to 2.6.
 - Separate modules as subpackages.
