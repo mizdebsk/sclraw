@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.6
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Maven Plugin Tools
 
 Group:          Development/Libraries
@@ -88,8 +88,8 @@ Summary: Maven Plugin Tool for Java
 Group: Development/Libraries
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: %{name}-api
-Obsoletes: maven-shared-plugin-tools-beanshell < 0:%{version}-%{release}
-Provides: maven-shared-plugin-tools-beanshell = 0:%{version}-%{release}
+Obsoletes: maven-shared-plugin-tools-java < 0:%{version}-%{release}
+Provides: maven-shared-plugin-tools-java = 0:%{version}-%{release}
 
 %description java
 Descriptor extractor for plugins written in Java.
@@ -264,6 +264,9 @@ rm -rf %{buildroot}
 %{_javadir}/%{name}/plugin*
 
 %changelog
+* Wed May 19 2010 Alexander Kurtakov <akurtako@redhat.com> 0:2.6-4
+- Fix plugin-tools-java obsoletes.
+
 * Tue May 18 2010 Alexander Kurtakov <akurtako@redhat.com> 0:2.6-3
 - More BRs.
 
