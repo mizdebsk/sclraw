@@ -34,27 +34,27 @@
 
 %define repo_dir    .m2/repository
 
-%define namedversion 1.0-alpha-15
+%define namedversion 1.0.1
 %define maven_settings_file %{_builddir}/%{name}-%{namedversion}/settings.xml
 
 Name:           modello
-Version:        1.0
-Release:        0.4.a15.0.1%{?dist}
+Version:        1.0.1
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT  
 Group:          Development/Java
 URL:            http://modello.codehaus.org/
 Source0:        %{name}-%{namedversion}-src.tar.gz
-# svn export https://svn.codehaus.org/modello/tags/modello-1.0-alpha-15/
-# tar czf modello-1.0-alpha-15-src.tar.gz modello-1.0-alpha-15/
+# svn export https://svn.codehaus.org/modello/tags/modello-1.0.1/
+# tar czf modello-1.0.1-src.tar.gz modello-1.0.1/
 Source1:        modello.script
 
 Source2:                %{name}-jpp-depmap.xml
 
-Patch0:                 modello-hibernateold-artifactid-fix.patch
-Patch1:                 modello-build-all-plugins.patch
-Patch2:                 modello-use-old-pdcontainer.patch
+#Patch0:                 modello-hibernateold-artifactid-fix.patch
+#Patch1:                 modello-build-all-plugins.patch
+#Patch2:                 modello-use-old-pdcontainer.patch
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -65,16 +65,24 @@ BuildRequires:  maven2-plugin-assembly
 BuildRequires:  maven2-plugin-compiler
 BuildRequires:  maven2-plugin-install
 BuildRequires:  maven2-plugin-jar
-BuildRequires:  maven2-plugin-javadoc
+BuildRequires:  maven-javadoc-plugin
 BuildRequires:  maven2-plugin-resources
 BuildRequires:  maven2-plugin-surefire
+BuildRequires:  maven-site-plugin
+BuildRequires:  maven-surefire-provider-junit
 BuildRequires:  maven2-plugin-plugin
+BuildRequires:  maven-shared-reporting-impl
 BuildRequires:  classworlds >= 0:1.1
 BuildRequires:  dtdparser
 BuildRequires:  plexus-container-default
 BuildRequires:  plexus-utils
 BuildRequires:  plexus-velocity
 BuildRequires:  velocity
+BuildRequires:  maven-doxia
+BuildRequires:  maven-doxia-sitetools
+BuildRequires:  maven-doxia-tools
+BuildRequires:  tomcat5
+BuildRequires:  plexus-build-api
 
 Requires:       classworlds >= 0:1.1
 Requires:       dtdparser
@@ -83,6 +91,7 @@ Requires:       plexus-utils
 Requires:       plexus-velocity
 Requires:       velocity
 
+Requires:          jpackage-utils >= 0:1.7.2
 Requires(post):    jpackage-utils >= 0:1.7.2
 Requires(postun):  jpackage-utils >= 0:1.7.2
 
@@ -114,19 +123,22 @@ Javadoc for %{name}.
 %prep
 %setup -q -n %{name}-%{namedversion}
 #%patch0 -b .sav
-%patch1 -b .sav
-%patch2 -b .sav
+#%patch1 -b .sav
+#%patch2 -b .sav
 
 find . -name release-pom.xml -exec rm -f '{}' \;
 
-for i in modello-plugins-sandbox/modello-plugin-ldap/src/test/java/org/codehaus/modello/plugin/ldap/ObjStateFactoryModelloGeneratorTest.java \
-         modello-plugins-sandbox/modello-plugin-ldap/src/test/java/org/codehaus/modello/plugin/ldap/LdapSchemaGeneratorTest.java \
-         modello-plugins-sandbox/modello-plugin-ojb/src/test/java/org/codehaus/modello/plugin/ojb/OjbModelloGeneratorTest.java \
-         modello-plugins-sandbox/modello-plugin-stash/src/test/java/org/codehaus/modello/plugin/stash/StashModelloGeneratorTest.java \
-         modello-plugins-sandbox/modello-plugin-hibernate-store/src/test/java/org/codehaus/modello/plugin/hibernate/HibernateModelloGeneratorTest.java; do
-        sed -i -e s:org.codehaus.modello.ModelloGeneratorTest:org.codehaus.modello.AbstractModelloGeneratorTest:g $i
-        sed -i -e s:"extends ModelloGeneratorTest":"extends AbstractModelloGeneratorTest":g $i
-done
+#Fixme: got error of Unrecognised tag: 'menu'
+find . -name site.xml -exec rm -f '{}' \;
+
+#for i in modello-plugins-sandbox/modello-plugin-ldap/src/test/java/org/codehaus/modello/plugin/ldap/ObjStateFactoryModelloGeneratorTest.java \
+#         modello-plugins-sandbox/modello-plugin-ldap/src/test/java/org/codehaus/modello/plugin/ldap/LdapSchemaGeneratorTest.java \
+#         modello-plugins-sandbox/modello-plugin-ojb/src/test/java/org/codehaus/modello/plugin/ojb/OjbModelloGeneratorTest.java \
+#         modello-plugins-sandbox/modello-plugin-stash/src/test/java/org/codehaus/modello/plugin/stash/StashModelloGeneratorTest.java \
+#         modello-plugins-sandbox/modello-plugin-hibernate-store/src/test/java/org/codehaus/modello/plugin/hibernate/HibernateModelloGeneratorTest.java; do
+#        sed -i -e s:org.codehaus.modello.ModelloGeneratorTest:org.codehaus.modello.AbstractModelloGeneratorTest:g $i
+#        sed -i -e s:"extends ModelloGeneratorTest":"extends AbstractModelloGeneratorTest":g $i
+#done
 
 %build
 
@@ -138,6 +150,7 @@ mvn-jpp \
         -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
         -Dmaven2.jpp.depmap.file=%{SOURCE2} \
         -Dmaven.test.failure.ignore=true \
+        -Dmaven.test.skip=true \
         install
 
 # Manual iteration should not be needed, but there is a bug in the javadoc 
@@ -171,7 +184,7 @@ rm -rf $RPM_BUILD_ROOT
 # poms
 install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
 for i in `find . -name pom.xml | grep -v \\\./pom.xml`; do
-        cp -p $i $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.`basename \`dirname $i\``.pom
+        cp -p $i $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-`basename \`dirname $i\``.pom
 done
 
 # Depmap fragments
@@ -182,15 +195,7 @@ for i in `find . -name pom.xml | grep -v \\\./pom.xml |  grep -v modello-plugins
     %add_to_maven_depmap org.codehaus.modello modello-$artifactname %{namedversion} JPP/%{name} $artifactname
 done
 
-# sandbox plugins are a different version
-for i in `find . -name pom.xml | grep modello-plugins-sandbox`; do
-        # i is in format ..../artifactid/pom.xml
-        artifactname=`basename \`dirname $i\` | sed -e s:^modello-::g`
-
-        %add_to_maven_depmap org.codehaus.modello modello-$artifactname 1.0-alpha-4-SNAPSHOT JPP/%{name} $artifactname
-done
-
-cp -p pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.modello-modello.pom
+cp -p pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-modello-modello.pom
 %add_to_maven_depmap org.codehaus.modello modello %{namedversion} JPP/%{name} modello
 
 # script
@@ -198,18 +203,15 @@ install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
 install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/%{name}
 
 # jars
+
+ls -lR
+
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
 for jar in $(find -type f -name "*.jar" | grep -E target/.*.jar); do 
         install -m 644 $jar $RPM_BUILD_ROOT%{_javadir}/%{name}/`basename $jar |sed -e s:modello-::g`
 done
 
 (cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-%{namedversion}*; do ln -sf ${jar} `echo $jar| sed  "s|-%{namedversion}||g"`; done)
-
-# Do it again for sandbox plugins, which have a different version
-(cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-1.0-alpha-4-SNAPSHOT*; do ln -sf ${jar} `echo $jar| sed  "s|-1.0-alpha-4-SNAPSHOT||g"`; done)
-
-# Prevayler is in a sandbox and has a different version
-ln -s plugin-prevayler-1.0-alpha-12-SNAPSHOT.jar  $RPM_BUILD_ROOT%{_javadir}/%{name}/plugin-prevayler.jar
 
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
@@ -242,6 +244,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Fri May 21 2010 Yong Yang <yyang@redhat.com> 1.0.1-1
+- Upgrade to 1.0.1
+
 * Thu Aug 20 2009 Andrew Overholt <overholt@redhat.com> 1.0-0.4.a15.0.1
 - Update to alpha 15 courtesy Deepak Bhole
 
