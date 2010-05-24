@@ -34,11 +34,11 @@
 
 %define repo_dir    .m2/repository
 
-%define namedversion 1.0.1
+%define namedversion 1.1
 %define maven_settings_file %{_builddir}/%{name}-%{namedversion}/settings.xml
 
 Name:           modello
-Version:        1.0.1
+Version:        1.1
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
@@ -244,6 +244,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon May 24 2010 Yong Yang <yyang@redhat.com> 1.1-1
+- Upgrade to 1.1
+
 * Fri May 21 2010 Yong Yang <yyang@redhat.com> 1.0.1-1
 - Upgrade to 1.0.1
 
