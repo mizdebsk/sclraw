@@ -28,9 +28,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define _without_gcj_support 1
-%define gcj_support %{?_with_gcj_support:1}%{!?_with_gcj_support:%{?_without_gcj_support:0}%{!?_without_gcj_support:%{?_gcj_support:%{_gcj_support}}%{!?_gcj_support:0}}}
-
 
 %define repo_dir    .m2/repository
 
@@ -39,15 +36,15 @@
 
 Name:           modello
 Version:        1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT  
 Group:          Development/Java
 URL:            http://modello.codehaus.org/
 Source0:        %{name}-%{namedversion}-src.tar.gz
-# svn export https://svn.codehaus.org/modello/tags/modello-1.0.1/
-# tar czf modello-1.0.1-src.tar.gz modello-1.0.1/
+# svn export https://svn.codehaus.org/modello/tags/modello-1.1/
+# tar czf modello-1.1-src.tar.gz modello-1.1/
 Source1:        modello.script
 
 Source2:                %{name}-jpp-depmap.xml
@@ -87,6 +84,7 @@ BuildRequires:  plexus-build-api
 Requires:       classworlds >= 0:1.1
 Requires:       dtdparser
 Requires:       plexus-container-default
+Requires:       plexus-build-api
 Requires:       plexus-utils
 Requires:       plexus-velocity
 Requires:       velocity
@@ -151,32 +149,7 @@ mvn-jpp \
         -Dmaven2.jpp.depmap.file=%{SOURCE2} \
         -Dmaven.test.failure.ignore=true \
         -Dmaven.test.skip=true \
-        install
-
-# Manual iteration should not be needed, but there is a bug in the javadoc 
-# plugin which makes this necessary. See: 
-# http://jira.codehaus.org/browse/MJAVADOC-157
-for dir in modello-*; do
-    pushd $dir
-        mvn-jpp \
-          -e \
-          -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-          -Dmaven2.jpp.depmap.file=%{SOURCE2} \
-          -Dmaven.test.failure.ignore=true \
-          javadoc:javadoc
-    popd
-done
-
-for dir in modello-plugins/modello-plugin-*; do
-    pushd $dir
-        mvn-jpp \
-          -e \
-          -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-          -Dmaven2.jpp.depmap.file=%{SOURCE2} \
-          -Dmaven.test.failure.ignore=true \
-          javadoc:javadoc
-    popd
-done
+        install javadoc:javadoc
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -184,7 +157,7 @@ rm -rf $RPM_BUILD_ROOT
 # poms
 install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
 for i in `find . -name pom.xml | grep -v \\\./pom.xml`; do
-        cp -p $i $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-`basename \`dirname $i\``.pom
+        cp -p $i $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.`basename \`dirname $i\``.pom
 done
 
 # Depmap fragments
@@ -195,7 +168,7 @@ for i in `find . -name pom.xml | grep -v \\\./pom.xml |  grep -v modello-plugins
     %add_to_maven_depmap org.codehaus.modello modello-$artifactname %{namedversion} JPP/%{name} $artifactname
 done
 
-cp -p pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-modello-modello.pom
+cp -p pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.modello-modello.pom
 %add_to_maven_depmap org.codehaus.modello modello %{namedversion} JPP/%{name} modello
 
 # script
@@ -203,8 +176,6 @@ install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
 install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/%{name}
 
 # jars
-
-ls -lR
 
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
 for jar in $(find -type f -name "*.jar" | grep -E target/.*.jar); do 
@@ -244,6 +215,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon May 24 2010 Yong Yang <yyang@redhat.com> 1.1-2
+- Fix JPP pom name
+
 * Mon May 24 2010 Yong Yang <yyang@redhat.com> 1.1-1
 - Upgrade to 1.1
 
