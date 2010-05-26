@@ -149,7 +149,8 @@ mvn-jpp \
         -Dmaven2.jpp.depmap.file=%{SOURCE2} \
         -Dmaven.test.failure.ignore=true \
         -Dmaven.test.skip=true \
-        install javadoc:javadoc
+        install
+#        javadoc:javadoc
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -217,6 +218,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon May 24 2010 Yong Yang <yyang@redhat.com> 1.1-2
 - Fix JPP pom name
+- Disable javadoc:javadoc due to the failure of maven-doxia
 
 * Mon May 24 2010 Yong Yang <yyang@redhat.com> 1.1-1
 - Upgrade to 1.1
