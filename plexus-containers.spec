@@ -169,6 +169,7 @@ mkdir -p $MAVEN_REPO_LOCAL
     mvn-jpp \
         -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
         -Dmaven2.jpp.depmap.file=%{SOURCE4} \
+        -Dmaven.test.skip=true \
         install
 
     # for integration tests ran during javadoc:javadoc
