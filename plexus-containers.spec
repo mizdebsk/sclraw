@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and Plexus
 Group:          Development/Libraries
@@ -234,10 +234,10 @@ install -pm 644 \
  $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-component-javadoc.pom
 
 %add_to_maven_depmap org.codehaus.plexus %{name} %{version} JPP/%{parent} %{subname}
-%add_to_maven_depmap org.codehaus.plexus containers-component-annotations %{version} JPP/%{parent} containers-component-annotations
-%add_to_maven_depmap org.codehaus.plexus containers-container-default %{version} JPP/%{parent} containers-container-default
-%add_to_maven_depmap org.codehaus.plexus containers-component-metadata %{version} JPP/%{parent} containers-component-metadata
-%add_to_maven_depmap org.codehaus.plexus containers-component-javadoc %%{version} JPP/%{parent} containers-component-javadoc
+%add_to_maven_depmap org.codehaus.plexus plexus-component-annotations %{version} JPP/%{parent} containers-component-annotations
+%add_to_maven_depmap org.codehaus.plexus plexus-container-default %{version} JPP/%{parent} containers-container-default
+%add_to_maven_depmap org.codehaus.plexus plexus-component-metadata %{version} JPP/%{parent} containers-component-metadata
+%add_to_maven_depmap org.codehaus.plexus plexus-component-javadoc %%{version} JPP/%{parent} containers-component-javadoc
 
 # component-api is now folded into container-default
 %add_to_maven_depmap org.codehaus.plexus containers-component-api %{version} JPP/%{parent} containers-container-default
@@ -330,6 +330,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/plexus-containers-component-javadoc
 
 %changelog
+* Thu Jul 15 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.4-2
+- Fix maven depmaps
+
 * Tue Jul 13 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.4-1
 - Version bump
 - Add new sub-packages
