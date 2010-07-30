@@ -27,48 +27,44 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-
-
-%define repo_dir    .m2/repository
-
-%define namedversion 1.1
-%define maven_settings_file %{_builddir}/%{name}-%{namedversion}/settings.xml
+%define __jar_repack %{nil}
 
 Name:           modello
-Version:        1.1
-Release:        2%{?dist}
+Version:        1.4
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
-License:        MIT  
-Group:          Development/Java
+License:        MIT
+Group:          Development/Libraries
 URL:            http://modello.codehaus.org/
-Source0:        %{name}-%{namedversion}-src.tar.gz
-# svn export https://svn.codehaus.org/modello/tags/modello-1.1/
-# tar czf modello-1.1-src.tar.gz modello-1.1/
+# svn export https://svn.codehaus.org/modello/tags/modello-1.4
+# tar czf modello-1.4-src.tar.xz modello-1.4
+Source0:        %{name}-%{version}-src.tar.xz
 Source1:        modello.script
 
-Source2:                %{name}-jpp-depmap.xml
+Source2:        %{name}-jpp-depmap.xml
 
-#Patch0:                 modello-hibernateold-artifactid-fix.patch
-#Patch1:                 modello-build-all-plugins.patch
-#Patch2:                 modello-use-old-pdcontainer.patch
+Patch0:         0001-Use-public-function-for-component-lookup.patch
+
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  ant >= 0:1.6
 BuildRequires:  jpackage-utils >= 0:1.7.2
 BuildRequires:  maven2 >= 2.0.4-9
-BuildRequires:  maven2-plugin-assembly
-BuildRequires:  maven2-plugin-compiler
-BuildRequires:  maven2-plugin-install
-BuildRequires:  maven2-plugin-jar
+BuildRequires:  maven-assembly-plugin
+BuildRequires:  maven-compiler-plugin
+BuildRequires:  maven-install-plugin
+BuildRequires:  maven-jar-plugin
 BuildRequires:  maven-javadoc-plugin
-BuildRequires:  maven2-plugin-resources
-BuildRequires:  maven2-plugin-surefire
+BuildRequires:  maven-resources-plugin
+BuildRequires:  maven-surefire-maven-plugin
 BuildRequires:  maven-site-plugin
 BuildRequires:  maven-surefire-provider-junit
-BuildRequires:  maven2-plugin-plugin
+BuildRequires:  maven-dependency-plugin
+BuildRequires:  maven-plugin-plugin
 BuildRequires:  maven-shared-reporting-impl
+BuildRequires:  maven-shared-invoker
 BuildRequires:  classworlds >= 0:1.1
 BuildRequires:  dtdparser
 BuildRequires:  plexus-container-default
@@ -78,8 +74,11 @@ BuildRequires:  velocity
 BuildRequires:  maven-doxia
 BuildRequires:  maven-doxia-sitetools
 BuildRequires:  maven-doxia-tools
-BuildRequires:  tomcat5
 BuildRequires:  plexus-build-api
+BuildRequires:  ws-jaxme
+BuildRequires:  xmlunit
+BuildRequires:  jpa_api = 3.0
+BuildRequires:  geronimo-parent-poms
 
 Requires:       classworlds >= 0:1.1
 Requires:       dtdparser
@@ -89,18 +88,18 @@ Requires:       plexus-utils
 Requires:       plexus-velocity
 Requires:       velocity
 
-Requires:          jpackage-utils >= 0:1.7.2
-Requires(post):    jpackage-utils >= 0:1.7.2
-Requires(postun):  jpackage-utils >= 0:1.7.2
+Requires:          jpackage-utils
+Requires(post):    jpackage-utils
+Requires(postun):  jpackage-utils
 
 Provides:       modello-maven-plugin = %{epoch}:%{version}-%{release}
 Obsoletes:      modello-maven-plugin < 0:1.0-0.a8.3jpp
 
 %description
-Modello is a Data Model toolkit in use by the 
+Modello is a Data Model toolkit in use by the
 http://maven.apache.org/maven2.
-It all starts with the Data Model. Once a data model is defined, 
-the toolkit can be used to generate any of the following at compile 
+It all starts with the Data Model. Once a data model is defined,
+the toolkit can be used to generate any of the following at compile
 time.
 Java POJOs of the model.
 Java POJOs to XML Writer (provided via xpp3 or dom4j).
@@ -113,52 +112,41 @@ Java model to [JPOX|http://www.jpox.org/] Mapping.
 
 %package javadoc
 Summary:        Javadoc for %{name}
-Group:          Development/Documentation
+Group:          Documentation
+Requires:       jpackage-utils
 
 %description javadoc
-Javadoc for %{name}.
+API documentation for %{name}.
 
 %prep
-%setup -q -n %{name}-%{namedversion}
-#%patch0 -b .sav
-#%patch1 -b .sav
-#%patch2 -b .sav
+%setup -q -n %{name}-%{version}
 
-find . -name release-pom.xml -exec rm -f '{}' \;
+# fix test compilation failure with new plexus-containers
+# not really needed now because we are skipping tests for other
+# problems...
+%patch0 -p1
 
-#Fixme: got error of Unrecognised tag: 'menu'
-find . -name site.xml -exec rm -f '{}' \;
-
-#for i in modello-plugins-sandbox/modello-plugin-ldap/src/test/java/org/codehaus/modello/plugin/ldap/ObjStateFactoryModelloGeneratorTest.java \
-#         modello-plugins-sandbox/modello-plugin-ldap/src/test/java/org/codehaus/modello/plugin/ldap/LdapSchemaGeneratorTest.java \
-#         modello-plugins-sandbox/modello-plugin-ojb/src/test/java/org/codehaus/modello/plugin/ojb/OjbModelloGeneratorTest.java \
-#         modello-plugins-sandbox/modello-plugin-stash/src/test/java/org/codehaus/modello/plugin/stash/StashModelloGeneratorTest.java \
-#         modello-plugins-sandbox/modello-plugin-hibernate-store/src/test/java/org/codehaus/modello/plugin/hibernate/HibernateModelloGeneratorTest.java; do
-#        sed -i -e s:org.codehaus.modello.ModelloGeneratorTest:org.codehaus.modello.AbstractModelloGeneratorTest:g $i
-#        sed -i -e s:"extends ModelloGeneratorTest":"extends AbstractModelloGeneratorTest":g $i
-#done
 
 %build
 
 export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
 mkdir -p $MAVEN_REPO_LOCAL
 
+# skip tests because we have too old xmlunit in Fedora now (1.0.8)
 mvn-jpp \
         -e \
         -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
         -Dmaven2.jpp.depmap.file=%{SOURCE2} \
-        -Dmaven.test.failure.ignore=true \
         -Dmaven.test.skip=true \
-        install
-#        javadoc:javadoc
+        install javadoc:aggregate
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 # poms
-install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
+install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
 for i in `find . -name pom.xml | grep -v \\\./pom.xml`; do
-        cp -p $i $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.`basename \`dirname $i\``.pom
+        cp -p $i $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.`basename \`dirname $i\``.pom
 done
 
 # Depmap fragments
@@ -166,11 +154,11 @@ for i in `find . -name pom.xml | grep -v \\\./pom.xml |  grep -v modello-plugins
     # i is in format ..../artifactid/pom.xml
     artifactname=`basename \`dirname $i\` | sed -e s:^modello-::g`
 
-    %add_to_maven_depmap org.codehaus.modello modello-$artifactname %{namedversion} JPP/%{name} $artifactname
+    %add_to_maven_depmap org.codehaus.modello modello-$artifactname %{version} JPP/%{name} $artifactname
 done
 
-cp -p pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.modello-modello.pom
-%add_to_maven_depmap org.codehaus.modello modello %{namedversion} JPP/%{name} modello
+cp -p pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.modello-modello.pom
+%add_to_maven_depmap org.codehaus.modello modello %{version} JPP/%{name} modello
 
 # script
 install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
@@ -179,21 +167,16 @@ install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/%{name}
 # jars
 
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
-for jar in $(find -type f -name "*.jar" | grep -E target/.*.jar); do 
+for jar in $(find -type f -name "*-%{version}.jar" | grep -E target/.*.jar); do
         install -m 644 $jar $RPM_BUILD_ROOT%{_javadir}/%{name}/`basename $jar |sed -e s:modello-::g`
 done
 
-(cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-%{namedversion}*; do ln -sf ${jar} `echo $jar| sed  "s|-%{namedversion}||g"`; done)
+(cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-%{version}*; do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
 
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-for target in $(find -type d -name target); do
-  if [ -d $target/site/apidocs ]; then
-    install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/`basename \`dirname $target\` | sed -e s:modello-::g`
-    cp -pr $target/site/apidocs/* $jar $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/`basename \`dirname $target\` | sed -e s:modello-::g`
-  fi
-done
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+(cd $RPM_BUILD_ROOT%{_javadocdir} && ln -sf %{name}-%{version} %{name})
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -206,16 +189,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%{_datadir}/maven2
+%{_mavenpomdir}/*
 %{_javadir}/%{name}
-%attr(755,root,root) %{_bindir}/*
-%{_mavendepmapfragdir}
+%{_bindir}/*
+%config(noreplace) %{_mavendepmapfragdir}/*
 
 %files javadoc
 %defattr(-,root,root,-)
-%doc %{_javadocdir}/*
+%{_javadocdir}/%{name}-%{version}
+%{_javadocdir}/%{name}
 
 %changelog
+* Tue Jul 20 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.4-1
+- Update to latest upstream version
+- Re-enable javadoc generation
+- Remove old workarounds/patches
+
 * Mon May 24 2010 Yong Yang <yyang@redhat.com> 1.1-2
 - Fix JPP pom name
 - Disable javadoc:javadoc due to the failure of maven-doxia
@@ -244,7 +233,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Mar 13 2007 Matt Wringe <mwringe@redhat.com> 0:1.0-0.1.a8.4jpp.2
 - Change license to MIT to reflex the actual license specified in the
   source headers.
-- fix various rpmlint issues 
+- fix various rpmlint issues
 
 * Mon Feb 26 2007 Tania Bento <tbento@redhat.com> 0:1.0-0.1.a8.4jpp.1
 - Fixed %%Release.
