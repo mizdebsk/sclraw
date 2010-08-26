@@ -31,7 +31,7 @@
 
 Name:           modello
 Version:        1.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT
@@ -66,7 +66,6 @@ BuildRequires:  maven-plugin-plugin
 BuildRequires:  maven-shared-reporting-impl
 BuildRequires:  maven-shared-invoker
 BuildRequires:  classworlds >= 0:1.1
-BuildRequires:  dtdparser
 BuildRequires:  plexus-container-default
 BuildRequires:  plexus-utils
 BuildRequires:  plexus-velocity
@@ -81,7 +80,6 @@ BuildRequires:  jpa_api = 3.0
 BuildRequires:  geronimo-parent-poms
 
 Requires:       classworlds >= 0:1.1
-Requires:       dtdparser
 Requires:       plexus-container-default
 Requires:       plexus-build-api
 Requires:       plexus-utils
@@ -200,6 +198,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Aug 26 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.4-2
+- Remove dtdparser BR/R
+
 * Tue Jul 20 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.4-1
 - Update to latest upstream version
 - Re-enable javadoc generation
