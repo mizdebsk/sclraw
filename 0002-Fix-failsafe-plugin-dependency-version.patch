@@ -1,0 +1,25 @@
+From 7b09e4dc7828c0be5d87c90510a91c6aaba44067 Mon Sep 17 00:00:00 2001
+From: Stanislav Ochotnicky <sochotnicky@redhat.com>
+Date: Tue, 24 Aug 2010 13:37:37 +0200
+Subject: [PATCH 2/2] Fix failsafe-plugin dependency version
+
+---
+ surefire-integration-tests/pom.xml |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/surefire-integration-tests/pom.xml b/surefire-integration-tests/pom.xml
+index 0029fed..f3f0364 100644
+--- a/surefire-integration-tests/pom.xml
++++ b/surefire-integration-tests/pom.xml
+@@ -153,7 +153,7 @@
+       </plugin>
+       <plugin>
+         <artifactId>maven-failsafe-plugin</artifactId>
+-        <version>2.5</version>
++        <version>${project.version}</version>
+         <configuration>
+           <!-- Pass current surefire version to the main suite so that it -->
+           <!-- can forward to all integration test projects. SUREFIRE-513 -->
+-- 
+1.7.2.1
+
