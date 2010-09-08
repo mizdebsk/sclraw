@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.6
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Maven Plugin Tools
 
 Group:          Development/Libraries
@@ -19,16 +19,17 @@ BuildRequires: maven-install-plugin
 BuildRequires: maven-compiler-plugin
 BuildRequires: maven-resources-plugin
 BuildRequires: maven-jar-plugin
-BuildRequires: maven2-plugin-source
+BuildRequires: maven-source-plugin
 BuildRequires: maven-plugin-plugin
+BuildRequires: maven-site-plugin
 BuildRequires: plexus-maven-plugin
 BuildRequires: maven-javadoc-plugin
 BuildRequires: maven-doxia-sitetools
 BuildRequires: maven-doxia-tools
-BuildRequires: maven-surefire-maven-plugin
+BuildRequires: maven-surefire-plugin
 BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-shared-reporting-impl
-BuildRequires: maven-shared-test-tools
+BuildRequires: maven-test-tools
 BuildRequires: maven-plugin-testing-harness
 Requires: maven2
 Requires:       jpackage-utils
@@ -140,7 +141,7 @@ mvn-jpp \
         -Dmaven2.jpp.mode=true \
         -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
         -Dmaven.test.skip=true \
-        package javadoc:javadoc
+        package javadoc:aggregate
 
 %install
 rm -rf %{buildroot}
@@ -204,14 +205,9 @@ install -pm 644 maven-plugin-plugin/pom.xml \
 # javadoc
 install -d -m 755 %{buildroot}%{_javadocdir}/%{name}-%{version}
 
-for dir in maven-plugin-*; do
-    install -d -m 755 %{buildroot}%{_javadocdir}/%{name}-%{version}/$dir
-    cp -pr $dir/target/site/apidocs/* \
-        %{buildroot}%{_javadocdir}/%{name}-%{version}/$dir/
-done
+cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}-%{version}/
 
-ln -s %{name}-%{version} \
-     $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 %post
 %update_maven_depmap
@@ -263,6 +259,10 @@ rm -rf %{buildroot}
 %{_javadir}/%{name}/plugin*
 
 %changelog
+* Wed Sep 8 2010 Alexander Kurtakov <akurtako@redhat.com> 0:2.6-6
+- BR maven-site-plugin.
+- Use javadoc:aggregate for multimodule projects.
+
 * Thu May 27 2010 Alexander Kurtakov <akurtako@redhat.com> 0:2.6-5
 - Add missing requires.
 - Drop modello patches not needed anymore.
