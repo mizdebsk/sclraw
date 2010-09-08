@@ -6,11 +6,11 @@
 
 # this needs to be exact version of maven-javadoc-plugin for
 # integration tests
-%global javadoc_plugin_version 2.4
+%global javadoc_plugin_version 2.7
 
 Name:           %{parent}-%{subname}
 Version:        1.5.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and Plexus
 Group:          Development/Libraries
@@ -111,37 +111,21 @@ Provides:       plexus-containers-component-api = %{version}-%{release}
 %description container-default
 %{summary}.
 
-%package component-metadata-javadoc
-Summary:        Javadoc for plexus-containers-component-metadata
+%package javadoc
+Summary:        API documentation for all plexus-containers packages
 Group:          Documentation
 Requires:       jpackage-utils
+Provides:       %{name}-component-annotations-javadoc = %{version}-%{release}
+Obsoletes:      %{name}-component-annotations-javadoc < %{version}-%{release}
+Provides:       %{name}-component-javadoc-javadoc = %{version}-%{release}
+Obsoletes:      %{name}-component-javadoc-javadoc < %{version}-%{release}
+Provides:       %{name}-component-metadata-javadoc = %{version}-%{release}
+Obsoletes:      %{name}-component-metadata-javadoc < %{version}-%{release}
+Provides:       %{name}-container-default-javadoc = %{version}-%{release}
+Obsoletes:      %{name}-container-default-javadoc < %{version}-%{release}
 
-%description component-metadata-javadoc
-API documentation for plexus-containers-component-metadata.
-
-%package component-javadoc-javadoc
-Summary:        Javadoc for plexus-containers-component-metadata-javadoc
-Group:          Documentation
-Requires:       jpackage-utils
-
-%description component-javadoc-javadoc
-API documentation for plexus-containers-component-javadoc.
-
-%package component-annotations-javadoc
-Summary:        Javadoc for plexus-containers-component-annotations
-Group:          Documentation
-Requires:       jpackage-utils
-
-%description component-annotations-javadoc
+%description javadoc
 %{summary}.
-
-%package container-default-javadoc
-Summary:        Javadoc for plexus-containers-container-default
-Group:          Documentation
-Requires:       jpackage-utils
-
-%description container-default-javadoc
-API documentation for plexus-containers-container-default
 
 %prep
 %setup -q -n plexus-containers-%{version}
@@ -180,7 +164,7 @@ mkdir -p $MAVEN_REPO_LOCAL
     mvn-jpp \
         -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
         -Dmaven2.jpp.depmap.file=%{SOURCE4} \
-        javadoc:javadoc
+        javadoc:aggregate
 %else
 export OPT_JAR_LIST="ant/ant-junit junit"
 pushd plexus-component-annotations
@@ -243,29 +227,9 @@ install -pm 644 \
 %add_to_maven_depmap org.codehaus.plexus containers-component-api %{version} JPP/%{parent} containers-container-default
 
 # javadoc
-install -d -m 755 \
- $RPM_BUILD_ROOT%{_javadocdir}/%{name}-component-annotations-%{version}
-%if %{with_maven}
-cp -pr plexus-component-annotations/target/site/apidocs/* \
- $RPM_BUILD_ROOT%{_javadocdir}/%{name}-component-annotations-%{version}
-%else
-# directory name is annotationsdocs while building with ant
-ls -l plexus-component-annotations/target/site/
-cp -pr plexus-component-annotations/target/site/annotationsdocs/* \
- $RPM_BUILD_ROOT%{_javadocdir}/%{name}-component-annotations-%{version}
-%endif
-ln -s %{name}-component-annotations-%{version} \
- $RPM_BUILD_ROOT%{_javadocdir}/%{parent}-containers-component-annotations
-
-for sub in container-default component-metadata component-javadoc;do
-    install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-$sub-%{version}
-
-     cp -pr plexus-$sub/target/site/apidocs/* \
-      $RPM_BUILD_ROOT%{_javadocdir}/%{name}-$sub-%{version}
-
-     ln -s %{name}-$sub-%{version} \
-      $RPM_BUILD_ROOT%{_javadocdir}/%{name}-$sub
-done
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name} # ghost symlink
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -309,27 +273,15 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_javadir}/%{parent}/containers-component-javadoc*
 
-%files component-annotations-javadoc
+%files javadoc
 %defattr(-,root,root,-)
-%doc %{_javadocdir}/plexus-containers-component-annotations-%{version}
-%doc %{_javadocdir}/plexus-containers-component-annotations
-
-%files container-default-javadoc
-%defattr(-,root,root,-)
-%doc %{_javadocdir}/plexus-containers-container-default-%{version}
-%doc %{_javadocdir}/plexus-containers-container-default
-
-%files component-metadata-javadoc
-%defattr(-,root,root,-)
-%doc %{_javadocdir}/plexus-containers-component-metadata-%{version}
-%doc %{_javadocdir}/plexus-containers-component-metadata
-
-%files component-javadoc-javadoc
-%defattr(-,root,root,-)
-%doc %{_javadocdir}/plexus-containers-component-javadoc-%{version}
-%doc %{_javadocdir}/plexus-containers-component-javadoc
+%doc %{_javadocdir}/*
 
 %changelog
+* Wed Sep  8 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.4-3
+- Use javadoc:aggregate
+- Merge javadoc subpackages into one -javadoc
+
 * Thu Jul 15 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.4-2
 - Fix maven depmaps
 
