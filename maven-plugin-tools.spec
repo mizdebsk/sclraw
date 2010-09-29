@@ -10,6 +10,7 @@ Epoch:          0
 #svn export http://svn.apache.org/repos/asf/maven/plugin-tools/tags/maven-plugin-tools-2.6 maven-plugin-tools-2.6
 #tar caf maven-plugin-tools-2.6.tar.xz maven-plugin-tools-2.6/
 Source0:        %{name}-%{version}.tar.xz
+Source1:        %{name}-depmap.xml
 
 # this patch should be upstreamed (together with updated pom.xml
 # dependency version on jtidy 8.0)
@@ -145,6 +146,7 @@ mvn-jpp \
         -e \
         -Dmaven2.jpp.mode=true \
         -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+        -Dmaven2.jpp.depmap.file=%{SOURCE1} \
         -Dmaven.test.skip=true \
         package javadoc:aggregate
 
@@ -266,6 +268,7 @@ rm -rf %{buildroot}
 %changelog
 * Wed Sep 29 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.6-7
 - Add patch for new jtidy
+- Add jtidy depmap
 
 * Wed Sep 8 2010 Alexander Kurtakov <akurtako@redhat.com> 0:2.6-6
 - BR maven-site-plugin.

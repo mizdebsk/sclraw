@@ -1,0 +1,16 @@
+<dependencies>
+	<dependency>
+	  <maven>
+		<groupId>net.sf.jtidy</groupId>
+		<artifactId>jtidy</artifactId>
+		<version>938</version>
+	  </maven>
+	  <jpp>
+		<groupId>JPP</groupId>
+		<artifactId>jtidy</artifactId>
+		<version>938</version>
+	  </jpp>
+	</dependency>
+
+</dependencies>
+
