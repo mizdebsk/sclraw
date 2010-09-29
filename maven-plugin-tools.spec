@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.6
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Maven Plugin Tools
 
 Group:          Development/Libraries
@@ -10,6 +10,10 @@ Epoch:          0
 #svn export http://svn.apache.org/repos/asf/maven/plugin-tools/tags/maven-plugin-tools-2.6 maven-plugin-tools-2.6
 #tar caf maven-plugin-tools-2.6.tar.xz maven-plugin-tools-2.6/
 Source0:        %{name}-%{version}.tar.xz
+
+# this patch should be upstreamed (together with updated pom.xml
+# dependency version on jtidy 8.0)
+Patch0:         0001-fix-for-new-jtidy.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch: noarch
@@ -67,7 +71,7 @@ Obsoletes: maven-shared-plugin-tools-api < 0:%{version}-%{release}
 Provides: maven-shared-plugin-tools-api = 0:%{version}-%{release}
 
 %description api
-The Maven Plugin Tools API provides an API to extract information from 
+The Maven Plugin Tools API provides an API to extract information from
 and generate documentation for Maven Plugins.
 
 %package beanshell
@@ -131,7 +135,8 @@ to include in the JAR. It is also used to generate Xdoc files for the Mojos as w
 plugin registry, the artifact metadata and a generic help goal.
 
 %prep
-%setup -q 
+%setup -q
+%patch0 -p1
 rm -fr src/site/site.xml
 
 %build
@@ -259,6 +264,9 @@ rm -rf %{buildroot}
 %{_javadir}/%{name}/plugin*
 
 %changelog
+* Wed Sep 29 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.6-7
+- Add patch for new jtidy
+
 * Wed Sep 8 2010 Alexander Kurtakov <akurtako@redhat.com> 0:2.6-6
 - BR maven-site-plugin.
 - Use javadoc:aggregate for multimodule projects.
