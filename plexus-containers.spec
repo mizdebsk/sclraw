@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and Plexus
 Group:          Development/Libraries
@@ -81,6 +81,7 @@ is like a J2EE application server, without all the baggage.
 Summary:        Component metadata from %{name}
 Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
+Requires:       plexus-cli
 
 %description component-metadata
 %{summary}.
@@ -278,6 +279,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Oct 11 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.4-4
+- Add plexus-cli to component-metadata Requires
+
 * Wed Sep  8 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.4-3
 - Use javadoc:aggregate
 - Merge javadoc subpackages into one -javadoc
