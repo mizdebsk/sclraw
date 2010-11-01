@@ -1,7 +1,7 @@
 
 Name:           maven-surefire
 Version:        2.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -219,6 +219,10 @@ install -pm 644 maven-failsafe-plugin/target/maven-failsafe-plugin*.jar $RPM_BUI
 %add_to_maven_depmap org.apache.maven.plugins maven-failsafe-plugin %{version} JPP maven-failsafe-plugin
 install -pm 644 maven-failsafe-plugin/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-maven-failsafe-plugin.pom
 
+install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-main.pom
+%add_to_maven_depmap org.apache.maven.surefire surefire %{version} JPP/maven-surefire main
+
+
 (cd $RPM_BUILD_ROOT%{_javadir}/ && for jar in *-%{version}*; \
   do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
 
@@ -293,6 +297,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Fri Oct 29 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.6-2
+- Add main pom.xml
+
 * Mon Aug 30 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.6-1
 - Rename subpackages to not repeat "maven" twice
 - Update to latest upstream version
