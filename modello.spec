@@ -31,7 +31,7 @@
 
 Name:           modello
 Version:        1.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT
@@ -40,7 +40,6 @@ URL:            http://modello.codehaus.org/
 # svn export https://svn.codehaus.org/modello/tags/modello-1.4
 # tar czf modello-1.4-src.tar.xz modello-1.4
 Source0:        %{name}-%{version}-src.tar.xz
-Source1:        modello.script
 
 Source2:        %{name}-jpp-depmap.xml
 
@@ -80,11 +79,13 @@ BuildRequires:  jpa_api = 3.0
 BuildRequires:  geronimo-parent-poms
 
 Requires:       classworlds >= 0:1.1
-Requires:       plexus-container-default
+Requires:       plexus-containers-container-default
 Requires:       plexus-build-api
 Requires:       plexus-utils
 Requires:       plexus-velocity
 Requires:       velocity
+Requires:       guava
+Requires:       xbean
 
 Requires:          jpackage-utils
 Requires(post):    jpackage-utils
@@ -141,17 +142,13 @@ mvn-jpp \
 %install
 rm -rf $RPM_BUILD_ROOT
 
-# poms
+# poms and depmap fragments
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
-for i in `find . -name pom.xml | grep -v \\\./pom.xml`; do
-        cp -p $i $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.`basename \`dirname $i\``.pom
-done
-
-# Depmap fragments
-for i in `find . -name pom.xml | grep -v \\\./pom.xml |  grep -v modello-plugins-sandbox`; do
+for i in `find . -name pom.xml -not -path ./pom.xml -not -path "*src/it/*"`; do
     # i is in format ..../artifactid/pom.xml
-    artifactname=`basename \`dirname $i\` | sed -e s:^modello-::g`
+    cp -p $i $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.`basename \`dirname $i\``.pom
 
+    artifactname=`basename \`dirname $i\` | sed -e s:^modello-::g`
     %add_to_maven_depmap org.codehaus.modello modello-$artifactname %{version} JPP/%{name} $artifactname
 done
 
@@ -160,7 +157,7 @@ cp -p pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.modello-modello.pom
 
 # script
 install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
-install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/%{name}
+%jpackage_script org.codehaus.modello.ModelloCli "" ""  "modello/core:modello/plugin-xpp3:modello/plugin-xml:guava:xbean:plexus/containers-container-default:plexus/utils:plexus/classworlds)" %{name} true
 
 # jars
 
@@ -198,6 +195,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Dec  1 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.4-3
+- Fix pom filenames (remove poms of integration tests) Resolves rhbz#655818
+- Use jpackage_script macro to generate script
+
 * Thu Aug 26 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.4-2
 - Remove dtdparser BR/R
 
