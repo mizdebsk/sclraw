@@ -1,7 +1,7 @@
 
 Name:           maven-surefire
 Version:        2.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -94,6 +94,7 @@ Plugin for generating reports from surefire test runs.
 %package provider-junit
 Summary:                JUnit3 provider for Maven Surefire
 Group:                  Development/Libraries
+Requires:               junit
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4O
 #Obsoletes:              maven-surefire-junit = 2.3.1
@@ -107,6 +108,7 @@ JUnit3 provider for Maven Surefire.
 Summary:                JUnit4 provider for Maven Surefire
 Group:                  Development/Libraries
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Requires:               junit4
 
 %description provider-junit4
 JUnit4 provider for Maven Surefire.
@@ -115,6 +117,7 @@ JUnit4 provider for Maven Surefire.
 Summary:                TestNG provider for Maven Surefire
 Group:                  Development/Libraries
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Requires:               testng
 
 %description provider-testng
 TestNG provider for Maven Surefire.
@@ -297,6 +300,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Wed Dec  8 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.6-3
+- Add proper Requires on junit/junit4/testng to providers
+
 * Fri Oct 29 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.6-2
 - Add main pom.xml
 
