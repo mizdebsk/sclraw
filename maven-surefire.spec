@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.7.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -188,7 +188,7 @@ install -pm 644 surefire-booter/target/surefire-booter-*.jar $RPM_BUILD_ROOT%{_j
 install -pm 644 surefire-booter/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-booter.pom
 
 install -pm 644 surefire-providers/surefire-junit/target/surefire-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit.jar
-%add_to_maven_depmap org.apache.maven.surefire surefire-junit %{version} JPP/maven-surefire junit
+%add_to_maven_depmap org.apache.maven.surefire surefire-junit3 %{version} JPP/maven-surefire junit
 install -pm 644 surefire-providers/surefire-junit/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit.pom
 
 install -pm 644 surefire-providers/surefire-junit4/target/surefire-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit4.jar
@@ -278,6 +278,9 @@ ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Jan 3 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.7.1-2
+- Fix junit3 depmap.
+
 * Wed Dec 29 2010 Alexander Kurtakov <akurtako@redhat.com> 0:2.7.1-1
 - Update to 2.7.1.
 
