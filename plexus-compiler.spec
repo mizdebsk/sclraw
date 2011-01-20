@@ -28,254 +28,146 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define grname      plexus
+%global parent  plexus
+%global dirhash a7f8290
+%global githash 7ca7d76
 
 Name:       plexus-compiler
-Version:    1.5.2
-Release:    4.3%{?dist}
+Version:    1.8
+Release:    1%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 License:    MIT
 Group:      Development/Java
 URL:        http://plexus.codehaus.org/
-# svn export svn://svn.plexus.codehaus.org/plexus/tags/plexus-compiler-1.5.2
-# tar czf plexus-compiler-1.5.2.tar.gz plexus-compiler-1.5.2
-Source0:    plexus-compiler-1.5.2.tar.gz
 
-Source1:    plexus-compiler-1.5.2-api-build.xml
-Source2:    plexus-compiler-1.5.2-compilers-aspectj-build.xml
-Source3:    plexus-compiler-1.5.2-compilers-csharp-build.xml
-Source4:    plexus-compiler-1.5.2-compilers-eclipse-build.xml
-Source5:    plexus-compiler-1.5.2-compilers-javac-build.xml
-Source6:    plexus-compiler-1.5.2-compilers-jikes-build.xml
-Source7:    plexus-compiler-1.5.2-compilers-parent-build.xml
-Source8:    plexus-compiler-1.5.2-manager-build.xml
-Source9:    plexus-compiler-1.5.2-parent-build.xml
-Source10:   plexus-compiler-1.5.2-test-build.xml
+# wget  https://nodeload.github.com/sonatype/plexus-components/tarball/plexus-compiler-1.8
+Source0:    sonatype-plexus-components-%{name}-%{version}-0-g%{githash}.tar.gz
 
-Patch0:     plexus-compiler-1.5.2-JikesCompiler.patch
-
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Patch0:     0001-Remove-aspecj-support.patch
 
 BuildArch:      noarch
-BuildRequires:  jpackage-utils >= 0:1.6
-BuildRequires:  ant >= 0:1.6
-BuildRequires:  ant-nodeps >= 0:1.6
+BuildRequires:  maven
+BuildRequires:  jpackage-utils
 BuildRequires:  junit
 BuildRequires:  classworlds
 BuildRequires:  eclipse-ecj
 BuildRequires:  plexus-container-default
 BuildRequires:  plexus-utils
-#BuildRequires:  aspectj >= 0:1.2
-#BuildRequires:  junit
-#Requires:       aspectj >= 0:1.2
+BuildRequires:  plexus-containers-component-metadata
+
 Requires:       classworlds
-Requires:       eclipse-ecj
 Requires:       plexus-container-default
 Requires:       plexus-utils
 
 %description
-Plexus Compiler adds support for using various compilers from a unified api.
+Plexus Compiler adds support for using various compilers from a
+unified api. Support for javac is available in main package. For
+additional compilers see %{name}-extras package.
+
+%package extras
+Summary:        Extra compiler support for %{name}
+Group:          Development/Libraries
+Requires:       jpackage-utils
+Requires:       eclipse-ecj
+Requires:       %{name} = %{version}-%{release}
+
+%description extras
+Additional support for csharp, eclipse and jikes compilers
 
 %package javadoc
 Summary:        Javadoc for %{name}
 Group:          Documentation
+Requires:       jpackage-utils
 
 %description javadoc
-Javadoc for %{name}.
+API documentation for %{name}.
 
 %prep
-%setup -q -n plexus-compiler-1.5.2
-cp %{SOURCE1} plexus-compiler-api/build.xml
-cp %{SOURCE2} plexus-compilers/plexus-compiler-aspectj/build.xml
-cp %{SOURCE3} plexus-compilers/plexus-compiler-csharp/build.xml
-cp %{SOURCE4} plexus-compilers/plexus-compiler-eclipse/build.xml
-cp %{SOURCE5} plexus-compilers/plexus-compiler-javac/build.xml
-cp %{SOURCE6} plexus-compilers/plexus-compiler-jikes/build.xml
-cp %{SOURCE7} plexus-compilers/build.xml
-cp %{SOURCE8} plexus-compiler-manager/build.xml
-cp %{SOURCE9} build.xml
-cp %{SOURCE10} plexus-compiler-test/build.xml
-
-%patch0 -b .sav
+%setup -q -n sonatype-plexus-components-%{dirhash}
+%patch0 -p1
 
 %build
-pushd plexus-compiler-api
-mkdir -p target/lib
-build-jar-repository -s -p target/lib \
-    plexus/utils \
-    plexus/container-default \
-    classworlds
-
-ant jar javadoc
-popd
-
-pushd plexus-compiler-manager
-mkdir -p target/lib
-cp ../plexus-compiler-api/target/plexus-compiler-api-1.5.2.jar target/lib/
-build-jar-repository -s -p target/lib \
-    plexus/container-default \
-    plexus/utils \
-    classworlds
-ant jar javadoc
-popd
-
-#pushd plexus-compiler-test
-## requires maven2
-#mkdir -p target/lib
-#cp ../plexus-compiler-api/target/plexus-compiler-api-1.5.2.jar target/lib/
-#build-jar-repository -s -p target/lib \
-#    maven \
-#    plexus/utils \
-#    plexus/container-default \
-#    classworlds \
-#    junit
-#ant jar javadoc
-#popd
-
-pushd plexus-compilers
-
-# FIXME: aspectj compiler disabled until Fedora gets aspectj. 
-# NOTE: Upstream does NOT build this by default anyways..
-
-# requires aspectj-1.5.0
-#pushd plexus-compiler-aspectj
-# tests require plexus-compiler-test, which requires maven2 in turn
-#rm -rf src/test/java/*
-#
-#mkdir -p target/lib
-#cp ../../plexus-compiler-api/target/plexus-compiler-api-1.5.2.jar target/lib/
-#build-jar-repository -s -p target/lib \
-#    plexus/container-default \
-#    plexus/utils \
-#    classworlds \
-#    aspectjtools \
-#    aspectjrt
-#ant jar javadoc
-#popd
-
-pushd plexus-compiler-csharp
-mkdir -p target/lib
-cp ../../plexus-compiler-api/target/plexus-compiler-api-1.5.2.jar target/lib/
-build-jar-repository -s -p target/lib \
-    plexus/utils \
-    plexus/container-default \
-    classworlds \
-    ant \
-    ant/ant-nodeps
-ant jar javadoc
-popd
-pushd plexus-compiler-eclipse
-# tests require plexus-compiler-test, which requires maven2 in turn
-rm -rf src/test/java/*
-#
-mkdir -p target/lib
-cp ../../plexus-compiler-api/target/plexus-compiler-api-1.5.2.jar target/lib/
-build-jar-repository -s -p target/lib \
-    plexus/utils \
-    plexus/container-default \
-    classworlds \
-    jdtcore
-ant jar javadoc
-popd
-pushd plexus-compiler-javac
-# tests require plexus-compiler-test, which requires maven2 in turn
-rm -rf src/test/java/*
-#
-mkdir -p target/lib
-cp ../../plexus-compiler-api/target/plexus-compiler-api-1.5.2.jar target/lib/
-build-jar-repository -s -p target/lib \
-    plexus/utils \
-    plexus/container-default \
-    classworlds
-ant jar javadoc
-popd
-pushd plexus-compiler-jikes
-# tests require plexus-compiler-test, which requires maven2 in turn
-rm -rf src/test/java/*
-#
-mkdir -p target/lib
-cp ../../plexus-compiler-api/target/plexus-compiler-api-1.5.2.jar target/lib/
-build-jar-repository -s -p target/lib \
-    plexus/utils \
-    plexus/container-default \
-    classworlds
-ant jar javadoc
-popd
-popd
+mvn-local \
+  -Dmaven.test.failure.ignore=true \
+  install javadoc:aggregate
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 # jars
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/plexus
-install -pm 644 %{name}-api/target/%{name}-api-%{version}.jar \
-  $RPM_BUILD_ROOT%{_javadir}/%{grname}/compiler-api-%{version}.jar
-#install -pm 644 %{name}-test/target/%{name}-test-%{version}.jar \
-#  $RPM_BUILD_ROOT%{_javadir}/%{grname}/compiler-test-%{version}.jar
-install -pm 644 %{name}-manager/target/%{name}-manager-%{version}.jar \
-  $RPM_BUILD_ROOT%{_javadir}/%{grname}/compiler-manager-%{version}.jar
-#install -pm 644 %{grname}-compilers/plexus-compiler-aspectj/target/%{name}-aspectj-%{version}.jar \
-#  $RPM_BUILD_ROOT%{_javadir}/%{grname}/compiler-aspectj-%{version}.jar
-install -pm 644 %{grname}-compilers/plexus-compiler-csharp/target/%{name}-csharp-%{version}.jar \
-  $RPM_BUILD_ROOT%{_javadir}/%{grname}/compiler-csharp-%{version}.jar
-install -pm 644 %{grname}-compilers/plexus-compiler-eclipse/target/%{name}-eclipse-%{version}.jar \
-  $RPM_BUILD_ROOT%{_javadir}/%{grname}/compiler-eclipse-%{version}.jar
-install -pm 644 %{grname}-compilers/plexus-compiler-javac/target/%{name}-javac-%{version}.jar \
-  $RPM_BUILD_ROOT%{_javadir}/%{grname}/compiler-javac-%{version}.jar
-install -pm 644 %{grname}-compilers/plexus-compiler-jikes/target/%{name}-jikes-%{version}.jar \
-  $RPM_BUILD_ROOT%{_javadir}/%{grname}/compiler-jikes-%{version}.jar
-(cd $RPM_BUILD_ROOT%{_javadir}/%{grname}
-    for jar in *-%{version}*; do 
-        ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; 
-    done
-)
+install -d -m 755 %{buildroot}%{_javadir}/%{parent}
+install -d -m 755 %{buildroot}%{_mavenpomdir}
 
-# javadoc
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/api
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/manager
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/test
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers
-#install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers/aspectj
-install -d -m 755 \
-    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers/csharp
-install -d -m 755 \
-    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers/eclipse
-install -d -m 755 \
-    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers/javac
-install -d -m 755 \
-    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers/jikes
-cp -pr %{name}-api/target/docs/apidocs/* \
-    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/api
-cp -pr %{name}-manager/target/docs/apidocs/* \
-    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/manager
-#cp -pr %{name}-test/target/docs/apidocs/* \
-#    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/test
-#cp -pr %{grname}-compilers/%{name}-aspectj/target/docs/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers/aspectj
-cp -pr %{grname}-compilers/%{name}-csharp/target/docs/apidocs/* \
-    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers/csharp
-cp -pr %{grname}-compilers/%{name}-eclipse/target/docs/apidocs/* \
-    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers/eclipse
-cp -pr %{grname}-compilers/%{name}-javac/target/docs/apidocs/* \
-    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers/javac
-cp -pr %{grname}-compilers/%{name}-jikes/target/docs/apidocs/* \
-    $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/compilers/jikes
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name} # ghost symlink
+for mod in plexus-compiler-{api,test,manager}; do
+    jarname=${mod/plexus-}
+    install -pm 644 $mod/target/${mod}-%{version}.jar \
+                    %{buildroot}%{_javadir}/%{parent}/$jarname.jar
+
+    install -pm 644 $mod/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-$jarname.pom
+    %add_to_maven_depmap org.codehaus.plexus $mod %{version} JPP/%{parent} $jarname
+done
+
+pushd plexus-compilers
+for mod in plexus-compiler-{csharp,eclipse,jikes,javac}; do
+    jarname=${mod/plexus-}
+    install -pm 644 $mod/target/${mod}-%{version}.jar \
+                    %{buildroot}%{_javadir}/%{parent}/$jarname.jar
+
+    install -pm 644 $mod/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-$jarname.pom
+    %add_to_maven_depmap org.codehaus.plexus $mod %{version} JPP/%{parent} $jarname
+done
+
+install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-compilers.pom
+%add_to_maven_depmap org.codehaus.plexus plexus-compilers %{version} JPP/%{parent} compilers
+popd
+
+install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-compiler.pom
+%add_to_maven_depmap org.codehaus.plexus plexus-compiler %{version} JPP/%{parent} compiler
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+# javadocs
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+
+%pre javadoc
+# workaround for rpm bug, can be removed in F-17
+[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
+rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
+
+%post
+%update_maven_depmap
+
+%postun
+%update_maven_depmap
+
 
 %files
 %defattr(-,root,root,-)
-%{_javadir}/%{grname}/*
+%{_javadir}/%{parent}/compiler-api.jar
+%{_javadir}/%{parent}/compiler-manager.jar
+%{_javadir}/%{parent}/compiler-test.jar
+%{_javadir}/%{parent}/compiler-javac.jar
+%{_mavenpomdir}/*.pom
+%{_mavendepmapfragdir}/%{name}
+
+%files extras
+%defattr(-,root,root,-)
+%{_javadir}/%{parent}/compiler-csharp.jar
+%{_javadir}/%{parent}/compiler-eclipse.jar
+%{_javadir}/%{parent}/compiler-jikes.jar
 
 %files javadoc
 %defattr(-,root,root,-)
-%doc %{_javadocdir}/*
+%doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Jan 20 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.8-1
+- Update to latest version (1.8)
+- Create extras subpackage with optional compilers
+- Provide maven depmaps
+- Versionless jars & javadocs
+- Use maven 3 to build
+
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5.2-4.3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
