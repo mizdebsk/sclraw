@@ -88,9 +88,12 @@ API documentation for %{name}.
 %patch0 -p1
 
 %build
-mvn-local \
-  -Dmaven.test.failure.ignore=true \
-  install javadoc:aggregate
+export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
+mkdir -p $MAVEN_REPO_LOCAL
+mvn-jpp -e \
+        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+        -Dmaven.test.skip=true \
+        install javadoc:aggregate
 
 
 %install
@@ -166,7 +169,6 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 - Create extras subpackage with optional compilers
 - Provide maven depmaps
 - Versionless jars & javadocs
-- Use maven 3 to build
 
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5.2-4.3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
