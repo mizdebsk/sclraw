@@ -13,7 +13,7 @@ Source0:        %{name}-%{version}.tar.xz
 BuildArch: noarch
 
 BuildRequires: java-devel >= 1:1.6.0
-BuildRequires: maven2
+BuildRequires: maven
 BuildRequires: maven-plugin-plugin
 BuildRequires: maven-compiler-plugin
 BuildRequires: maven-jar-plugin
