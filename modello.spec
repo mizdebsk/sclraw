@@ -27,26 +27,22 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-%define __jar_repack %{nil}
 
 Name:           modello
-Version:        1.4
-Release:        3%{?dist}
+Version:        1.4.1
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT
 Group:          Development/Libraries
 URL:            http://modello.codehaus.org/
-# svn export https://svn.codehaus.org/modello/tags/modello-1.4
-# tar czf modello-1.4-src.tar.xz modello-1.4
-Source0:        %{name}-%{version}-src.tar.xz
+Source0:        http://repo2.maven.org/maven2/org/codehaus/%{name}/%{name}/%{version}/%{name}-%{version}-source-release.zip
 
 Source2:        %{name}-jpp-depmap.xml
 
 Patch0:         0001-Use-public-function-for-component-lookup.patch
 
 BuildArch:      noarch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  ant >= 0:1.6
 BuildRequires:  jpackage-utils >= 0:1.7.2
@@ -57,7 +53,7 @@ BuildRequires:  maven-install-plugin
 BuildRequires:  maven-jar-plugin
 BuildRequires:  maven-javadoc-plugin
 BuildRequires:  maven-resources-plugin
-BuildRequires:  maven-surefire-maven-plugin
+BuildRequires:  maven-surefire-plugin
 BuildRequires:  maven-site-plugin
 BuildRequires:  maven-surefire-provider-junit
 BuildRequires:  maven-dependency-plugin
@@ -123,7 +119,7 @@ API documentation for %{name}.
 # fix test compilation failure with new plexus-containers
 # not really needed now because we are skipping tests for other
 # problems...
-%patch0 -p1
+#%%patch0 -p1
 
 
 %build
@@ -140,8 +136,6 @@ mvn-jpp \
         install javadoc:aggregate
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 # poms and depmap fragments
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
 for i in `find . -name pom.xml -not -path ./pom.xml -not -path "*src/it/*"`; do
@@ -163,18 +157,13 @@ install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
 
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
 for jar in $(find -type f -name "*-%{version}.jar" | grep -E target/.*.jar); do
-        install -m 644 $jar $RPM_BUILD_ROOT%{_javadir}/%{name}/`basename $jar |sed -e s:modello-::g`
+        install -m 644 $jar $RPM_BUILD_ROOT%{_javadir}/%{name}/`basename $jar |sed -e s:modello-::g|sed -e s:-%{version}::g`
 done
-
-(cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-%{version}*; do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
 
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 (cd $RPM_BUILD_ROOT%{_javadocdir} && ln -sf %{name}-%{version} %{name})
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post
 %update_maven_depmap
@@ -195,6 +184,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Jan 26 2011 Alexander Kurtakov <akurtako@redhat.com> 0:1.4.1-1
+- Update to upstream 1.4.1.
+
 * Wed Dec  1 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.4-3
 - Fix pom filenames (remove poms of integration tests) Resolves rhbz#655818
 - Use jpackage_script macro to generate script
@@ -267,4 +259,3 @@ rm -rf $RPM_BUILD_ROOT
 
 * Mon Nov 07 2005 Ralph Apel <r.apel at r-apel.de> - 0:1.0-0.a4.1jpp
 - First JPackage build
-

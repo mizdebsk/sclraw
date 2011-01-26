@@ -12,19 +12,6 @@
 	</jpp>
   </dependency>
   <dependency>
-	<maven>
-	  <groupId>wutka</groupId>
-	  <artifactId>dtdparser</artifactId>
-	  <version>1.21</version>
-	</maven>
-	<jpp>
-	  <groupId>JPP</groupId>
-	  <artifactId>dtdparser</artifactId>
-	  <version>1.21</version>
-	</jpp>
-  </dependency>
-
-  <dependency>
       <maven>
           <groupId>org.codehaus.woodstox</groupId>
           <artifactId>wstx-asl</artifactId>
