@@ -30,7 +30,7 @@
 
 Name:           modello
 Version:        1.4.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT
@@ -184,6 +184,9 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 %{_javadocdir}/%{name}
 
 %changelog
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.4.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Wed Jan 26 2011 Alexander Kurtakov <akurtako@redhat.com> 0:1.4.1-1
 - Update to upstream 1.4.1.
 
