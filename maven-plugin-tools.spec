@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.6
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Maven Plugin Tools
 
 Group:          Development/Libraries
@@ -264,6 +264,9 @@ rm -rf %{buildroot}
 %{_javadir}/%{name}/plugin*
 
 %changelog
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.6-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Thu Sep 30 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.6-8
 - Remove jtidy depmap (not needed anymore)
 
