@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        1.0
-Release:        0.2.a5%{?dist}
+Release:        0.3.a5%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
@@ -106,6 +106,9 @@ rm -rf target/site/api*
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-0.3.a5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Wed Dec 23 2009 Alexander Kurtakov <akurtako@redhat.com> 1.0-0.2.a5
 - Fix review comments.
 
