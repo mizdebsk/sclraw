@@ -34,7 +34,7 @@
 
 Name:       plexus-compiler
 Version:    1.8
-Release:    1%{?dist}
+Release:    2%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 License:    MIT
@@ -164,6 +164,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Thu Jan 20 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.8-1
 - Update to latest version (1.8)
 - Create extras subpackage with optional compilers
