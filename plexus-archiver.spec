@@ -30,7 +30,7 @@
 
 Name:           plexus-archiver
 Version:        1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
@@ -138,6 +138,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Wed Oct 6 2010 Alexander Kurtakov <akurtako@redhat.com> 0:1.1-1
 - Update to 1.1.
 
