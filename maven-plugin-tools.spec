@@ -1,24 +1,22 @@
 Name:           maven-plugin-tools
-Version:        2.6
-Release:        9%{?dist}
+Version:        2.7
+Release:        1%{?dist}
 Summary:        Maven Plugin Tools
 
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugin-tools/
 Epoch:          0
-#svn export http://svn.apache.org/repos/asf/maven/plugin-tools/tags/maven-plugin-tools-2.6 maven-plugin-tools-2.6
-#tar caf maven-plugin-tools-2.6.tar.xz maven-plugin-tools-2.6/
-Source0:        %{name}-%{version}.tar.xz
+Source0:        http://repo2.maven.org/maven2/org/apache/maven/plugin-tools/%{name}/%{version}/%{name}-%{version}-source-release.zip
 
 # this patch should be upstreamed (together with updated pom.xml
 # dependency version on jtidy 8.0)
 Patch0:         0001-fix-for-new-jtidy.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch: noarch
 
 BuildRequires: java-devel >= 1:1.6.0
+BuildRequires: maven
 BuildRequires: maven-install-plugin
 BuildRequires: maven-compiler-plugin
 BuildRequires: maven-resources-plugin
@@ -35,7 +33,7 @@ BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-shared-reporting-impl
 BuildRequires: maven-test-tools
 BuildRequires: maven-plugin-testing-harness
-Requires: maven2
+Requires: maven
 Requires:       jpackage-utils
 Requires:       java
 Requires(post):       jpackage-utils
@@ -136,41 +134,31 @@ plugin registry, the artifact metadata and a generic help goal.
 
 %prep
 %setup -q
-%patch0 -p1
-rm -fr src/site/site.xml
+%patch0
 
 %build
 export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mvn-jpp \
-        -e \
-        -Dmaven2.jpp.mode=true \
-        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-        -Dmaven.test.skip=true \
+mvn-rpmbuild \
         package javadoc:aggregate
 
 %install
-rm -rf %{buildroot}
-
 # jars
 install -d -m 755 %{buildroot}%{_javadir}/%{name}
 
 install -pm 644 maven-plugin-tools-ant/target/maven-plugin-tools-ant-%{version}.jar \
-                %{buildroot}%{_javadir}/maven-plugin-tools/ant-%{version}.jar
+                %{buildroot}%{_javadir}/maven-plugin-tools/ant.jar
 install -pm 644 maven-plugin-tools-api/target/maven-plugin-tools-api-%{version}.jar \
-                %{buildroot}%{_javadir}/maven-plugin-tools/api-%{version}.jar
+                %{buildroot}%{_javadir}/maven-plugin-tools/api.jar
 install -pm 644 maven-plugin-tools-beanshell/target/maven-plugin-tools-beanshell-%{version}.jar \
-                %{buildroot}%{_javadir}/maven-plugin-tools/beanshell-%{version}.jar
+                %{buildroot}%{_javadir}/maven-plugin-tools/beanshell.jar
 install -pm 644 maven-plugin-tools-java/target/maven-plugin-tools-java-%{version}.jar \
-                %{buildroot}%{_javadir}/maven-plugin-tools/java-%{version}.jar
+                %{buildroot}%{_javadir}/maven-plugin-tools/java.jar
 install -pm 644 maven-plugin-tools-javadoc/target/maven-plugin-tools-javadoc-%{version}.jar \
-                %{buildroot}%{_javadir}/maven-plugin-tools/javadoc-%{version}.jar
+                %{buildroot}%{_javadir}/maven-plugin-tools/javadoc.jar
 install -pm 644 maven-plugin-tools-model/target/maven-plugin-tools-model-%{version}.jar \
-                %{buildroot}%{_javadir}/maven-plugin-tools/model-%{version}.jar
+                %{buildroot}%{_javadir}/maven-plugin-tools/model.jar
 install -pm 644 maven-plugin-plugin/target/maven-plugin-plugin-%{version}.jar \
-                %{buildroot}%{_javadir}/maven-plugin-tools/plugin-%{version}.jar
-
-(cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-%{version}*; \
-  do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
+                %{buildroot}%{_javadir}/maven-plugin-tools/plugin.jar
 
 # pom
 install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
@@ -208,20 +196,20 @@ install -pm 644 maven-plugin-plugin/pom.xml \
 %add_to_maven_depmap org.apache.maven.plugins maven-plugin-plugin %{version} JPP/%{name} plugin
 
 # javadoc
-install -d -m 755 %{buildroot}%{_javadocdir}/%{name}-%{version}
+install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
 
-cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}-%{version}/
+cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}/
 
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+%pre javadoc
+# workaround for rpm bug, can be removed in F-17
+[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
+rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
 %post
 %update_maven_depmap
 
 %postun
 %update_maven_depmap
-
-%clean
-rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
@@ -231,7 +219,6 @@ rm -rf %{buildroot}
 
 %files javadocs
 %defattr(-,root,root,-)
-%{_javadocdir}/%{name}-%{version}
 %{_javadocdir}/%{name}
 
 %files ant
@@ -249,7 +236,6 @@ rm -rf %{buildroot}
 %files java
 %defattr(-,root,root,-)
 %{_javadir}/%{name}/java.*
-%{_javadir}/%{name}/java-*
 
 %files javadoc
 %defattr(-,root,root,-)
@@ -264,6 +250,10 @@ rm -rf %{buildroot}
 %{_javadir}/%{name}/plugin*
 
 %changelog
+* Sat Feb 12 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.7-1
+- Update to new upstream release.
+- Adapt to current guidelines.
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.6-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

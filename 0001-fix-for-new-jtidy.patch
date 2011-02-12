@@ -1,17 +1,5 @@
-From 5fdd641a5c85c65338ddb8c6ed3ffbfef46f62b0 Mon Sep 17 00:00:00 2001
-From: Stanislav Ochotnicky <sochotnicky@redhat.com>
-Date: Wed, 29 Sep 2010 13:25:06 +0200
-Subject: [PATCH] fix for new jtidy
-
----
- maven-plugin-tools-api/pom.xml                     |    4 ++--
- .../maven/tools/plugin/util/PluginUtils.java       |    3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/maven-plugin-tools-api/pom.xml b/maven-plugin-tools-api/pom.xml
-index e05a1fc..6525863 100644
---- a/maven-plugin-tools-api/pom.xml
-+++ b/maven-plugin-tools-api/pom.xml
+--- maven-plugin-tools-api/pom.xml.orig	2010-05-01 15:49:32.000000000 +0300
++++ maven-plugin-tools-api/pom.xml	2011-02-12 17:30:20.937431517 +0200
 @@ -83,9 +83,9 @@
  
      <!-- misc -->
@@ -24,10 +12,8 @@ index e05a1fc..6525863 100644
      </dependency>
  
      <!-- test -->
-diff --git a/maven-plugin-tools-api/src/main/java/org/apache/maven/tools/plugin/util/PluginUtils.java b/maven-plugin-tools-api/src/main/java/org/apache/maven/tools/plugin/util/PluginUtils.java
-index f89c036..09e25fe 100644
---- a/maven-plugin-tools-api/src/main/java/org/apache/maven/tools/plugin/util/PluginUtils.java
-+++ b/maven-plugin-tools-api/src/main/java/org/apache/maven/tools/plugin/util/PluginUtils.java
+--- maven-plugin-tools-api/src/main/java/org/apache/maven/tools/plugin/util/PluginUtils.java.orig	2010-05-01 15:49:32.000000000 +0300
++++ maven-plugin-tools-api/src/main/java/org/apache/maven/tools/plugin/util/PluginUtils.java	2011-02-12 17:32:13.115079407 +0200
 @@ -265,7 +265,8 @@ public final class PluginUtils
          tidy.setDocType( "loose" );
          tidy.setXHTML( true );
@@ -38,6 +24,3 @@ index f89c036..09e25fe 100644
          tidy.setMakeClean( true );
          tidy.setNumEntities( true );
          tidy.setQuoteNbsp( false );
--- 
-1.7.2.3
-
