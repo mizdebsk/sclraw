@@ -9,26 +9,22 @@
 %global javadoc_plugin_version 2.7
 
 Name:           %{parent}-%{subname}
-Version:        1.5.4
-Release:        5%{?dist}
+Version:        1.5.5
+Release:        1%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and Plexus
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/
 # svn export \
-#  http://svn.codehaus.org/plexus/plexus-containers/tags/plexus-containers-1.5.4
-# tar caf plexus-containers-1.5.4.tar.xz plexus-containers-1.5.4
+#  http://svn.codehaus.org/plexus/plexus-containers/tags/plexus-containers-1.5.5
+# tar caf plexus-containers-1.5.5.tar.xz plexus-containers-1.5.5
 Source0:        %{name}-%{version}.tar.xz
 Source1:        plexus-container-default-build.xml
 Source2:        plexus-component-annotations-build.xml
 Source3:        plexus-containers-settings.xml
-Source4:        %{name}.depmap
 
-Patch0:         plexus-containers-javadoc-junit-link.patch
-Patch1:         plexus-containers-pom.patch
-Patch2:         plexus-containers-test-oom.patch
+Patch0:         plexus-containers-test-oom.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 
@@ -134,10 +130,7 @@ Obsoletes:      %{name}-container-default-javadoc < %{version}-%{release}
 cp %{SOURCE1} plexus-container-default/build.xml
 cp %{SOURCE2} plexus-component-annotations/build.xml
 
-# Fixit: update patch
-#%patch0 -b .sav0
-%patch1
-%patch2
+%patch0
 
 # to prevent ant from failing
 mkdir -p plexus-component-annotations/src/test/java
@@ -151,9 +144,8 @@ export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
 mkdir -p $MAVEN_REPO_LOCAL
 
 %if %{with_maven}
-    mvn-jpp \
+    mvn-rpmbuild \
         -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-        -Dmaven2.jpp.depmap.file=%{SOURCE4} \
         -Dmaven.test.skip=true \
         install
 
@@ -162,9 +154,8 @@ mkdir -p $MAVEN_REPO_LOCAL
         sha1sum $file | awk '{print $1}' > $ile.sha1
     done
 
-    mvn-jpp \
+    mvn-rpmbuild \
         -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-        -Dmaven2.jpp.depmap.file=%{SOURCE4} \
         javadoc:aggregate
 %else
 export OPT_JAR_LIST="ant/ant-junit junit"
@@ -186,20 +177,16 @@ popd
 %endif
 
 %install
-rm -rf $RPM_BUILD_ROOT
 # jars
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/plexus
 install -pm 644 plexus-container-default/target/*.jar \
- $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-container-default-%{version}.jar
+ $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-container-default.jar
 install -pm 644 plexus-component-annotations/target/*.jar \
- $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-component-annotations-%{version}.jar
+ $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-component-annotations.jar
 install -pm 644 plexus-component-metadata/target/*.jar \
- $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-component-metadata-%{version}.jar
+ $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-component-metadata.jar
 install -pm 644 plexus-component-annotations/target/*.jar \
- $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-component-javadoc-%{version}.jar
-
-(cd $RPM_BUILD_ROOT%{_javadir}/%{parent} && for jar in *-%{version}*; \
-  do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
+ $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-component-javadoc.jar
 
 # pom
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
@@ -228,12 +215,14 @@ install -pm 644 \
 %add_to_maven_depmap org.codehaus.plexus containers-component-api %{version} JPP/%{parent} containers-container-default
 
 # javadoc
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name} # ghost symlink
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+%pre javadoc
+# workaround for rpm bug, can be removed in F-18
+[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
+rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
+
 
 %post component-metadata
 %update_maven_depmap
@@ -256,7 +245,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %{_mavenpomdir}/*
-%{_mavendepmapfragdir}
+%{_mavendepmapfragdir}/%{name}
 
 %files component-annotations
 %defattr(-,root,root,-)
@@ -279,6 +268,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_javadocdir}/*
 
 %changelog
+* Fri Feb 25 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-1
+- Update to latest upstream
+- Remove obsolete patches
+- Use maven 3 to build
+- Packaging fixes
+- Versionless jars & javadocs
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.4-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
