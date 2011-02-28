@@ -28,19 +28,19 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define parent plexus
-%define subname utils
+%global parent plexus
+%global subname utils
 
 Name:           plexus-utils
-Version:        2.0.5
-Release:        3%{?dist}
+Version:        2.0.6
+Release:        1%{?dist}
 Summary:        Plexus Common Utilities
 License:        ASL 1.1 and ASL 2.0 and MIT
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/
-Source0:        plexus-utils-%{version}.tar.gz
-# svn export http://svn.codehaus.org/plexus/plexus-utils/tags/plexus-utils-2.0.1/
-Patch0:         plexus-utils-remove-release-plugin.patch
+# git clone git://github.com/sonatype/sisu
+# git archive --prefix="plexus-utils-2.0.6/" --format=tar plexus-utils-2.0.6 | bzip2 > plexus-utils-2.0.6.tar.bz2
+Source0:        plexus-utils-%{version}.tar.bz2
 
 BuildArch:      noarch
 BuildRequires:  jpackage-utils >= 0:1.6
@@ -79,15 +79,9 @@ Javadoc for %{name}.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
-export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mkdir -p $MAVEN_REPO_LOCAL
-
-mvn-jpp \
-    -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-    install javadoc:javadoc
+mvn-rpmbuild install javadoc:javadoc
 
 %install
 # jars
@@ -129,6 +123,11 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Mon Feb 28 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.0.6-1
+- Update to 2.0.6
+- Remove obsolete patches
+- Use maven 3 to build
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
