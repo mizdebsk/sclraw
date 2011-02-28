@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and Plexus
 Group:          Development/Libraries
@@ -30,7 +30,7 @@ BuildArch:      noarch
 
 BuildRequires:  jpackage-utils >= 0:1.7.3
 %if %{with_maven}
-BuildRequires:  maven2
+BuildRequires:  maven
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-install-plugin
 BuildRequires:  maven-invoker-plugin
@@ -140,23 +140,15 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 
 %build
 
-export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mkdir -p $MAVEN_REPO_LOCAL
-
 %if %{with_maven}
-    mvn-rpmbuild \
-        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-        -Dmaven.test.skip=true \
-        install
+    mvn-rpmbuild -Dmaven.test.skip=true install
 
     # for integration tests ran during javadoc:javadoc
     for file in $MAVEN_REPO_LOCAL/org/apache/maven/plugins/maven-javadoc-plugin/%{javadoc_plugin_version}/*;do
         sha1sum $file | awk '{print $1}' > $ile.sha1
     done
 
-    mvn-rpmbuild \
-        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-        javadoc:aggregate
+    mvn-rpmbuild javadoc:aggregate
 %else
 export OPT_JAR_LIST="ant/ant-junit junit"
 pushd plexus-component-annotations
@@ -268,6 +260,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Feb 28 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-2
+- Remove unneeded env var definitions
+
 * Fri Feb 25 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-1
 - Update to latest upstream
 - Remove obsolete patches
