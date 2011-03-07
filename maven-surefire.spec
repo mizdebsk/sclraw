@@ -1,6 +1,6 @@
 Name:           maven-surefire
-Version:        2.7.1
-Release:        3%{?dist}
+Version:        2.7.2
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -16,6 +16,9 @@ Patch1:         0001-Remove-mockito-dependency.patch
 # use current version of maven-failsafe-plugin present in maven-surefire
 Patch2:         0002-Fix-failsafe-plugin-dependency-version.patch
 
+# remove test dep on htmlunit
+Patch3:         0003-Remove-htmlunit-dependency.patch
+
 BuildArch:      noarch
 BuildRequires:  ant
 BuildRequires:  ant-nodeps
@@ -26,7 +29,7 @@ BuildRequires:  plexus-utils
 BuildRequires:  junit4
 BuildRequires:  testng
 
-BuildRequires:  maven2
+BuildRequires:  maven
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-help-plugin
 BuildRequires:  maven-install-plugin
@@ -148,20 +151,17 @@ Javadoc for %{name}.
 %setup -q -n surefire-%{version}
 
 %patch1 -p1 -b .sav
-%patch2 -b .sav
+%patch2 -p1 -b .sav
+%patch3 -p1 -b .sav
 
 %build
-export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mkdir -p $MAVEN_REPO_LOCAL
 # tests turned off because they need jmock
-mvn-jpp -e \
-        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-        -Dmaven2.jpp.depmap.file=%{SOURCE1} \
+mvn-rpmbuild -e \
+        -Dmaven.local.depmap.file=%{SOURCE1} \
         -Dmaven.test.skip=true \
         install javadoc:aggregate
 
 %install
-rm -rf $RPM_BUILD_ROOT
 # jars
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/maven-surefire
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
@@ -187,15 +187,24 @@ install -pm 644 surefire-booter/target/surefire-booter-*.jar $RPM_BUILD_ROOT%{_j
 %add_to_maven_depmap org.apache.maven.surefire surefire-booter %{version} JPP/maven-surefire booter
 install -pm 644 surefire-booter/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-booter.pom
 
-install -pm 644 surefire-providers/surefire-junit/target/surefire-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit.jar
-%add_to_maven_depmap org.apache.maven.surefire surefire-junit3 %{version} JPP/maven-surefire junit
-install -pm 644 surefire-providers/surefire-junit/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit.pom
+install -pm 644 surefire-providers/common-junit3/target/common-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common-junit.jar
+%add_to_maven_depmap org.apache.maven.surefire common-junit3 %{version} JPP/maven-surefire common-junit
+install -pm 644 surefire-providers/common-junit3/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common-junit.pom
 
-install -pm 644 surefire-providers/surefire-junit4/target/surefire-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit4.jar
+install -pm 644 surefire-providers/surefire-junit3/target/original-surefire-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit.jar
+%add_to_maven_depmap org.apache.maven.surefire surefire-junit3 %{version} JPP/maven-surefire junit
+%add_to_maven_depmap org.apache.maven.surefire surefire-junit %{version} JPP/maven-surefire junit
+install -pm 644 surefire-providers/surefire-junit3/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit.pom
+
+install -pm 644 surefire-providers/common-junit4/target/common-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common-junit4.jar
+%add_to_maven_depmap org.apache.maven.surefire common-junit4 %{version} JPP/maven-surefire common-junit4
+install -pm 644 surefire-providers/common-junit4/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common-junit4.pom
+
+install -pm 644 surefire-providers/surefire-junit4/target/original-surefire-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit4.jar
 %add_to_maven_depmap org.apache.maven.surefire surefire-junit4 %{version} JPP/maven-surefire junit4
 install -pm 644 surefire-providers/surefire-junit4/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit4.pom
 
-install -pm 644 surefire-providers/surefire-junit47/target/surefire-junit47-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit47.jar
+install -pm 644 surefire-providers/surefire-junit47/target/original-surefire-junit47-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit47.jar
 %add_to_maven_depmap org.apache.maven.surefire surefire-junit47 %{version} JPP/maven-surefire junit47
 install -pm 644 surefire-providers/surefire-junit47/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit47.pom
 
@@ -214,9 +223,8 @@ install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-main.p
 %add_to_maven_depmap org.apache.maven.surefire surefire %{version} JPP/maven-surefire main
 
 # javadoc
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-ln -sf %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 # Create compatibility links
 ln -s %{_javadir}/maven-surefire/api.jar \
@@ -229,6 +237,12 @@ ln -s %{_javadir}/maven-surefire/maven-plugin.jar \
 ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
       $RPM_BUILD_ROOT%{_datadir}/maven2/plugins/surefire-report-plugin.jar
 
+%pre javadoc
+# workaround for rpm bug, can be removed in F-18
+[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
+rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
+
+
 %post
 %update_maven_depmap
 
@@ -238,46 +252,55 @@ ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
 %files
 %defattr(-,root,root,-)
 %dir %{_javadir}/maven-surefire
-%{_javadir}/maven-surefire/api*
-%{_javadir}/maven-surefire/booter*
+%{_javadir}/maven-surefire/api.jar
+%{_javadir}/maven-surefire/booter.jar
 %{_javadir}/maven-surefire/surefire.jar
-%{_javadir}/maven-surefire/common*
+%{_javadir}/maven-surefire/common.jar
 %{_mavenpomdir}/*
 %{_mavendepmapfragdir}/*
 
 %files plugin
 %defattr(-,root,root,-)
-%{_javadir}/maven-surefire/maven-plugin*
+%{_javadir}/maven-surefire/maven-plugin.jar
 %dir %{_datadir}/maven2/plugins
 %{_datadir}/maven2/plugins/surefire-plugin.jar
 
 %files report-plugin
 %defattr(-,root,root,-)
-%{_javadir}/maven-surefire/report-maven-plugin*
+%{_javadir}/maven-surefire/report-maven-plugin.jar
 %dir %{_datadir}/maven2/plugins
 %{_datadir}/maven2/plugins/surefire-report-plugin.jar
 
 %files provider-junit
 %defattr(-,root,root,-)
-%{_javadir}/maven-surefire/junit[^4]*
+%{_javadir}/maven-surefire/junit.jar
+%{_javadir}/maven-surefire/common-junit.jar
 
 %files provider-junit4
 %defattr(-,root,root,-)
-%{_javadir}/maven-surefire/junit4*
+%{_javadir}/maven-surefire/junit4.jar
+%{_javadir}/maven-surefire/junit47.jar
+%{_javadir}/maven-surefire/common-junit4.jar
 
 %files provider-testng
 %defattr(-,root,root,-)
-%{_javadir}/maven-surefire/testng*
+%{_javadir}/maven-surefire/testng.jar
 
 %files -n maven-failsafe-plugin
 %defattr(-,root,root,-)
-%{_javadir}/maven-failsafe-plugin*jar
+%{_javadir}/maven-failsafe-plugin.jar
 
 %files javadoc
 %defattr(-,root,root,-)
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Mar  7 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.7.2-1
+- Update to latest version (2.7.2)
+- Add common-junit* jars to distribution
+- Versionless javadocs
+- Use maven 3 to build
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.7.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
