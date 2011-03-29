@@ -1,5 +1,5 @@
 Name:           maven-surefire
-Version:        2.7.2
+Version:        2.8
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
@@ -11,13 +11,10 @@ Source0:        http://repo2.maven.org/maven2/org/apache/maven/surefire/surefire
 Source1:        %{name}-jpp-depmap.xml
 
 # mockito is not available in Fedora yet
-Patch1:         0001-Remove-mockito-dependency.patch
-
-# use current version of maven-failsafe-plugin present in maven-surefire
-Patch2:         0002-Fix-failsafe-plugin-dependency-version.patch
+Patch0:         0001-Remove-mockito-dependency.patch
 
 # remove test dep on htmlunit
-Patch3:         0003-Remove-htmlunit-dependency.patch
+Patch1:         0002-Remove-htmlunit-dependency.patch
 
 BuildArch:      noarch
 BuildRequires:  ant
@@ -150,9 +147,11 @@ Javadoc for %{name}.
 %prep
 %setup -q -n surefire-%{version}
 
+sed -i 's:<version>2.7.2</version>:<version>${project.version}</version>:' \
+       surefire-integration-tests/pom.xml
+
+%patch0 -p1 -b .sav
 %patch1 -p1 -b .sav
-%patch2 -p1 -b .sav
-%patch3 -p1 -b .sav
 
 %build
 # tests turned off because they need jmock
@@ -295,6 +294,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Tue Mar 29 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.8-1
+- Update to latest upstream version (2.8)
+
 * Mon Mar  7 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.7.2-1
 - Update to latest version (2.7.2)
 - Add common-junit* jars to distribution
