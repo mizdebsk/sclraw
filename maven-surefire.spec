@@ -1,5 +1,5 @@
 Name:           maven-surefire
-Version:        2.8
+Version:        2.8.1
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
@@ -294,6 +294,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Apr 18 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.8.1-1
+- Update to latest upstream version (2.8.1)
+
 * Tue Mar 29 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.8-1
 - Update to latest upstream version (2.8)
 

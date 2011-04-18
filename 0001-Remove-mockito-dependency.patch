@@ -1,4 +1,4 @@
-From e8c67feb59487de9665aea6f8d7bc2948f5f818a Mon Sep 17 00:00:00 2001
+From 1432e34bd406b9c9c507f5d02373ff2ef44c97b1 Mon Sep 17 00:00:00 2001
 From: Stanislav Ochotnicky <sochotnicky@redhat.com>
 Date: Tue, 29 Mar 2011 14:44:37 +0200
 Subject: [PATCH 1/2] Remove mockito dependency
@@ -8,7 +8,7 @@ Subject: [PATCH 1/2] Remove mockito dependency
  1 files changed, 0 insertions(+), 6 deletions(-)
 
 diff --git a/surefire-providers/surefire-junit47/pom.xml b/surefire-providers/surefire-junit47/pom.xml
-index 52545bc..54a242d 100644
+index 604847a..ee11a40 100644
 --- a/surefire-providers/surefire-junit47/pom.xml
 +++ b/surefire-providers/surefire-junit47/pom.xml
 @@ -43,12 +43,6 @@
@@ -25,5 +25,5 @@ index 52545bc..54a242d 100644
        <artifactId>common-junit4</artifactId>
        <version>${project.version}</version>
 -- 
-1.7.4
+1.7.4.4
 
