@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.8.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -211,6 +211,10 @@ install -pm 644 surefire-providers/surefire-testng/target/surefire-testng-*.jar 
 %add_to_maven_depmap org.apache.maven.surefire surefire-testng %{version} JPP/maven-surefire testng
 install -pm 644 surefire-providers/surefire-testng/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-testng.pom
 
+install -pm 644 surefire-providers/surefire-testng-utils/target/surefire-testng-utils-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/testng-utils.jar
+%add_to_maven_depmap org.apache.maven.surefire surefire-testng-utils %{version} JPP/maven-surefire testng-utils
+install -pm 644 surefire-providers/surefire-testng-utils/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-testng-utils.pom
+
 %add_to_maven_depmap org.apache.maven.surefire providers %{version} JPP/maven-surefire providers
 install -pm 644 surefire-providers/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-providers.pom
 
@@ -249,7 +253,6 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %update_maven_depmap
 
 %files
-%defattr(-,root,root,-)
 %dir %{_javadir}/maven-surefire
 %{_javadir}/maven-surefire/api.jar
 %{_javadir}/maven-surefire/booter.jar
@@ -259,41 +262,38 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_mavendepmapfragdir}/*
 
 %files plugin
-%defattr(-,root,root,-)
 %{_javadir}/maven-surefire/maven-plugin.jar
 %dir %{_datadir}/maven2/plugins
 %{_datadir}/maven2/plugins/surefire-plugin.jar
 
 %files report-plugin
-%defattr(-,root,root,-)
 %{_javadir}/maven-surefire/report-maven-plugin.jar
 %dir %{_datadir}/maven2/plugins
 %{_datadir}/maven2/plugins/surefire-report-plugin.jar
 
 %files provider-junit
-%defattr(-,root,root,-)
 %{_javadir}/maven-surefire/junit.jar
 %{_javadir}/maven-surefire/common-junit.jar
 
 %files provider-junit4
-%defattr(-,root,root,-)
 %{_javadir}/maven-surefire/junit4.jar
 %{_javadir}/maven-surefire/junit47.jar
 %{_javadir}/maven-surefire/common-junit4.jar
 
 %files provider-testng
-%defattr(-,root,root,-)
 %{_javadir}/maven-surefire/testng.jar
+%{_javadir}/maven-surefire/testng-utils.jar
 
 %files -n maven-failsafe-plugin
-%defattr(-,root,root,-)
 %{_javadir}/maven-failsafe-plugin.jar
 
 %files javadoc
-%defattr(-,root,root,-)
 %doc %{_javadocdir}/*
 
 %changelog
+* Fri May 13 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.8.1-2
+- Install testng-utils jar and pom
+
 * Mon Apr 18 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.8.1-1
 - Update to latest upstream version (2.8.1)
 
