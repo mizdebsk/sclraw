@@ -29,16 +29,17 @@
 #
 
 Name:           plexus-archiver
-Version:        1.1
-Release:        2%{?dist}
+Version:        1.2
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
-Source0:        plexus-archiver-%{version}-src.tar.xz
+#svn export http://svn.codehaus.org/plexus/plexus-components/tags/plexus-archiver-1.2/
+#tar caf plexus-archiver-1.2.tar.xz plexus-archiver-1.2/
+Source0:        plexus-archiver-%{version}.tar.xz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  jpackage-utils >= 0:1.6
@@ -47,7 +48,7 @@ BuildRequires:  classworlds >= 0:1.1
 BuildRequires:  plexus-container-default 
 BuildRequires:  plexus-utils 
 BuildRequires:  plexus-io
-BuildRequires: maven2
+BuildRequires: maven
 BuildRequires: maven-resources-plugin
 BuildRequires: maven-compiler-plugin
 BuildRequires: maven-jar-plugin
@@ -76,6 +77,7 @@ is like a J2EE application server, without all the baggage.
 %package javadoc
 Summary:        Javadoc for %{name}
 Group:          Development/Documentation
+Requires:       jpackage-utils
 
 %description javadoc
 Javadoc for %{name}.
@@ -88,37 +90,24 @@ Javadoc for %{name}.
 rm -fr src/test/java/org/codehaus/plexus/archiver/DuplicateFilesTest.java
 
 %build
-export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mvn-jpp \
-        -e \
-        -Dmaven2.jpp.mode=true \
-        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-        -Dmaven.test.failure.ignore=true \
-        install javadoc:javadoc
+mvn-rpmbuild install javadoc:javadoc
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 # jars
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/plexus
 install -pm 644 target/%{name}-%{version}.jar \
-  $RPM_BUILD_ROOT%{_javadir}/plexus/archiver-%{version}.jar
-(cd $RPM_BUILD_ROOT%{_javadir}/plexus && for jar in *-%{version}*; \
-                  do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
+  $RPM_BUILD_ROOT%{_javadir}/plexus/archiver.jar
                   
 %add_to_maven_depmap org.codehaus.plexus %{name} %{version} JPP/plexus archiver
 
 # pom
-install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
-install -pm 644 pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}.pom
+install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
+install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}.pom
 
 # javadoc
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name} 
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 %post
 %update_maven_depmap
@@ -134,10 +123,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files javadoc
 %defattr(-,root,root,-)
-%doc %{_javadocdir}/%{name}-%{version}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue May 17 2011 Alexander Kurtakov <akurtako@redhat.com> 0:1.2-1
+- Update to 1.2.
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
