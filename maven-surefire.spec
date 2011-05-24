@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.8.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -18,7 +18,6 @@ Patch1:         0002-Remove-htmlunit-dependency.patch
 
 BuildArch:      noarch
 BuildRequires:  ant
-BuildRequires:  ant-nodeps
 BuildRequires:  classworlds
 BuildRequires:  jpackage-utils >= 0:1.7.2
 BuildRequires:  junit >= 3.8.2
@@ -38,16 +37,15 @@ BuildRequires:  maven-resources-plugin
 BuildRequires:  maven-site-plugin
 BuildRequires:  maven-shade-plugin
 BuildRequires:  maven-shared-verifier
-BuildRequires:  maven-surefire-maven-plugin
+BuildRequires:  maven-surefire-plugin
 
 BuildRequires:  plexus-containers-component-api >= 1.0-0.a34
-BuildRequires:  tomcat6
 BuildRequires:  tomcat6-servlet-2.5-api
 BuildRequires:  maven-plugin-testing-harness
 BuildRequires:  bsf
 
 Requires:       classworlds
-Requires:       maven2
+Requires:       maven
 Requires:       junit
 Requires:       plexus-utils
 
@@ -65,9 +63,9 @@ Summary:                Surefire plugin for maven
 Group:                  Development/Libraries
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire <= 0:2.0.4
-Provides :              maven2-plugin-surefire = %{epoch}:%{version}-%{release}
+Provides:              maven2-plugin-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven-surefire-maven-plugin < 0:2.6
-Provides :              maven-surefire-maven-plugin = %{epoch}:%{version}-%{release}
+Provides:              maven-surefire-maven-plugin = %{epoch}:%{version}-%{release}
 
 %description plugin
 Maven surefire plugin for running tests via the surefire framework.
@@ -77,9 +75,9 @@ Summary:                Surefire reports plugin for maven
 Group:                  Development/Libraries
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4
-Provides :              maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
+Provides:              maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
 Obsoletes:              maven-surefire-report-maven-plugin < 0:2.6
-Provides :              maven-surefire-report-maven-plugin = %{epoch}:%{version}-%{release}
+Provides:              maven-surefire-report-maven-plugin = %{epoch}:%{version}-%{release}
 
 %description report-plugin
 Plugin for generating reports from surefire test runs.
@@ -140,6 +138,7 @@ to execute.
 %package javadoc
 Summary:          Javadoc for %{name}
 Group:            Documentation
+Requires:         jpackage-utils
 
 %description javadoc
 Javadoc for %{name}.
@@ -166,7 +165,7 @@ install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/maven-surefire
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
 
 install -pm 644 maven-surefire-plugin/target/maven-surefire-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/maven-plugin.jar
-%add_to_maven_depmap org.apache.maven.surefire maven-surefire-plugin %{version} JPP/maven-surefire maven-plugin
+%add_to_maven_depmap org.apache.maven.plugins maven-surefire-plugin %{version} JPP/maven-surefire maven-plugin
 install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-maven-plugin.pom
 install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven2.plugins-surefire-plugin.pom
 
@@ -291,6 +290,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Tue May 24 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.8.1-3
+- Fix maven-surefire-plugin group in the depmap.
+
 * Fri May 13 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.8.1-2
 - Install testng-utils jar and pom
 
