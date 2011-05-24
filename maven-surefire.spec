@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.8.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -63,9 +63,9 @@ Summary:                Surefire plugin for maven
 Group:                  Development/Libraries
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire <= 0:2.0.4
-Provides:              maven2-plugin-surefire = %{epoch}:%{version}-%{release}
+Provides:               maven2-plugin-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven-surefire-maven-plugin < 0:2.6
-Provides:              maven-surefire-maven-plugin = %{epoch}:%{version}-%{release}
+Provides:               maven-surefire-maven-plugin = %{epoch}:%{version}-%{release}
 
 %description plugin
 Maven surefire plugin for running tests via the surefire framework.
@@ -75,9 +75,9 @@ Summary:                Surefire reports plugin for maven
 Group:                  Development/Libraries
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4
-Provides:              maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
+Provides:               maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
 Obsoletes:              maven-surefire-report-maven-plugin < 0:2.6
-Provides:              maven-surefire-report-maven-plugin = %{epoch}:%{version}-%{release}
+Provides:               maven-surefire-report-maven-plugin = %{epoch}:%{version}-%{release}
 
 %description report-plugin
 Plugin for generating reports from surefire test runs.
@@ -89,7 +89,7 @@ Requires:               junit
 Requires:               maven-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4O
 #Obsoletes:              maven-surefire-junit = 2.3.1
-Provides:              maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
+Provides:               maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
 #Provides:              maven-surefire-junit = 2.3.1
 
 %description provider-junit
@@ -174,7 +174,7 @@ install -pm 644 maven-surefire-common/target/maven-surefire-common-*.jar $RPM_BU
 install -pm 644 maven-surefire-common/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common.pom
 
 install -pm 644 maven-surefire-report-plugin/target/maven-surefire-report-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/report-maven-plugin.jar
-%add_to_maven_depmap org.apache.maven.surefire maven-surefire-report-plugin %{version} JPP/maven-surefire report-maven-plugin
+%add_to_maven_depmap org.apache.maven.plugins maven-surefire-report-plugin %{version} JPP/maven-surefire report-maven-plugin
 install -pm 644 maven-surefire-report-plugin/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-report-maven-plugin.pom
 
 install -pm 644 surefire-api/target/original-surefire-api-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/api.jar
@@ -214,7 +214,7 @@ install -pm 644 surefire-providers/surefire-testng-utils/target/surefire-testng-
 %add_to_maven_depmap org.apache.maven.surefire surefire-testng-utils %{version} JPP/maven-surefire testng-utils
 install -pm 644 surefire-providers/surefire-testng-utils/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-testng-utils.pom
 
-%add_to_maven_depmap org.apache.maven.surefire providers %{version} JPP/maven-surefire providers
+%add_to_maven_depmap org.apache.maven.surefire surefire-providers %{version} JPP/maven-surefire providers
 install -pm 644 surefire-providers/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-providers.pom
 
 install -pm 644 maven-failsafe-plugin/target/maven-failsafe-plugin*.jar $RPM_BUILD_ROOT%{_javadir}/maven-failsafe-plugin.jar
@@ -290,6 +290,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Tue May 24 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.8.1-4
+- Fix up providers artifact and report plugin groupid
+
 * Tue May 24 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.8.1-3
 - Fix maven-surefire-plugin group in the depmap.
 
