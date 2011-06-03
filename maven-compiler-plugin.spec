@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
 Version:        2.3.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
@@ -20,12 +20,12 @@ BuildRequires: maven-jar-plugin
 BuildRequires: maven-install-plugin
 BuildRequires: maven-resources-plugin
 BuildRequires: maven-javadoc-plugin
-BuildRequires: maven-surefire-maven-plugin
+BuildRequires: maven-surefire-plugin
 BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-doxia-sitetools
-BuildRequires: maven-shared-plugin-testing-harness
+BuildRequires: maven-plugin-testing-harness
 
-Requires:      maven2
+Requires:      maven
 Requires:      jpackage-utils
 Requires:      java
 Requires(post):       jpackage-utils
@@ -50,8 +50,8 @@ API documentation for %{name}.
 %setup -q #You may need to update this according to your Source0
 
 %build
-mvn-local -e \
-        -Dmaven.test.skip=true \
+mvn-rpmbuild -e \
+        -Dmaven.test.failure.ignore=true \
         install javadoc:javadoc
 
 %install
@@ -83,16 +83,18 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %update_maven_depmap
 
 %files
-%defattr(-,root,root,-)
 %{_javadir}/*
 %{_mavenpomdir}/*
 %{_mavendepmapfragdir}/*
 
 %files javadoc
-%defattr(-,root,root,-)
 %{_javadocdir}/%{name}
 
 %changelog
+* Fri Jun 3 2011 Alexander Kurtakov <akurtako@redhat.com> 2.3.2-3
+- Do not require maven2.
+- Guidelines fixes.
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
