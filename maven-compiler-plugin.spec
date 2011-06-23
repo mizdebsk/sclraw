@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
 Version:        2.3.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
@@ -24,12 +24,16 @@ BuildRequires: maven-surefire-plugin
 BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-doxia-sitetools
 BuildRequires: maven-plugin-testing-harness
+BuildRequires: maven-toolchain
+BuildRequires: plexus-utils
+BuildRequires: plexus-compiler
 
 Requires:      maven
+Requires:      maven-toolchain
+Requires:      plexus-utils
+Requires:      plexus-compiler
 Requires:      jpackage-utils
 Requires:      java
-Requires(post):       jpackage-utils
-Requires(postun):     jpackage-utils
 
 Provides:       maven2-plugin-compiler = %{version}-%{release}
 Obsoletes:      maven2-plugin-compiler <= 0:2.0.8
@@ -60,12 +64,13 @@ mvn-rpmbuild -e \
 install -d -m 0755 %{buildroot}%{_javadir}
 install -m 644 target/%{name}-%{version}.jar   %{buildroot}%{_javadir}/%{name}.jar
 
-%add_to_maven_depmap org.apache.maven.plugins maven-compiler-plugin %{version} JPP maven-compiler-plugin
-
 # poms
 install -d -m 755 %{buildroot}%{_mavenpomdir}
 install -pm 644 pom.xml \
     %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
+
+
+%add_maven_depmap JPP-%{name}.pom %{name}.jar
 
 # javadoc
 install -d -m 0755 %{buildroot}%{_javadocdir}/%{name}
@@ -76,12 +81,6 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}
 [ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
 rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
-
 %files
 %{_javadir}/*
 %{_mavenpomdir}/*
@@ -91,6 +90,11 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_javadocdir}/%{name}
 
 %changelog
+* Mon Jun 27 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.3.2-4
+- Add few missing (Build)requires
+- Remove post(un) scriptlets with update_maven_depmap
+- Use new add_maven_depmap macro
+
 * Fri Jun 3 2011 Alexander Kurtakov <akurtako@redhat.com> 2.3.2-3
 - Do not require maven2.
 - Guidelines fixes.
