@@ -1,7 +1,7 @@
-From 2fbf5b756733d623079d9764bb9371742b6bc42b Mon Sep 17 00:00:00 2001
+From 32f70674cf1fed176c7bb0f557846bec1b6ffc30 Mon Sep 17 00:00:00 2001
 From: Stanislav Ochotnicky <sochotnicky@redhat.com>
 Date: Mon, 18 Apr 2011 15:06:00 +0200
-Subject: [PATCH 2/2] Remove htmlunit dependency
+Subject: [PATCH 2/3] Remove htmlunit dependency
 
 ---
  surefire-integration-tests/pom.xml       |    6 ------
@@ -9,7 +9,7 @@ Subject: [PATCH 2/2] Remove htmlunit dependency
  2 files changed, 0 insertions(+), 12 deletions(-)
 
 diff --git a/surefire-integration-tests/pom.xml b/surefire-integration-tests/pom.xml
-index 594c0dc..79b299e 100644
+index 09d7f08..6484403 100644
 --- a/surefire-integration-tests/pom.xml
 +++ b/surefire-integration-tests/pom.xml
 @@ -51,12 +51,6 @@
@@ -26,7 +26,7 @@ index 594c0dc..79b299e 100644
        <artifactId>commons-io</artifactId>
        <version>2.0.1</version>
 diff --git a/surefire-setup-integration-tests/pom.xml b/surefire-setup-integration-tests/pom.xml
-index 6face0e..fec0de6 100644
+index bc3b206..dc233ad 100644
 --- a/surefire-setup-integration-tests/pom.xml
 +++ b/surefire-setup-integration-tests/pom.xml
 @@ -90,12 +90,6 @@
@@ -43,5 +43,5 @@ index 6face0e..fec0de6 100644
        <artifactId>commons-io</artifactId>
        <version>2.0.1</version>
 -- 
-1.7.4.4
+1.7.5.4
 

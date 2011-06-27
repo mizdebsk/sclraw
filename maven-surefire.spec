@@ -1,6 +1,6 @@
 Name:           maven-surefire
-Version:        2.8.1
-Release:        4%{?dist}
+Version:        2.9
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -15,6 +15,9 @@ Patch0:         0001-Remove-mockito-dependency.patch
 
 # remove test dep on htmlunit
 Patch1:         0002-Remove-htmlunit-dependency.patch
+
+# provide compatibility for maven3
+Patch2:         0003-Fix-maven3-compatibility.patch
 
 BuildArch:      noarch
 BuildRequires:  ant
@@ -38,7 +41,11 @@ BuildRequires:  maven-site-plugin
 BuildRequires:  maven-shade-plugin
 BuildRequires:  maven-shared-verifier
 BuildRequires:  maven-surefire-plugin
-
+BuildRequires:  maven-surefire-provider-junit
+BuildRequires:  maven-toolchain
+BuildRequires:  maven-project
+BuildRequires:  maven-shared-common-artifact-filters
+BuildRequires:  modello
 BuildRequires:  plexus-containers-component-api >= 1.0-0.a34
 BuildRequires:  tomcat6-servlet-2.5-api
 BuildRequires:  maven-plugin-testing-harness
@@ -46,6 +53,9 @@ BuildRequires:  bsf
 
 Requires:       classworlds
 Requires:       maven
+Requires:       maven-toolchain
+Requires:       maven-project
+Requires:       maven-shared-common-artifact-filters
 Requires:       junit
 Requires:       plexus-utils
 
@@ -61,7 +71,7 @@ Surefire is a test framework project.
 %package plugin
 Summary:                Surefire plugin for maven
 Group:                  Development/Libraries
-Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Requires:               %{name} = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire <= 0:2.0.4
 Provides:               maven2-plugin-surefire = %{epoch}:%{version}-%{release}
 Obsoletes:              maven-surefire-maven-plugin < 0:2.6
@@ -73,7 +83,7 @@ Maven surefire plugin for running tests via the surefire framework.
 %package report-plugin
 Summary:                Surefire reports plugin for maven
 Group:                  Development/Libraries
-Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Requires:               %{name} = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4
 Provides:               maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
 Obsoletes:              maven-surefire-report-maven-plugin < 0:2.6
@@ -86,7 +96,7 @@ Plugin for generating reports from surefire test runs.
 Summary:                JUnit3 provider for Maven Surefire
 Group:                  Development/Libraries
 Requires:               junit
-Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Requires:               %{name} = %{epoch}:%{version}-%{release}
 Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4O
 #Obsoletes:              maven-surefire-junit = 2.3.1
 Provides:               maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
@@ -98,7 +108,8 @@ JUnit3 provider for Maven Surefire.
 %package provider-junit4
 Summary:                JUnit4 provider for Maven Surefire
 Group:                  Development/Libraries
-Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Requires:               %{name} = %{epoch}:%{version}-%{release}
+Requires:               %{name}-provider-junit = %{epoch}:%{version}-%{release}
 Requires:               junit4
 
 %description provider-junit4
@@ -107,7 +118,7 @@ JUnit4 provider for Maven Surefire.
 %package provider-testng
 Summary:                TestNG provider for Maven Surefire
 Group:                  Development/Libraries
-Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Requires:               %{name} = %{epoch}:%{version}-%{release}
 Requires:               testng
 
 %description provider-testng
@@ -116,7 +127,7 @@ TestNG provider for Maven Surefire.
 %package -n maven-failsafe-plugin
 Summary:                Maven plugin for running integration tests
 Group:                  Development/Libraries
-Requires:               maven-surefire = %{epoch}:%{version}-%{release}
+Requires:               %{name} = %{epoch}:%{version}-%{release}
 
 %description -n maven-failsafe-plugin
 The Failsafe Plugin is designed to run integration tests while the
@@ -151,6 +162,7 @@ sed -i 's:<version>2.7.2</version>:<version>${project.version}</version>:' \
 
 %patch0 -p1 -b .sav
 %patch1 -p1 -b .sav
+%patch2 -p1 -b .sav
 
 %build
 # tests turned off because they need jmock
@@ -245,12 +257,6 @@ ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
 rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
 
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
-
 %files
 %dir %{_javadir}/maven-surefire
 %{_javadir}/maven-surefire/api.jar
@@ -290,6 +296,10 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Jun 27 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.9-1
+- Update to latest upstream (2.9)
+- Fix up Requires for juni4 provider
+
 * Tue May 24 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.8.1-4
 - Fix up providers artifact and report plugin groupid
 
