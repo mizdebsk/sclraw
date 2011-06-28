@@ -6,11 +6,11 @@
 
 # this needs to be exact version of maven-javadoc-plugin for
 # integration tests
-%global javadoc_plugin_version 2.7
+%global javadoc_plugin_version 2.8
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and Plexus
 Group:          Development/Libraries
@@ -23,13 +23,12 @@ Source1:        plexus-container-default-build.xml
 Source2:        plexus-component-annotations-build.xml
 Source3:        plexus-containers-settings.xml
 
-Patch0:         plexus-containers-test-oom.patch
-
+Patch0:         0001-Fix-test-oom.patch
+Patch1:         0002-Fix-maven3-compatibility.patch
 
 BuildArch:      noarch
 
 BuildRequires:  jpackage-utils >= 0:1.7.3
-%if %{with_maven}
 BuildRequires:  maven
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-install-plugin
@@ -46,11 +45,6 @@ BuildRequires:  maven-doxia-sitetools
 BuildRequires:  maven2-common-poms >= 1.0
 BuildRequires:  maven-release
 BuildRequires:  maven-plugin-plugin
-%else
-BuildRequires:  ant >= 0:1.6.5
-BuildRequires:  ant-junit
-BuildRequires:  junit
-%endif
 BuildRequires:  plexus-classworlds
 BuildRequires:  plexus-utils
 BuildRequires:  plexus-cli
@@ -62,8 +56,6 @@ Requires:       plexus-utils
 Requires:       xbean
 Requires:       guava
 
-Requires(post):    jpackage-utils >= 0:1.7.2
-Requires(postun):  jpackage-utils >= 0:1.7.2
 
 %description
 The Plexus project seeks to create end-to-end developer tools for
@@ -130,7 +122,8 @@ Obsoletes:      %{name}-container-default-javadoc < %{version}-%{release}
 cp %{SOURCE1} plexus-container-default/build.xml
 cp %{SOURCE2} plexus-component-annotations/build.xml
 
-%patch0
+%patch0 -p1
+%patch1 -p1
 
 # to prevent ant from failing
 mkdir -p plexus-component-annotations/src/test/java
@@ -140,71 +133,46 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 
 %build
 
-%if %{with_maven}
-    mvn-rpmbuild -Dmaven.test.skip=true install
+mvn-rpmbuild -Dmaven.test.skip=true install
 
-    # for integration tests ran during javadoc:javadoc
-    for file in $MAVEN_REPO_LOCAL/org/apache/maven/plugins/maven-javadoc-plugin/%{javadoc_plugin_version}/*;do
-        sha1sum $file | awk '{print $1}' > $ile.sha1
-    done
+# for integration tests ran during javadoc:javadoc
+for file in $MAVEN_REPO_LOCAL/org/apache/maven/plugins/maven-javadoc-plugin/%{javadoc_plugin_version}/*;do
+    sha1sum $file | awk '{print $1}' > $ile.sha1
+done
 
-    mvn-rpmbuild javadoc:aggregate
-%else
-export OPT_JAR_LIST="ant/ant-junit junit"
-pushd plexus-component-annotations
-export CLASSPATH=$(build-classpath \
-plexus/classworlds \
-)
-ant -Dbuild.sysclasspath=only jar javadoc
-popd
-pushd plexus-container-default
-rm src/test/java/org/codehaus/plexus/hierarchy/PlexusHierarchyTest.java
-CLASSPATH=$CLASSPATH:$(build-classpath \
-plexus/utils \
-)
-CLASSPATH=$CLASSPATH:../plexus-component-annotations/target/plexus-component-annotations-%{version}.jar
-CLASSPATH=$CLASSPATH:target/classes:target/test-classes
-ant -Dbuild.sysclasspath=only jar javadoc
-popd
-%endif
+mvn-rpmbuild javadoc:aggregate
 
 %install
 # jars
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/plexus
+install -pm 644 plexus-component-annotations/target/*.jar \
+ $RPM_BUILD_ROOT%{_javadir}/%{parent}/%{subname}-component-annotations.jar
 install -pm 644 plexus-container-default/target/*.jar \
- $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-container-default.jar
-install -pm 644 plexus-component-annotations/target/*.jar \
- $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-component-annotations.jar
+ $RPM_BUILD_ROOT%{_javadir}/%{parent}/%{subname}-container-default.jar
 install -pm 644 plexus-component-metadata/target/*.jar \
- $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-component-metadata.jar
+ $RPM_BUILD_ROOT%{_javadir}/%{parent}/%{subname}-component-metadata.jar
 install -pm 644 plexus-component-annotations/target/*.jar \
- $RPM_BUILD_ROOT%{_javadir}/%{parent}/containers-component-javadoc.jar
+ $RPM_BUILD_ROOT%{_javadir}/%{parent}/%{subname}-component-javadoc.jar
 
 # pom
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
-install -pm 644 \
- pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-%{subname}.pom
-install -pm 644 \
- plexus-container-default/pom.xml \
- $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-container-default.pom
-install -pm 644 \
- plexus-component-annotations/pom.xml \
- $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-component-annotations.pom
-install -pm 644 \
- plexus-component-metadata/pom.xml \
- $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-component-metadata.pom
-install -pm 644 \
- plexus-component-javadoc/pom.xml \
- $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-component-javadoc.pom
+install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-%{subname}.pom
 
-%add_to_maven_depmap org.codehaus.plexus %{name} %{version} JPP/%{parent} %{subname}
-%add_to_maven_depmap org.codehaus.plexus plexus-component-annotations %{version} JPP/%{parent} containers-component-annotations
-%add_to_maven_depmap org.codehaus.plexus plexus-container-default %{version} JPP/%{parent} containers-container-default
-%add_to_maven_depmap org.codehaus.plexus plexus-component-metadata %{version} JPP/%{parent} containers-component-metadata
-%add_to_maven_depmap org.codehaus.plexus plexus-component-javadoc %%{version} JPP/%{parent} containers-component-javadoc
+install -pm 644 plexus-component-annotations/pom.xml \
+         $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-%{subname}-component-annotations.pom
+install -pm 644 plexus-container-default/pom.xml \
+         $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-%{subname}-container-default.pom
+install -pm 644 plexus-component-metadata/pom.xml \
+         $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-%{subname}-component-metadata.pom
+install -pm 644 plexus-component-javadoc/pom.xml \
+         $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-%{subname}-component-javadoc.pom
 
+%add_maven_depmap JPP.%{parent}-%{subname}.pom
+%add_maven_depmap JPP.%{parent}-%{subname}-component-annotations.pom %{parent}/%{subname}-component-annotations.jar -f component-annotations
 # component-api is now folded into container-default
-%add_to_maven_depmap org.codehaus.plexus containers-component-api %{version} JPP/%{parent} containers-container-default
+%add_maven_depmap JPP.%{parent}-%{subname}-container-default.pom %{parent}/%{subname}-container-default.jar -a "org.codehaus.plexus:containers-component-api" -f container-default
+%add_maven_depmap JPP.%{parent}-%{subname}-component-metadata.pom %{parent}/%{subname}-component-metadata.jar -f component-metadata
+%add_maven_depmap JPP.%{parent}-%{subname}-component-javadoc.pom %{parent}/%{subname}-component-javadoc.jar -f component-javadoc
 
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
@@ -216,50 +184,38 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
 
-%post component-metadata
-%update_maven_depmap
-
-%postun component-metadata
-%update_maven_depmap
-
-%post component-annotations
-%update_maven_depmap
-
-%postun component-annotations
-%update_maven_depmap
-
-%post container-default
-%update_maven_depmap
-
-%postun container-default
-%update_maven_depmap
-
 %files
-%defattr(-,root,root,-)
-%{_mavenpomdir}/*
+%{_mavenpomdir}/JPP.%{parent}-%{subname}.pom
 %{_mavendepmapfragdir}/%{name}
 
 %files component-annotations
-%defattr(-,root,root,-)
-%{_javadir}/%{parent}/containers-component-annotations*
+%{_mavendepmapfragdir}/%{name}-component-annotations
+%{_mavenpomdir}/JPP.%{parent}-%{subname}-component-annotations.pom
+%{_javadir}/%{parent}/containers-component-annotations.jar
 
 %files container-default
-%defattr(-,root,root,-)
-%{_javadir}/%{parent}/containers-container-default*
+%{_mavendepmapfragdir}/%{name}-container-default
+%{_mavenpomdir}/JPP.%{parent}-%{subname}-container-default.pom
+%{_javadir}/%{parent}/containers-container-default.jar
 
 %files component-metadata
-%defattr(-,root,root,-)
-%{_javadir}/%{parent}/containers-component-metadata*
+%{_mavendepmapfragdir}/%{name}-component-metadata
+%{_mavenpomdir}/JPP.%{parent}-%{subname}-component-metadata.pom
+%{_javadir}/%{parent}/containers-component-metadata.jar
 
 %files component-javadoc
-%defattr(-,root,root,-)
-%{_javadir}/%{parent}/containers-component-javadoc*
+%{_mavendepmapfragdir}/%{name}-component-javadoc
+%{_mavenpomdir}/JPP.%{parent}-%{subname}-component-javadoc.pom
+%{_javadir}/%{parent}/containers-component-javadoc.jar
 
 %files javadoc
-%defattr(-,root,root,-)
 %doc %{_javadocdir}/*
 
 %changelog
+* Tue Jun 28 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-3
+- Fix maven3 build
+- Use new add_maven_depmap macro
+
 * Mon Feb 28 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-2
 - Remove unneeded env var definitions
 
