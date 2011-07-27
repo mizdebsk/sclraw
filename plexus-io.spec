@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        1.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
@@ -25,7 +25,6 @@ BuildRequires: maven-javadoc-plugin
 BuildRequires: maven-surefire-plugin
 BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-doxia-sitetools
-BuildRequires: plexus-maven-plugin
 Requires:  jpackage-utils
 Requires: plexus-utils
 Requires: plexus-container-default
@@ -68,24 +67,21 @@ install -pm 644 pom.xml \
 install -d -m 0755 %{buildroot}%{_javadocdir}/%{name}
 cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
 
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
 
 %files
-%defattr(-,root,root,-)
 %doc NOTICE.txt
 %{_javadir}/plexus/*.jar
 %{_mavenpomdir}/*
 %{_mavendepmapfragdir}/*
 
 %files javadoc
-%defattr(-,root,root,-)
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Jul 27 2011 Jaromir Capik <jcapik@redhat.com> - 1.0.1-2
+- Removal of plexus-maven-plugin dependency (not needed)
+- Minor spec file changes according to the latest guidelines
+
 * Tue May 17 2011 Alexander Kurtakov <akurtako@redhat.com> 1.0.1-1
 - Update to upstream 1.0.1.
 - Adapt to current guidelines.
