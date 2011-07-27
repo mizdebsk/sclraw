@@ -7,11 +7,11 @@ Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://plexus.codehaus.org/plexus-components/plexus-io
 #svn export http://svn.codehaus.org/plexus/plexus-components/tags/plexus-io-1.0.1/
-#tar caf plexus-io-1.0.1.tar.xz plexus-io-1.0.1/      
+#tar caf plexus-io-1.0.1.tar.xz plexus-io-1.0.1/
 Source0:        plexus-io-%{version}.tar.xz
 BuildArch: noarch
 
-BuildRequires: java-devel >= 1:1.6.0 
+BuildRequires: java-devel >= 1:1.6.0
 BuildRequires:  jpackage-utils
 
 BuildRequires: plexus-utils
@@ -34,7 +34,7 @@ Requires(postun): jpackage-utils
 
 %description
 Plexus IO is a set of plexus components, which are designed for use
-in I/O operations. 
+in I/O operations.
 
 %package javadoc
 Group:          Documentation
@@ -46,7 +46,7 @@ API documentation for %{name}.
 
 
 %prep
-%setup -q 
+%setup -q
 
 %build
 mvn-rpmbuild install javadoc:javadoc
@@ -56,12 +56,13 @@ mvn-rpmbuild install javadoc:javadoc
 install -d -m 0755 %{buildroot}%{_javadir}/plexus
 install -m 644 target/%{name}-%{version}.jar   %{buildroot}%{_javadir}/plexus/io.jar
 
-%add_to_maven_depmap org.codehaus.plexus %{name} %{version} JPP/plexus io
 
 # poms
 install -d -m 755 %{buildroot}%{_mavenpomdir}
 install -pm 644 pom.xml \
     %{buildroot}%{_mavenpomdir}/JPP.%{name}.pom
+
+%add_maven_depmap JPP.%{name}.pom plexus/io.jar
 
 # javadoc
 install -d -m 0755 %{buildroot}%{_javadocdir}/%{name}
@@ -70,14 +71,17 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
 
 %files
 %doc NOTICE.txt
-%{_javadir}/plexus/*.jar
-%{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
+%{_javadir}/plexus/io.jar
+%{_mavenpomdir}/JPP.%{name}.pom
+%{_mavendepmapfragdir}/%{name}
 
 %files javadoc
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Jul 27 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.0.1-2
+- Use add_maven_depmap macro
+
 * Wed Jul 27 2011 Jaromir Capik <jcapik@redhat.com> - 1.0.1-2
 - Removal of plexus-maven-plugin dependency (not needed)
 - Minor spec file changes according to the latest guidelines
