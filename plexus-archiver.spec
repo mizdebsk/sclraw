@@ -30,7 +30,7 @@
 
 Name:           plexus-archiver
 Version:        1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
@@ -58,7 +58,6 @@ BuildRequires: maven-surefire-plugin
 BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-shared-reporting-impl
 BuildRequires: maven-doxia-sitetools
-BuildRequires: plexus-maven-plugin
 Requires:       classworlds >= 0:1.1
 Requires:       plexus-container-default 
 Requires:       plexus-utils 
@@ -84,7 +83,7 @@ Javadoc for %{name}.
 
 
 %prep
-%setup -q 
+%setup -q
 
 #remove not compilint tests
 rm -fr src/test/java/org/codehaus/plexus/archiver/DuplicateFilesTest.java
@@ -109,23 +108,19 @@ install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}.pom
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
-
 %files
-%defattr(-,root,root,-)
 %{_javadir}/*
 %{_mavenpomdir}/*
 %{_mavendepmapfragdir}/*
 
 %files javadoc
-%defattr(-,root,root,-)
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Jul 27 2011 Jaromir Capik <jcapik@redhat.com> - 0:1.2-2
+- Removal of plexus-maven-plugin dependency (not needed)
+- Minor spec file changes according to the latest guidelines
+
 * Tue May 17 2011 Alexander Kurtakov <akurtako@redhat.com> 0:1.2-1
 - Update to 1.2.
 
