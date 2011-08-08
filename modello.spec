@@ -29,8 +29,8 @@
 #
 
 Name:           modello
-Version:        1.4.1
-Release:        2%{?dist}
+Version:        1.5
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        MIT
@@ -40,13 +40,12 @@ Source0:        http://repo2.maven.org/maven2/org/codehaus/%{name}/%{name}/%{ver
 
 Source2:        %{name}-jpp-depmap.xml
 
-Patch0:         0001-Use-public-function-for-component-lookup.patch
 
 BuildArch:      noarch
 
 BuildRequires:  ant >= 0:1.6
 BuildRequires:  jpackage-utils >= 0:1.7.2
-BuildRequires:  maven2 >= 2.0.4-9
+BuildRequires:  maven
 BuildRequires:  maven-assembly-plugin
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-install-plugin
@@ -114,24 +113,13 @@ Requires:       jpackage-utils
 API documentation for %{name}.
 
 %prep
-%setup -q -n %{name}-%{version}
-
-# fix test compilation failure with new plexus-containers
-# not really needed now because we are skipping tests for other
-# problems...
-#%%patch0 -p1
-
+%setup -q 
 
 %build
 
-export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mkdir -p $MAVEN_REPO_LOCAL
-
 # skip tests because we have too old xmlunit in Fedora now (1.0.8)
-mvn-jpp \
-        -e \
-        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-        -Dmaven2.jpp.depmap.file=%{SOURCE2} \
+mvn-rpmbuild \
+        -Dmaven.local.depmap.file=%{SOURCE2} \
         -Dmaven.test.skip=true \
         install javadoc:aggregate
 
@@ -147,7 +135,7 @@ for i in `find . -name pom.xml -not -path ./pom.xml -not -path "*src/it/*"`; do
 done
 
 cp -p pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.modello-modello.pom
-%add_to_maven_depmap org.codehaus.modello modello %{version} JPP/%{name} modello
+%add_maven_depmap JPP.modello-modello.pom
 
 # script
 install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
@@ -161,29 +149,22 @@ for jar in $(find -type f -name "*-%{version}.jar" | grep -E target/.*.jar); do
 done
 
 # javadoc
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-(cd $RPM_BUILD_ROOT%{_javadocdir} && ln -sf %{name}-%{version} %{name})
-
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 %files
-%defattr(-,root,root,-)
 %{_mavenpomdir}/*
 %{_javadir}/%{name}
 %{_bindir}/*
-%config(noreplace) %{_mavendepmapfragdir}/*
+%{_mavendepmapfragdir}/*
 
 %files javadoc
-%defattr(-,root,root,-)
-%{_javadocdir}/%{name}-%{version}
 %{_javadocdir}/%{name}
 
 %changelog
+* Mon Aug 8 2011 Alexander Kurtakov <akurtako@redhat.com> 0:1.5-1
+- Update to upstream 1.5.
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.4.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
