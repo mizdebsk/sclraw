@@ -32,22 +32,21 @@
 %global subname utils
 
 Name:           plexus-utils
-Version:        2.0.6
+Version:        3.0
 Release:        1%{?dist}
 Summary:        Plexus Common Utilities
 License:        ASL 1.1 and ASL 2.0 and MIT
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/
-# git clone git://github.com/sonatype/sisu
-# git archive --prefix="plexus-utils-2.0.6/" --format=tar plexus-utils-2.0.6 | bzip2 > plexus-utils-2.0.6.tar.bz2
-Source0:        plexus-utils-%{version}.tar.bz2
+# git clone git://github.com/sonatype/plexus-utils
+# git archive --prefix="plexus-utils-3.0/" --format=tar plexus-utils-3.0 | xz > plexus-utils-3.0.tar.xz
+Source0:        plexus-utils-%{version}.tar.xz
 
 BuildArch:      noarch
 BuildRequires:  jpackage-utils >= 0:1.6
 Requires:       jpackage-utils
-Requires(postun): jpackage-utils
 
-BuildRequires:  maven2
+BuildRequires:  maven
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-install-plugin
 BuildRequires:  maven-jar-plugin
@@ -56,9 +55,6 @@ BuildRequires:  maven-resources-plugin
 BuildRequires:  maven-surefire-plugin
 BuildRequires:  maven-doxia-sitetools
 BuildRequires:  maven-surefire-provider-junit
-
-Requires(post):    jpackage-utils >= 0:1.7.2
-Requires(postun):  jpackage-utils >= 0:1.7.2
 
 %description
 The Plexus project seeks to create end-to-end developer tools for
@@ -72,7 +68,6 @@ is like a J2EE application server, without all the baggage.
 Summary:          Javadoc for %{name}
 Group:            Documentation
 Requires:         jpackage-utils
-Requires(postun): jpackage-utils
 
 %description javadoc
 Javadoc for %{name}.
@@ -81,7 +76,7 @@ Javadoc for %{name}.
 %setup -q
 
 %build
-mvn-rpmbuild install javadoc:javadoc
+mvn-rpmbuild install javadoc:javadoc -Dmaven.test.failure.ignore=true
 
 %install
 # jars
@@ -101,28 +96,19 @@ install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-%{subname}.
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
-
-%pre javadoc
-# workaround for rpm bug, can be removed in F-17
-[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
-rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
-
 %files
-%defattr(-,root,root,-)
 %{_javadir}/*
 %{_mavenpomdir}/*
 %{_mavendepmapfragdir}/*
+%doc NOTICE.txt
 
 %files javadoc
-%defattr(-,root,root,-)
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Sep 7 2011 Alexander Kurtakov <akurtako@redhat.com> 3.0-1
+- Update to upstream 3.0.
+
 * Mon Feb 28 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.0.6-1
 - Update to 2.0.6
 - Remove obsolete patches
