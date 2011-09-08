@@ -1,14 +1,14 @@
 Name:           plexus-io
-Version:        1.0.1
-Release:        2%{?dist}
+Version:        2.0.1
+Release:        1%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://plexus.codehaus.org/plexus-components/plexus-io
-#svn export http://svn.codehaus.org/plexus/plexus-components/tags/plexus-io-1.0.1/
-#tar caf plexus-io-1.0.1.tar.xz plexus-io-1.0.1/
-Source0:        plexus-io-%{version}.tar.xz
+# git clone https://github.com/sonatype/plexus-io
+# git archive --format=tar --prefix=plexus-io-2.0.1/ plexus-io-2.0.1 | xz >plexus-io-2.0.1.tar.xz
+Source0:        %{name}-%{version}.tar.xz
 BuildArch: noarch
 
 BuildRequires: java-devel >= 1:1.6.0
@@ -28,9 +28,6 @@ BuildRequires: maven-doxia-sitetools
 Requires:  jpackage-utils
 Requires: plexus-utils
 Requires: plexus-container-default
-
-Requires(post): jpackage-utils
-Requires(postun): jpackage-utils
 
 %description
 Plexus IO is a set of plexus components, which are designed for use
@@ -79,6 +76,9 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Sep 8 2011 Alexander Kurtakov <akurtako@redhat.com> 2.0.1-1
+- Update to 2.0.1 upstream release.
+
 * Wed Jul 27 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.0.1-2
 - Use add_maven_depmap macro
 
