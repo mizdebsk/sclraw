@@ -29,16 +29,16 @@
 #
 
 Name:           plexus-archiver
-Version:        1.2
-Release:        2%{?dist}
+Version:        2.0.1
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
-#svn export http://svn.codehaus.org/plexus/plexus-components/tags/plexus-archiver-1.2/
-#tar caf plexus-archiver-1.2.tar.xz plexus-archiver-1.2/
-Source0:        plexus-archiver-%{version}.tar.xz
+# git clone https://github.com/sonatype/plexus-archiver
+# git archive --format=tar --prefix=plexus-archiver-2.0.1/ plexus-archiver-2.0.1 | xz >plexus-archiver-2.0.1.tar.xz
+Source0:        %{name}-%{version}.tar.xz
 
 
 BuildArch:      noarch
@@ -75,7 +75,7 @@ is like a J2EE application server, without all the baggage.
 
 %package javadoc
 Summary:        Javadoc for %{name}
-Group:          Development/Documentation
+Group:          Documentation
 Requires:       jpackage-utils
 
 %description javadoc
@@ -85,12 +85,8 @@ Javadoc for %{name}.
 %prep
 %setup -q
 
-#remove not compilint tests
-rm -fr src/test/java/org/codehaus/plexus/archiver/DuplicateFilesTest.java
-
 %build
 mvn-rpmbuild install javadoc:javadoc
-
 
 %install
 # jars
@@ -98,11 +94,11 @@ install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/plexus
 install -pm 644 target/%{name}-%{version}.jar \
   $RPM_BUILD_ROOT%{_javadir}/plexus/archiver.jar
                   
-%add_to_maven_depmap org.codehaus.plexus %{name} %{version} JPP/plexus archiver
-
 # pom
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
 install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}.pom
+
+%add_maven_depmap JPP.%{name}.pom plexus/archiver.jar
 
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
@@ -117,6 +113,9 @@ cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Sep 8 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.0.1-1
+- Update to 2.0.1 version.
+
 * Wed Jul 27 2011 Jaromir Capik <jcapik@redhat.com> - 0:1.2-2
 - Removal of plexus-maven-plugin dependency (not needed)
 - Minor spec file changes according to the latest guidelines
@@ -171,3 +170,4 @@ cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 * Mon Nov 07 2005 Ralph Apel <r.apel at r-apel.de> - 0:1.0-0.a3.1jpp
 - First JPackage build
+
