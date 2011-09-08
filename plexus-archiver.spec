@@ -30,7 +30,7 @@
 
 Name:           plexus-archiver
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
@@ -55,7 +55,7 @@ BuildRequires: maven-jar-plugin
 BuildRequires: maven-install-plugin
 BuildRequires: maven-javadoc-plugin
 BuildRequires: maven-surefire-plugin
-BuildRequires: maven-surefire-provider-junit
+BuildRequires: maven-surefire-provider-junit4
 BuildRequires: maven-shared-reporting-impl
 BuildRequires: maven-doxia-sitetools
 Requires:       classworlds >= 0:1.1
@@ -113,6 +113,9 @@ cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Sep 8 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.0.1-2
+- BR maven-surefire-provider-junit4.
+
 * Thu Sep 8 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.0.1-1
 - Update to 2.0.1 version.
 
@@ -170,4 +173,3 @@ cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 * Mon Nov 07 2005 Ralph Apel <r.apel at r-apel.de> - 0:1.0-0.a3.1jpp
 - First JPackage build
-
