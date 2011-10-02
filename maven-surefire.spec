@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -40,6 +40,7 @@ BuildRequires:  maven-resources-plugin
 BuildRequires:  maven-site-plugin
 BuildRequires:  maven-shade-plugin
 BuildRequires:  maven-shared-verifier
+BuildRequires:  maven-enforcer-plugin
 BuildRequires:  maven-surefire-plugin
 BuildRequires:  maven-surefire-provider-junit
 BuildRequires:  maven-toolchain
@@ -294,6 +295,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Sun Oct 2 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.10-2
+- BR maven-enforcer-plugin.
+
 * Sun Oct 2 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.10-1
 - Update to latest upstream - 2.10.
 - Use new maven macro.
