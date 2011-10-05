@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.10
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -10,14 +10,8 @@ URL:            http://maven.apache.org/surefire/
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/surefire/surefire/%{version}/surefire-%{version}-source-release.zip
 Source1:        %{name}-jpp-depmap.xml
 
-# mockito is not available in Fedora yet
-Patch0:         0001-Remove-mockito-dependency.patch
-
-# remove test dep on htmlunit
-Patch1:         0002-Remove-htmlunit-dependency.patch
-
 # provide compatibility for maven3
-Patch2:         0003-Fix-maven3-compatibility.patch
+Patch0:         0003-Fix-maven3-compatibility.patch
 
 BuildArch:      noarch
 BuildRequires:  ant
@@ -59,9 +53,6 @@ Requires:       maven-project
 Requires:       maven-shared-common-artifact-filters
 Requires:       junit
 Requires:       plexus-utils
-
-Requires(post):    jpackage-utils >= 0:1.7.2
-Requires(postun):  jpackage-utils >= 0:1.7.2
 
 Obsoletes:      maven-surefire-booter <= 0:1.5.3
 Provides:       maven-surefire-booter = %{epoch}:%{version}-%{release}
@@ -161,9 +152,7 @@ Javadoc for %{name}.
 sed -i 's:<version>2.7.2</version>:<version>${project.version}</version>:' \
        surefire-integration-tests/pom.xml
 
-#%patch0 -p1 -b .sav
-#%patch1 -p1 -b .sav
-%patch2 -p1 -b .sav
+%patch0 -p1 -b .sav
 
 %build
 # tests turned off because they need jmock
@@ -203,7 +192,7 @@ install -pm 644 surefire-providers/common-junit3/pom.xml $RPM_BUILD_ROOT%{_maven
 
 install -pm 644 surefire-providers/surefire-junit3/target/original-surefire-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit.jar
 install -pm 644 surefire-providers/surefire-junit3/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit.pom
-%add_maven_depmap JPP.maven-surefire-junit.pom maven-surefire/junit.jar -a "org.apache.maven.surefire:surefire-junit" 
+%add_maven_depmap JPP.maven-surefire-junit.pom maven-surefire/junit.jar -a "org.apache.maven.surefire:surefire-junit"
 
 install -pm 644 surefire-providers/common-junit4/target/common-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common-junit4.jar
 install -pm 644 surefire-providers/common-junit4/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common-junit4.pom
@@ -211,7 +200,7 @@ install -pm 644 surefire-providers/common-junit4/pom.xml $RPM_BUILD_ROOT%{_maven
 
 install -pm 644 surefire-providers/surefire-junit4/target/original-surefire-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit4.jar
 install -pm 644 surefire-providers/surefire-junit4/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit4.pom
-%add_to_maven_depmap oJPP.maven-surefire-junit4.pom maven-surefire/junit4.jar
+%add_maven_depmap JPP.maven-surefire-junit4.pom maven-surefire/junit4.jar
 
 install -pm 644 surefire-providers/surefire-junit47/target/original-surefire-junit47-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit47.jar
 install -pm 644 surefire-providers/surefire-junit47/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit47.pom
@@ -295,6 +284,10 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Wed Oct  5 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.10-3
+- Fix junit4 depmap provider macro
+- Remove unused patches
+
 * Sun Oct 2 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.10-2
 - BR maven-enforcer-plugin.
 
