@@ -6,7 +6,6 @@ Summary:        Maven Plugin Tools
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugin-tools/
-Epoch:          0
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/plugin-tools/%{name}/%{version}/%{name}-%{version}-source-release.zip
 
 # this patch should be upstreamed (together with updated pom.xml
@@ -37,8 +36,6 @@ BuildRequires: modello
 Requires: maven
 Requires:       jpackage-utils
 Requires:       java
-Requires(post):       jpackage-utils
-Requires(postun):     jpackage-utils
 
 %description
 The Maven Plugin Tools contains the necessary tools to be able to produce Maven Plugins in a variety of languages.
@@ -251,7 +248,7 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_mavendepmapfragdir}/maven-plugin-plugin
 
 %changelog
-* Tue Aug 16 2011 Jaromir Capik <jcapik@redhat.com> -  0:2.7-2
+* Tue Aug 16 2011 Jaromir Capik <jcapik@redhat.com> -  2.7-2
 - Removal of plexus-maven-plugin (not needed)
 - Migration to maven3
 - Removal of unwanted file duplicates
