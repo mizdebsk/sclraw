@@ -33,6 +33,7 @@ BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-shared-reporting-impl
 BuildRequires: maven-test-tools
 BuildRequires: maven-plugin-testing-harness
+BuildRequires: modello
 Requires: maven
 Requires:       jpackage-utils
 Requires:       java
