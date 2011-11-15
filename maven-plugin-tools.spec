@@ -15,7 +15,7 @@ Patch1:         0002-maven3-compat.patch
 
 BuildArch: noarch
 
-BuildRequires: java-devel >= 1:1.6.0
+BuildRequires: java-devel = 1:1.6.0
 BuildRequires: maven
 BuildRequires: maven-install-plugin
 BuildRequires: maven-compiler-plugin
