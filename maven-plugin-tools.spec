@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Plugin Tools
 
 Group:          Development/Libraries
@@ -12,6 +12,7 @@ Source0:        http://repo2.maven.org/maven2/org/apache/maven/plugin-tools/%{na
 # this patch should be upstreamed (together with updated pom.xml
 # dependency version on jtidy 8.0)
 Patch0:         0001-fix-for-new-jtidy.patch
+Patch1:         0002-maven3-compat.patch
 
 BuildArch: noarch
 
@@ -24,7 +25,6 @@ BuildRequires: maven-jar-plugin
 BuildRequires: maven-source-plugin
 BuildRequires: maven-plugin-plugin
 BuildRequires: maven-site-plugin
-BuildRequires: plexus-maven-plugin
 BuildRequires: maven-javadoc-plugin
 BuildRequires: maven-doxia-sitetools
 BuildRequires: maven-doxia-tools
@@ -135,11 +135,11 @@ plugin registry, the artifact metadata and a generic help goal.
 %prep
 %setup -q
 %patch0
+%patch1 -p1
 
 %build
 export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mvn-rpmbuild \
-        package javadoc:aggregate
+mvn-rpmbuild package javadoc:aggregate
 
 %install
 # jars
@@ -161,39 +161,41 @@ install -pm 644 maven-plugin-plugin/target/maven-plugin-plugin-%{version}.jar \
                 %{buildroot}%{_javadir}/maven-plugin-tools/plugin.jar
 
 # pom
-install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
+install -d -m 755 %{buildroot}%{_mavenpomdir}
 
 install -pm 644 pom.xml \
-                $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}.pom
-%add_to_maven_depmap org.apache.maven.plugin-tools %{name} %{version} JPP/%{name} %{name}
+                %{buildroot}%{_mavenpomdir}/JPP.%{name}-%{name}.pom
+%add_maven_depmap JPP.%{name}-%{name}.pom
 
-install -pm 644 maven-plugin-tools-ant/pom.xml \
-                $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-ant.pom
-%add_to_maven_depmap org.apache.maven.plugin-tools %{name}-ant %{version} JPP/%{name} ant
+install -pm 644 %{name}-ant/pom.xml \
+                %{buildroot}%{_mavenpomdir}/JPP.%{name}-ant.pom
+%add_maven_depmap -f ant JPP.%{name}-ant.pom %{name}/ant.jar
 
-install -pm 644 maven-plugin-tools-api/pom.xml \
-                $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-api.pom
-%add_to_maven_depmap org.apache.maven.plugin-tools %{name}-api %{version} JPP/%{name} api
+install -pm 644 %{name}-api/pom.xml \
+                %{buildroot}%{_mavenpomdir}/JPP.%{name}-api.pom
+%add_maven_depmap -f api JPP.%{name}-api.pom %{name}/api.jar
 
-install -pm 644 maven-plugin-tools-beanshell/pom.xml \
-                $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-beanshell.pom
-%add_to_maven_depmap org.apache.maven.plugin-tools %{name}-beanshell %{version} JPP/%{name} beanshell
+install -pm 644 %{name}-beanshell/pom.xml \
+                %{buildroot}%{_mavenpomdir}/JPP.%{name}-beanshell.pom
+%add_maven_depmap -f beanshell JPP.%{name}-beanshell.pom %{name}/beanshell.jar
 
-install -pm 644 maven-plugin-tools-java/pom.xml \
-                $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-java.pom
-%add_to_maven_depmap org.apache.maven.plugin-tools %{name}-java %{version} JPP/%{name} java
+install -pm 644 %{name}-java/pom.xml \
+                %{buildroot}%{_mavenpomdir}/JPP.%{name}-java.pom
+%add_maven_depmap -f java JPP.%{name}-java.pom %{name}/java.jar
 
-install -pm 644 maven-plugin-tools-javadoc/pom.xml \
-                $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-javadoc.pom
-%add_to_maven_depmap org.apache.maven.plugin-tools %{name}-javadoc %{version} JPP/%{name} javadoc
+install -pm 644 %{name}-javadoc/pom.xml \
+                %{buildroot}%{_mavenpomdir}/JPP.%{name}-javadoc.pom
+%add_maven_depmap -f javadoc JPP.%{name}-javadoc.pom %{name}/javadoc.jar
 
-install -pm 644 maven-plugin-tools-model/pom.xml \
-                $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-model.pom
-%add_to_maven_depmap org.apache.maven.plugin-tools %{name}-model %{version} JPP/%{name} model
+install -pm 644 %{name}-model/pom.xml \
+                %{buildroot}%{_mavenpomdir}/JPP.%{name}-model.pom
+%add_maven_depmap -f model JPP.%{name}-model.pom %{name}/model.jar
 
 install -pm 644 maven-plugin-plugin/pom.xml \
-                $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-plugin.pom
-%add_to_maven_depmap org.apache.maven.plugins maven-plugin-plugin %{version} JPP/%{name} plugin
+                %{buildroot}%{_mavenpomdir}/JPP.%{name}-plugin.pom
+%add_maven_depmap -f plugin JPP.%{name}-plugin.pom %{name}/plugin.jar
+# add_maven_depmap macro supports name suffixes only, renaming ...
+mv -f %{buildroot}%{_mavendepmapfragdir}/%{name}-plugin %{buildroot}%{_mavendepmapfragdir}/maven-plugin-plugin
 
 # javadoc
 install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
@@ -205,51 +207,55 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}/
 [ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
 rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
-
 %files
-%defattr(-,root,root,-)
-%{_javadir}/*
-%{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
+%{_mavenpomdir}/JPP.%{name}-%{name}.pom
+%{_mavendepmapfragdir}/%{name}
 
 %files javadocs
-%defattr(-,root,root,-)
 %{_javadocdir}/%{name}
 
 %files ant
-%defattr(-,root,root,-)
-%{_javadir}/%{name}/ant*
+%{_javadir}/%{name}/ant.jar
+%{_mavenpomdir}/JPP.%{name}-ant.pom
+%{_mavendepmapfragdir}/%{name}-ant
 
 %files api
-%defattr(-,root,root,-)
-%{_javadir}/%{name}/api*
+%{_javadir}/%{name}/api.jar
+%{_mavenpomdir}/JPP.%{name}-api.pom
+%{_mavendepmapfragdir}/%{name}-api
 
 %files beanshell
-%defattr(-,root,root,-)
-%{_javadir}/%{name}/beanshell*
+%{_javadir}/%{name}/beanshell.jar
+%{_mavenpomdir}/JPP.%{name}-beanshell.pom
+%{_mavendepmapfragdir}/%{name}-beanshell
 
 %files java
-%defattr(-,root,root,-)
-%{_javadir}/%{name}/java.*
+%{_javadir}/%{name}/java.jar
+%{_mavenpomdir}/JPP.%{name}-java.pom
+%{_mavendepmapfragdir}/%{name}-java
 
 %files javadoc
-%defattr(-,root,root,-)
-%{_javadir}/%{name}/javadoc*
+%{_javadir}/%{name}/javadoc.jar
+%{_mavenpomdir}/JPP.%{name}-javadoc.pom
+%{_mavendepmapfragdir}/%{name}-javadoc
 
 %files model
-%defattr(-,root,root,-)
-%{_javadir}/%{name}/model*
+%{_javadir}/%{name}/model.jar
+%{_mavenpomdir}/JPP.%{name}-model.pom
+%{_mavendepmapfragdir}/%{name}-model
 
 %files -n maven-plugin-plugin
-%defattr(-,root,root,-)
 %{_javadir}/%{name}/plugin*
+%{_mavenpomdir}/JPP.%{name}-plugin.pom
+%{_mavendepmapfragdir}/maven-plugin-plugin
 
 %changelog
+* Tue Aug 16 2011 Jaromir Capik <jcapik@redhat.com> -  0:2.7-2
+- Removal of plexus-maven-plugin (not needed)
+- Migration to maven3
+- Removal of unwanted file duplicates
+- Minor spec file changes according to the latest guidelines
+
 * Sat Feb 12 2011 Alexander Kurtakov <akurtako@redhat.com> 0:2.7-1
 - Update to new upstream release.
 - Adapt to current guidelines.
