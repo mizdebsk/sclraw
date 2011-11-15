@@ -1,6 +1,7 @@
 Name:           maven-plugin-tools
 Version:        2.7
 Release:        2%{?dist}
+Epoch:          0
 Summary:        Maven Plugin Tools
 
 Group:          Development/Libraries
@@ -248,7 +249,7 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_mavendepmapfragdir}/maven-plugin-plugin
 
 %changelog
-* Tue Aug 16 2011 Jaromir Capik <jcapik@redhat.com> -  2.7-2
+* Tue Aug 16 2011 Jaromir Capik <jcapik@redhat.com> -  0:2.7-2
 - Removal of plexus-maven-plugin (not needed)
 - Migration to maven3
 - Removal of unwanted file duplicates
