@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -13,10 +13,11 @@ Source0:        http://repo2.maven.org/maven2/org/apache/maven/plugin-tools/%{na
 # dependency version on jtidy 8.0)
 Patch0:         0001-fix-for-new-jtidy.patch
 Patch1:         0002-maven3-compat.patch
+Patch2:         0003-missing-com.sun-in-1.6.0-and-higher.patch
 
 BuildArch: noarch
 
-BuildRequires: java-devel = 1:1.6.0
+BuildRequires: java-devel >= 1:1.6.0
 BuildRequires: maven
 BuildRequires: maven-install-plugin
 BuildRequires: maven-compiler-plugin
@@ -135,6 +136,7 @@ plugin registry, the artifact metadata and a generic help goal.
 %setup -q
 %patch0
 %patch1 -p1
+%patch2 -p1
 
 %build
 export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
@@ -249,6 +251,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_mavendepmapfragdir}/maven-plugin-plugin
 
 %changelog
+* Wed Nov 16 2011 Jaromir Capik <jcapik@redhat.com> -  0:2.7-3
+- Missing com.sun.javadoc / com.sun.tools.doclet forced in the POM
+
 * Tue Aug 16 2011 Jaromir Capik <jcapik@redhat.com> -  0:2.7-2
 - Removal of plexus-maven-plugin (not needed)
 - Migration to maven3
