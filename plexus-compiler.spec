@@ -34,7 +34,7 @@
 
 Name:       plexus-compiler
 Version:    1.8
-Release:    2%{?dist}
+Release:    3%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 License:    MIT
@@ -87,11 +87,12 @@ API documentation for %{name}.
 %setup -q -n sonatype-plexus-components-%{dirhash}
 %patch0 -p1
 
+
+# don't build/install compiler-test module, it needs maven2 test harness
+sed -i 's:<module>plexus-compiler-test</module>::' pom.xml
+
 %build
-export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mkdir -p $MAVEN_REPO_LOCAL
-mvn-jpp -e \
-        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+mvn-rpmbuild -e \
         -Dmaven.test.skip=true \
         install javadoc:aggregate
 
@@ -101,13 +102,13 @@ mvn-jpp -e \
 install -d -m 755 %{buildroot}%{_javadir}/%{parent}
 install -d -m 755 %{buildroot}%{_mavenpomdir}
 
-for mod in plexus-compiler-{api,test,manager}; do
+for mod in plexus-compiler-{api,manager}; do
     jarname=${mod/plexus-}
     install -pm 644 $mod/target/${mod}-%{version}.jar \
                     %{buildroot}%{_javadir}/%{parent}/$jarname.jar
 
     install -pm 644 $mod/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-$jarname.pom
-    %add_to_maven_depmap org.codehaus.plexus $mod %{version} JPP/%{parent} $jarname
+    %add_maven_depmap JPP.%{parent}-$jarname.pom %{parent}/$jarname.jar
 done
 
 pushd plexus-compilers
@@ -117,15 +118,21 @@ for mod in plexus-compiler-{csharp,eclipse,jikes,javac}; do
                     %{buildroot}%{_javadir}/%{parent}/$jarname.jar
 
     install -pm 644 $mod/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-$jarname.pom
-    %add_to_maven_depmap org.codehaus.plexus $mod %{version} JPP/%{parent} $jarname
+    %add_maven_depmap JPP.%{parent}-$jarname.pom %{parent}/$jarname.jar -f extras
 done
 
+install -pm 644 plexus-compiler-javac/target/plexus-compiler-javac-%{version}.jar \
+                    %{buildroot}%{_javadir}/%{parent}/compiler-javac.jar
+
+install -pm 644 plexus-compiler-javac/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-compiler-javac.pom
+%add_maven_depmap JPP.%{parent}-compiler-javac.pom %{parent}/compiler-javac.jar
+
 install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-compilers.pom
-%add_to_maven_depmap org.codehaus.plexus plexus-compilers %{version} JPP/%{parent} compilers
+%add_maven_depmap JPP.%{parent}-compilers.pom
 popd
 
 install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-compiler.pom
-%add_to_maven_depmap org.codehaus.plexus plexus-compiler %{version} JPP/%{parent} compiler
+%add_maven_depmap JPP.%{parent}-compiler.pom
 
 
 # javadocs
@@ -137,33 +144,37 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 [ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
 rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
-
 
 %files
-%defattr(-,root,root,-)
 %{_javadir}/%{parent}/compiler-api.jar
 %{_javadir}/%{parent}/compiler-manager.jar
-%{_javadir}/%{parent}/compiler-test.jar
 %{_javadir}/%{parent}/compiler-javac.jar
-%{_mavenpomdir}/*.pom
+%{_mavenpomdir}/JPP.%{parent}-compilers.pom
+%{_mavenpomdir}/JPP.%{parent}-compiler.pom
+%{_mavenpomdir}/JPP.%{parent}-compiler-api.pom
+%{_mavenpomdir}/JPP.%{parent}-compiler-manager.pom
+%{_mavenpomdir}/JPP.%{parent}-compiler-javac.pom
 %{_mavendepmapfragdir}/%{name}
 
 %files extras
-%defattr(-,root,root,-)
+%{_mavendepmapfragdir}/%{name}-extras
 %{_javadir}/%{parent}/compiler-csharp.jar
 %{_javadir}/%{parent}/compiler-eclipse.jar
 %{_javadir}/%{parent}/compiler-jikes.jar
+%{_mavenpomdir}/JPP.%{parent}-compiler-jikes.pom
+%{_mavenpomdir}/JPP.%{parent}-compiler-eclipse.pom
+%{_mavenpomdir}/JPP.%{parent}-compiler-csharp.pom
 
 %files javadoc
-%defattr(-,root,root,-)
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Dec  1 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.8-3
+- Build with maven 3
+- Don't install compiler-test module (nothing should use it anyway)
+- Fixes accoding to current guidelines
+- Install depmaps into extras separately
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
