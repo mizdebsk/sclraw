@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.7
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -251,6 +251,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_mavendepmapfragdir}/maven-plugin-plugin
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.7-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Wed Nov 16 2011 Jaromir Capik <jcapik@redhat.com> -  0:2.7-3
 - Missing com.sun.javadoc / com.sun.tools.doclet forced in the POM
 
