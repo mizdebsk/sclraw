@@ -29,20 +29,20 @@
 #
 
 %global parent  plexus
-%global dirhash a7f8290
-%global githash 7ca7d76
+%global dirhash 8b4d9ed
+%global githash gef6142f
 
 Name:       plexus-compiler
-Version:    1.8
-Release:    3%{?dist}
+Version:    1.8.3
+Release:    1%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 License:    MIT
 Group:      Development/Java
 URL:        http://plexus.codehaus.org/
 
-# wget  https://nodeload.github.com/sonatype/plexus-components/tarball/plexus-compiler-1.8
-Source0:    sonatype-plexus-components-%{name}-%{version}-0-g%{githash}.tar.gz
+# wget  https://github.com/sonatype/plexus-compiler/tarball/plexus-compiler-1.8.3
+Source0:    sonatype-plexus-compiler-plexus-compiler-1.8.3-0-%{githash}.tar.gz
 
 Patch0:     0001-Remove-aspecj-support.patch
 
@@ -59,6 +59,7 @@ BuildRequires:  plexus-containers-component-metadata
 Requires:       classworlds
 Requires:       plexus-container-default
 Requires:       plexus-utils
+Requires:       junit4
 
 %description
 Plexus Compiler adds support for using various compilers from a
@@ -84,7 +85,7 @@ Requires:       jpackage-utils
 API documentation for %{name}.
 
 %prep
-%setup -q -n sonatype-plexus-components-%{dirhash}
+%setup -q -n sonatype-plexus-compiler-%{dirhash}
 %patch0 -p1
 
 
@@ -169,6 +170,10 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Fri Jan 13 2012 Alexander Kurtakov <akurtako@redhat.com> 0:1.8.3-1
+- Update to upstream 1.8.3 release.
+- For some reason junit is strong (not test) dependency.
+
 * Thu Dec  1 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.8-3
 - Build with maven 3
 - Don't install compiler-test module (nothing should use it anyway)
@@ -208,4 +213,3 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
 * Tue May 30 2006 Ralph Apel <r.apel at r-apel.de> - 0:1.5.2-1jpp
 - First JPackage build
-
