@@ -55,6 +55,7 @@ BuildRequires:  eclipse-ecj
 BuildRequires:  plexus-container-default
 BuildRequires:  plexus-utils
 BuildRequires:  plexus-containers-component-metadata
+BuildRequires:  junit4
 
 Requires:       classworlds
 Requires:       plexus-container-default
