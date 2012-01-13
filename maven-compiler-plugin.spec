@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
 Version:        2.3.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
@@ -90,6 +90,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_javadocdir}/%{name}
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Jun 27 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.3.2-4
 - Add few missing (Build)requires
 - Remove post(un) scriptlets with update_maven_depmap
