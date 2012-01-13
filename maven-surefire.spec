@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.10
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -303,6 +303,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.10-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Thu Nov 24 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.10-4
 - Move poms and depmaps to respective sub-packages
 - Add requires on junit provider to maven-plugin
