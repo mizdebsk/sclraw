@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
@@ -76,6 +76,9 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
 %{_javadocdir}/%{name}
 
 %changelog
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Thu Sep 8 2011 Alexander Kurtakov <akurtako@redhat.com> 2.0.1-1
 - Update to 2.0.1 upstream release.
 
