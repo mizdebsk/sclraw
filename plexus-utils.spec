@@ -33,7 +33,7 @@
 
 Name:           plexus-utils
 Version:        3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus Common Utilities
 License:        ASL 1.1 and ASL 2.0 and MIT
 Group:          Development/Libraries
@@ -106,6 +106,9 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Wed Sep 7 2011 Alexander Kurtakov <akurtako@redhat.com> 3.0-1
 - Update to upstream 3.0.
 
