@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and Plexus
 Group:          Development/Libraries
@@ -212,6 +212,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.5-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Tue Jun 28 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-3
 - Fix maven3 build
 - Use new add_maven_depmap macro
