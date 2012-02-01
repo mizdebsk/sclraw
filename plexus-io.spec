@@ -1,13 +1,14 @@
 Name:           plexus-io
-Version:        2.0.1
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://plexus.codehaus.org/plexus-components/plexus-io
 # git clone https://github.com/sonatype/plexus-io
-# git archive --format=tar --prefix=plexus-io-2.0.1/ plexus-io-2.0.1 | xz >plexus-io-2.0.1.tar.xz
+# cd plexus-io
+# git archive --format=tar --prefix=plexus-io-2.0.2/ plexus-io-2.0.2 | xz >plexus-io-2.0.2.tar.xz
 Source0:        %{name}-%{version}.tar.xz
 BuildArch: noarch
 
@@ -46,7 +47,7 @@ API documentation for %{name}.
 %setup -q
 
 %build
-mvn-rpmbuild install javadoc:javadoc
+mvn-rpmbuild install javadoc:aggregate
 
 %install
 # jars
@@ -76,6 +77,9 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Feb 02 2012 Tomas Radej <tradej@redhat.com> - 2.0.2-1
+- Updated to upstream version
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
