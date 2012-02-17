@@ -6,11 +6,11 @@
 
 # this needs to be exact version of maven-javadoc-plugin for
 # integration tests
-%global javadoc_plugin_version 2.8
+%global javadoc_plugin_version 2.8.1
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and Plexus
 Group:          Development/Libraries
@@ -25,6 +25,7 @@ Source3:        plexus-containers-settings.xml
 
 Patch0:         0001-Fix-test-oom.patch
 Patch1:         0002-Fix-maven3-compatibility.patch
+Patch2:         0003-Fix-OpenJDK7-compatibility.patch
 
 BuildArch:      noarch
 
@@ -124,6 +125,7 @@ cp %{SOURCE2} plexus-component-annotations/build.xml
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 # to prevent ant from failing
 mkdir -p plexus-component-annotations/src/test/java
@@ -212,6 +214,10 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Fri Feb 17 2012 Deepak Bhole <dbhole@redhat.com> - 1.5.5-5
+- Resolves rhbz#791339
+- Applied fix from Omair Majid <omajid at redhat dot com> to build with Java 7
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
