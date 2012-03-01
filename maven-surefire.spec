@@ -1,8 +1,8 @@
-%global bootstrap 1
+%global bootstrap 0
 
 Name:           maven-surefire
 Version:        2.12
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -41,7 +41,7 @@ BuildRequires:  maven-site-plugin
 BuildRequires:  maven-shade-plugin
 BuildRequires:  maven-shared-verifier
 BuildRequires:  maven-enforcer-plugin
-BuildRequires:  maven-surefire-plugin
+BuildRequires:  maven-surefire-plugin >= 0:2.12-1
 BuildRequires:  maven-surefire-provider-junit
 BuildRequires:  maven-toolchain
 BuildRequires:  maven-project
@@ -371,6 +371,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Thu Mar 01 2012 Jaromir Capik <jcapik@redhat.com> - 0:2.12-2
+- Update to 2.12
+
 * Thu Mar 01 2012 Jaromir Capik <jcapik@redhat.com> - 0:2.12-1
 - Bootstrap for 2.12
 
