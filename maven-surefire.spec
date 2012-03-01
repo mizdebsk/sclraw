@@ -1,6 +1,8 @@
+%global bootstrap 1
+
 Name:           maven-surefire
-Version:        2.10
-Release:        5%{?dist}
+Version:        2.12
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -12,6 +14,10 @@ Source1:        %{name}-jpp-depmap.xml
 
 # provide compatibility for maven3
 Patch0:         0003-Fix-maven3-compatibility.patch
+
+%if %{bootstrap}
+Patch1:         0004-Surefire-2.12-bootstrap.patch
+%endif
 
 BuildArch:      noarch
 BuildRequires:  ant
@@ -45,6 +51,7 @@ BuildRequires:  plexus-containers-component-api >= 1.0-0.a34
 BuildRequires:  tomcat6-servlet-2.5-api
 BuildRequires:  maven-plugin-testing-harness
 BuildRequires:  bsf
+BuildRequires:  javacc-maven-plugin
 
 Requires:       classworlds
 Requires:       maven
@@ -150,10 +157,11 @@ Javadoc for %{name}.
 %prep
 %setup -q -n surefire-%{version}
 
-sed -i 's:<version>2.7.2</version>:<version>${project.version}</version>:' \
-       surefire-integration-tests/pom.xml
-
 %patch0 -p1 -b .sav
+
+%if %{bootstrap}
+%patch1 -p1 -b .sav
+%endif
 
 %build
 # tests turned off because they need jmock
@@ -162,27 +170,43 @@ mvn-rpmbuild -e \
         install javadoc:aggregate
 
 %install
-# jars
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/maven-surefire
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
+
 
 install -pm 644 maven-surefire-plugin/target/maven-surefire-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/maven-plugin.jar
 install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-maven-plugin.pom
 %add_maven_depmap JPP.maven-surefire-maven-plugin.pom maven-surefire/maven-plugin.jar -f maven-plugin
 
-install -pm 644 maven-surefire-common/target/maven-surefire-common-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common.jar
+
+%if %{bootstrap}
+  install -pm 644 maven-surefire-common/target/maven-surefire-common-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common.jar
+%else
+  install -pm 644 maven-surefire-common/target/original-maven-surefire-common-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common.jar
+%endif
 install -pm 644 maven-surefire-common/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common.pom
 %add_maven_depmap JPP.maven-surefire-common.pom maven-surefire/common.jar
+
 
 install -pm 644 maven-surefire-report-plugin/target/maven-surefire-report-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/report-maven-plugin.jar
 install -pm 644 maven-surefire-report-plugin/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-report-maven-plugin.pom
 %add_maven_depmap JPP.maven-surefire-report-maven-plugin.pom maven-surefire/report-maven-plugin.jar -f report-plugin
 
-install -pm 644 surefire-api/target/original-surefire-api-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/api.jar
+
+%if %{bootstrap}
+  install -pm 644 surefire-api/target/surefire-api-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/api.jar
+%else
+  install -pm 644 surefire-api/target/original-surefire-api-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/api.jar
+%endif
 install -pm 644 surefire-api/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-api.pom
 %add_maven_depmap JPP.maven-surefire-api.pom maven-surefire/api.jar
 
+
+%if %{bootstrap}
 install -pm 644 surefire-booter/target/surefire-booter-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/booter.jar
+%else
+install -pm 644 surefire-booter/target/original-surefire-booter-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/booter.jar
+%endif
 install -pm 644 surefire-booter/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-booter.pom
 %add_maven_depmap JPP.maven-surefire-booter.pom maven-surefire/booter.jar
 
@@ -190,39 +214,79 @@ install -pm 644 surefire-providers/common-junit3/target/common-junit3-*.jar $RPM
 install -pm 644 surefire-providers/common-junit3/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common-junit.pom
 %add_maven_depmap JPP.maven-surefire-common-junit.pom maven-surefire/common-junit.jar -f junit
 
-install -pm 644 surefire-providers/surefire-junit3/target/original-surefire-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit.jar
+
+%if %{bootstrap}
+  install -pm 644 surefire-providers/surefire-junit3/target/surefire-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit.jar
+%else
+  install -pm 644 surefire-providers/surefire-junit3/target/original-surefire-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit.jar
+%endif
 install -pm 644 surefire-providers/surefire-junit3/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit.pom
 %add_maven_depmap JPP.maven-surefire-junit.pom maven-surefire/junit.jar -a "org.apache.maven.surefire:surefire-junit" -f junit
+
 
 install -pm 644 surefire-providers/common-junit4/target/common-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common-junit4.jar
 install -pm 644 surefire-providers/common-junit4/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common-junit4.pom
 %add_maven_depmap JPP.maven-surefire-common-junit4.pom maven-surefire/common-junit4.jar -f junit4
 
-install -pm 644 surefire-providers/surefire-junit4/target/original-surefire-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit4.jar
+
+%if %{bootstrap}
+  install -pm 644 surefire-providers/surefire-junit4/target/surefire-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit4.jar
+%else
+  install -pm 644 surefire-providers/surefire-junit4/target/original-surefire-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit4.jar
+%endif
 install -pm 644 surefire-providers/surefire-junit4/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit4.pom
 %add_maven_depmap JPP.maven-surefire-junit4.pom maven-surefire/junit4.jar -f junit4
 
-install -pm 644 surefire-providers/surefire-junit47/target/original-surefire-junit47-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit47.jar
+
+%if %{bootstrap}
+  install -pm 644 surefire-providers/surefire-junit47/target/surefire-junit47-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit47.jar
+%else
+  install -pm 644 surefire-providers/surefire-junit47/target/original-surefire-junit47-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit47.jar
+%endif
 install -pm 644 surefire-providers/surefire-junit47/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit47.pom
 %add_maven_depmap JPP.maven-surefire-junit47.pom maven-surefire/junit47.jar -f junit4
+
+
+%if %{bootstrap}
+  install -pm 644 surefire-providers/common-junit48/target/common-junit48-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common-junit48.jar
+%else
+  install -pm 644 surefire-providers/common-junit48/target/original-common-junit48-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common-junit48.jar
+%endif
+install -pm 644 surefire-providers/common-junit48/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common-junit48.pom
+%add_maven_depmap JPP.maven-surefire-common-junit48.pom maven-surefire/common-junit48.jar -f junit4
+
 
 install -pm 644 surefire-providers/surefire-testng/target/surefire-testng-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/testng.jar
 install -pm 644 surefire-providers/surefire-testng/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-testng.pom
 %add_maven_depmap JPP.maven-surefire-testng.pom maven-surefire/testng.jar -f testng
 
-install -pm 644 surefire-providers/surefire-testng-utils/target/surefire-testng-utils-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/testng-utils.jar
+
+%if %{bootstrap}
+  install -pm 644 surefire-providers/surefire-testng-utils/target/surefire-testng-utils-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/testng-utils.jar
+%else
+  install -pm 644 surefire-providers/surefire-testng-utils/target/original-surefire-testng-utils-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/testng-utils.jar
+%endif
 install -pm 644 surefire-providers/surefire-testng-utils/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-testng-utils.pom
 %add_maven_depmap JPP.maven-surefire-testng-utils.pom maven-surefire/testng-utils.jar -f testng
 
+
 install -pm 644 surefire-providers/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-providers.pom
 %add_maven_depmap JPP.maven-surefire-providers.pom
+
 
 install -pm 644 maven-failsafe-plugin/target/maven-failsafe-plugin*.jar $RPM_BUILD_ROOT%{_javadir}/maven-failsafe-plugin.jar
 install -pm 644 maven-failsafe-plugin/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-maven-failsafe-plugin.pom
 %add_maven_depmap JPP-maven-failsafe-plugin.pom maven-failsafe-plugin.jar -f failsafe-plugin
 
+
 install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-main.pom
 %add_maven_depmap JPP.maven-surefire-main.pom
+
+
+install -pm 644 surefire-grouper/target/surefire-grouper-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/grouper.jar
+install -pm 644 surefire-grouper/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-grouper.pom
+%add_maven_depmap JPP.maven-surefire-grouper.pom maven-surefire/grouper.jar
+
 
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
@@ -250,11 +314,13 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_javadir}/maven-surefire/booter.jar
 %{_javadir}/maven-surefire/surefire.jar
 %{_javadir}/maven-surefire/common.jar
+%{_javadir}/maven-surefire/grouper.jar
 %{_mavenpomdir}/JPP.%{name}-api.pom
 %{_mavenpomdir}/JPP.%{name}-booter.pom
 %{_mavenpomdir}/JPP.%{name}-common.pom
 %{_mavenpomdir}/JPP.%{name}-main.pom
 %{_mavenpomdir}/JPP.%{name}-providers.pom
+%{_mavenpomdir}/JPP.%{name}-grouper.pom
 %{_mavendepmapfragdir}/%{name}
 
 %files plugin
@@ -283,9 +349,11 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_mavenpomdir}/JPP.%{name}-junit4.pom
 %{_mavenpomdir}/JPP.%{name}-junit47.pom
 %{_mavenpomdir}/JPP.%{name}-common-junit4.pom
+%{_mavenpomdir}/JPP.%{name}-common-junit48.pom
 %{_javadir}/maven-surefire/junit4.jar
 %{_javadir}/maven-surefire/junit47.jar
 %{_javadir}/maven-surefire/common-junit4.jar
+%{_javadir}/maven-surefire/common-junit48.jar
 
 %files provider-testng
 %{_mavendepmapfragdir}/%{name}-testng
@@ -303,6 +371,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Thu Mar 01 2012 Jaromir Capik <jcapik@redhat.com> - 0:2.12-1
+- Bootstrap for 2.12
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.10-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

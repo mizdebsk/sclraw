@@ -1,0 +1,186 @@
+diff -Naur surefire-2.12.orig/surefire-api/pom.xml surefire-2.12/surefire-api/pom.xml
+--- surefire-2.12.orig/surefire-api/pom.xml	2012-01-28 23:36:18.000000000 +0100
++++ surefire-2.12/surefire-api/pom.xml	2012-02-29 19:23:44.260000076 +0100
+@@ -41,53 +41,12 @@
+   <build>
+     <plugins>
+       <plugin>
+-        <artifactId>maven-surefire-plugin</artifactId>
+-        <dependencies>
+-          <dependency>
+-            <groupId>org.apache.maven.surefire</groupId>
+-            <artifactId>surefire-shadefire</artifactId>
+-            <version>${project.version}</version>
+-          </dependency>
+-        </dependencies>
+-      </plugin>
+-      <plugin>
+         <artifactId>maven-compiler-plugin</artifactId>
+         <configuration>
+           <source>1.3</source>
+           <target>1.3</target>
+         </configuration>
+       </plugin>
+-      <plugin>
+-        <groupId>org.apache.maven.plugins</groupId>
+-        <artifactId>maven-shade-plugin</artifactId>
+-        <executions>
+-          <execution>
+-            <phase>package</phase>
+-            <goals>
+-              <goal>shade</goal>
+-            </goals>
+-            <configuration>
+-              <minimizeJar>true</minimizeJar>
+-              <artifactSet>
+-                <includes>
+-                  <include>org.codehaus.plexus:plexus-utils</include>
+-                  <include>commons-lang:commons-lang</include>
+-                </includes>
+-              </artifactSet>
+-              <relocations>
+-                <relocation>
+-                  <pattern>org.codehaus.plexus.util</pattern>
+-                  <shadedPattern>org.apache.maven.surefire.shade.org.codehaus.plexus.util</shadedPattern>
+-                </relocation>
+-                <relocation>
+-                  <pattern>org.apache.commons.lang</pattern>
+-                  <shadedPattern>org.apache.maven.surefire.shade.org.apache.commons.lang</shadedPattern>
+-                </relocation>
+-              </relocations>
+-            </configuration>
+-          </execution>
+-        </executions>
+-      </plugin>
+     </plugins>
+   </build>
+ </project>
+diff -Naur surefire-2.12.orig/surefire-booter/pom.xml surefire-2.12/surefire-booter/pom.xml
+--- surefire-2.12.orig/surefire-booter/pom.xml	2012-01-28 23:36:18.000000000 +0100
++++ surefire-2.12/surefire-booter/pom.xml	2012-02-29 19:24:03.748008335 +0100
+@@ -41,48 +41,12 @@
+   <build>
+     <plugins>
+       <plugin>
+-        <artifactId>maven-surefire-plugin</artifactId>
+-        <dependencies>
+-          <dependency>
+-            <groupId>org.apache.maven.surefire</groupId>
+-            <artifactId>surefire-shadefire</artifactId>
+-            <version>${project.version}</version>
+-          </dependency>
+-        </dependencies>
+-      </plugin>
+-      <plugin>
+         <artifactId>maven-compiler-plugin</artifactId>
+         <configuration>
+           <source>1.3</source>
+           <target>1.3</target>
+         </configuration>
+       </plugin>
+-      <plugin>
+-        <groupId>org.apache.maven.plugins</groupId>
+-        <artifactId>maven-shade-plugin</artifactId>
+-        <executions>
+-          <execution>
+-            <phase>package</phase>
+-            <goals>
+-              <goal>shade</goal>
+-            </goals>
+-            <configuration>
+-              <minimizeJar>true</minimizeJar>
+-              <artifactSet>
+-                <includes>
+-                  <include>commons-lang:commons-lang</include>
+-                </includes>
+-              </artifactSet>
+-              <relocations>
+-                <relocation>
+-                  <pattern>org.apache.commons.lang</pattern>
+-                  <shadedPattern>org.apache.maven.surefire.shade.org.apache.commons.lang</shadedPattern>
+-                </relocation>
+-              </relocations>
+-            </configuration>
+-          </execution>
+-        </executions>
+-      </plugin>
+     </plugins>
+   </build>
+ </project>
+diff -Naur surefire-2.12.orig/surefire-providers/pom.xml surefire-2.12/surefire-providers/pom.xml
+--- surefire-2.12.orig/surefire-providers/pom.xml	2012-01-28 23:36:10.000000000 +0100
++++ surefire-2.12/surefire-providers/pom.xml	2012-02-29 19:24:30.740000002 +0100
+@@ -51,20 +51,5 @@
+     </dependency>
+   </dependencies>
+ 
+-  <build>
+-    <plugins>
+-      <plugin>
+-        <artifactId>maven-surefire-plugin</artifactId>
+-        <version>${shadedVersion}</version>
+-        <dependencies>
+-          <dependency>
+-            <groupId>org.apache.maven.surefire</groupId>
+-            <artifactId>surefire-shadefire</artifactId>
+-            <version>${project.version}</version>
+-          </dependency>
+-        </dependencies>
+-      </plugin>
+-    </plugins>
+-  </build>
+ </project>
+ 
+diff -Naur surefire-2.12.orig/surefire-providers/surefire-junit3/pom.xml surefire-2.12/surefire-providers/surefire-junit3/pom.xml
+--- surefire-2.12.orig/surefire-providers/surefire-junit3/pom.xml	2012-01-28 23:36:10.000000000 +0100
++++ surefire-2.12/surefire-providers/surefire-junit3/pom.xml	2012-02-29 19:24:51.380998384 +0100
+@@ -52,28 +52,6 @@
+         <targetPath>META-INF</targetPath>
+       </resource>
+     </resources>
+-     <plugins>
+-       <plugin>
+-         <groupId>org.apache.maven.plugins</groupId>
+-         <artifactId>maven-shade-plugin</artifactId>
+-         <executions>
+-           <execution>
+-             <phase>package</phase>
+-             <goals>
+-               <goal>shade</goal>
+-             </goals>
+-             <configuration>
+-               <artifactSet>
+-                 <includes>
+-                   <include>org.apache.maven.surefire:common-junit3</include>
+-                 </includes>
+-               </artifactSet>
+-             </configuration>
+-           </execution>
+-         </executions>
+-       </plugin>
+-
+-     </plugins>
+-    </build>
++  </build>
+ 
+ </project>
+diff -Naur surefire-2.12.orig/surefire-grouper/pom.xml surefire-2.12/surefire-grouper/pom.xml
+--- surefire-2.12.orig/surefire-grouper/pom.xml	2012-01-28 23:36:10.000000000 +0100
++++ surefire-2.12/surefire-grouper/pom.xml	2012-03-01 11:12:03.570994187 +0100
+@@ -52,16 +52,6 @@
+         </executions>
+       </plugin>
+       <plugin>
+-        <artifactId>maven-surefire-plugin</artifactId>
+-        <dependencies>
+-          <dependency>
+-            <groupId>org.apache.maven.surefire</groupId>
+-            <artifactId>surefire-shadefire</artifactId>
+-            <version>${project.version}</version>
+-          </dependency>
+-        </dependencies>
+-      </plugin>
+-      <plugin>
+         <artifactId>maven-jar-plugin</artifactId>
+         <configuration>
+           <archive>
