@@ -2,7 +2,7 @@
 
 Name:           maven-surefire
 Version:        2.12
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -14,10 +14,7 @@ Source1:        %{name}-jpp-depmap.xml
 
 # provide compatibility for maven3
 Patch0:         0003-Fix-maven3-compatibility.patch
-
-%if %{bootstrap}
 Patch1:         0004-Surefire-2.12-bootstrap.patch
-%endif
 
 BuildArch:      noarch
 BuildRequires:  ant
@@ -371,6 +368,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Tue Mar 06 2012 Jaromir Capik <jcapik@redhat.com> - 0:2.12-3
+- Removing bootstrap condition for Patch1 inclusion (always needed in SRPM)
+
 * Thu Mar 01 2012 Jaromir Capik <jcapik@redhat.com> - 0:2.12-2
 - Update to 2.12
 
