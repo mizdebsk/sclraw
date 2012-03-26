@@ -1,0 +1,25 @@
+--- cdi-api-1.0.SP4/pom.xml	2010-12-16 14:10:21.000000000 -0500
++++ cdi-api-1.0.SP4-work/pom.xml	2012-03-19 09:05:04.611002728 -0400
+@@ -1,13 +1,6 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+ 
+-   <parent>
+-      <groupId>org.jboss.weld</groupId>
+-      <artifactId>weld-parent</artifactId>
+-      <version>17</version>
+-      <relativePath />
+-   </parent>
+-
+    <groupId>javax.enterprise</groupId>
+    <artifactId>cdi-api</artifactId>
+    <packaging>jar</packaging>
+@@ -70,7 +63,7 @@
+ 
+    <properties>
+       <atinject.api.version>1</atinject.api.version>
+-      <ejb.api.version>1.0.0.CR2</ejb.api.version>
++      <ejb.api.version>1.0.1.Final</ejb.api.version>
+       <jsr250.api.version>1.0</jsr250.api.version>
+       <uel.api.version>2.2</uel.api.version>
+       <interceptor.api.version>1.0.0.Beta1</interceptor.api.version>
