@@ -1,15 +1,13 @@
 Name:           plexus-io
-Version:        2.0.2
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://plexus.codehaus.org/plexus-components/plexus-io
-# git clone https://github.com/sonatype/plexus-io
-# cd plexus-io
-# git archive --format=tar --prefix=plexus-io-2.0.2/ plexus-io-2.0.2 | xz >plexus-io-2.0.2.tar.xz
-Source0:        %{name}-%{version}.tar.xz
+# fetched from https://github.com/sonatype/plexus-io/tarball/plexus-io-2.0.4
+Source0:        sonatype-plexus-io-plexus-io-2.0.4-0-g2767dfe.tar.gz
 BuildArch: noarch
 
 BuildRequires: java-devel >= 1:1.6.0
@@ -44,7 +42,7 @@ API documentation for %{name}.
 
 
 %prep
-%setup -q
+%setup -q -n sonatype-plexus-io-fd7f1a8
 
 %build
 mvn-rpmbuild install javadoc:aggregate
@@ -77,6 +75,9 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Apr 18 2012 Alexander Kurtakov <akurtako@redhat.com> 2.0.4-1
+- Update to latest upstream.
+
 * Thu Feb 02 2012 Tomas Radej <tradej@redhat.com> - 2.0.2-1
 - Updated to upstream version
 
