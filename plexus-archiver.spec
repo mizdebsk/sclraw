@@ -29,7 +29,7 @@
 #
 
 Name:           plexus-archiver
-Version:        2.1
+Version:        2.1.1
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
@@ -37,8 +37,8 @@ License:        MIT and ASL 2.0
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
 # git clone https://github.com/sonatype/plexus-archiver
-# Fetched from https://github.com/sonatype/plexus-archiver/tarball/plexus-archiver-2.1
-Source0:        sonatype-plexus-archiver-plexus-archiver-2.1-0-g9913f73.tar.gz 
+# Fetched from https://github.com/sonatype/plexus-archiver/tarball/plexus-archiver-2.1.1
+Source0:        sonatype-plexus-archiver-plexus-archiver-2.1.1-0-ge64d181.tar.gz
 
 
 BuildArch:      noarch
@@ -83,7 +83,7 @@ Javadoc for %{name}.
 
 
 %prep
-%setup -q -n sonatype-plexus-archiver-8b3fb4c
+%setup -q -n sonatype-plexus-archiver-25364f5
 
 %build
 mvn-rpmbuild -Dmaven.test.skip=true install javadoc:javadoc
@@ -113,6 +113,9 @@ cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Apr 18 2012 Alexander Kurtakov <akurtako@redhat.com> 0:2.1.1-1
+- Update to latest upstream release.
+
 * Wed Feb 15 2012 Alexander Kurtakov <akurtako@redhat.com> 0:2.1-1
 - Update to latest upstream release.
 
