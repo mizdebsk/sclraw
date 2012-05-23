@@ -1,13 +1,13 @@
 Name:           maven-compiler-plugin
-Version:        2.3.2
-Release:        5%{?dist}
+Version:        2.4
+Release:        1%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-compiler-plugin
-#svn export http://svn.apache.org/repos/asf/maven/plugins/tags/maven-compiler-plugin-2.3.2 maven-compiler-plugin-2.3.2
-#tar caf maven-compiler-plugin-2.3.2.tar.xz maven-compiler-plugin-2.3.2/
+#svn export http://svn.apache.org/repos/asf/maven/plugins/tags/maven-compiler-plugin-2.4 maven-compiler-plugin-2.4
+#tar caf maven-compiler-plugin-2.4.tar.xz maven-compiler-plugin-2.4/
 Source0:        %{name}-%{version}.tar.xz
 
 BuildArch: noarch
@@ -54,9 +54,7 @@ API documentation for %{name}.
 %setup -q #You may need to update this according to your Source0
 
 %build
-mvn-rpmbuild -e \
-        -Dmaven.test.failure.ignore=true \
-        install javadoc:javadoc
+mvn-rpmbuild install javadoc:aggregate -Dmaven.test.failure.ignore
 
 %install
 
@@ -76,11 +74,6 @@ install -pm 644 pom.xml \
 install -d -m 0755 %{buildroot}%{_javadocdir}/%{name}
 cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}
 
-%pre javadoc
-# workaround for rpm bug, can be removed in F-17
-[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
-rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
-
 %files
 %{_javadir}/*
 %{_mavenpomdir}/*
@@ -90,6 +83,10 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed May 23 2012 Tomas Radej <tradej@redhat.com> - 2.4-1
+- Updated to latest upstream version
+- Guidelines fixes + Removed RPM workaround
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
