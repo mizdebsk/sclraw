@@ -1,14 +1,12 @@
 Name:           maven-compiler-plugin
-Version:        2.4
+Version:        2.5.1
 Release:        1%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-compiler-plugin
-#svn export http://svn.apache.org/repos/asf/maven/plugins/tags/maven-compiler-plugin-2.4 maven-compiler-plugin-2.4
-#tar caf maven-compiler-plugin-2.4.tar.xz maven-compiler-plugin-2.4/
-Source0:        %{name}-%{version}.tar.xz
+Source0:        http://repo1.maven.org/maven2/org/apache/maven/plugins/%{name}/%{version}/%{name}-%{version}-source-release.zip
 
 BuildArch: noarch
 
@@ -51,7 +49,7 @@ API documentation for %{name}.
 
 
 %prep
-%setup -q #You may need to update this according to your Source0
+%setup -q 
 
 %build
 mvn-rpmbuild install javadoc:aggregate -Dmaven.test.failure.ignore
@@ -83,6 +81,9 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Tue Jun 19 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.5.1-1
+- Updated to latest upstream version (2.5.1)
+
 * Wed May 23 2012 Tomas Radej <tradej@redhat.com> - 2.4-1
 - Updated to latest upstream version
 - Guidelines fixes + Removed RPM workaround
