@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.0
-Release:          3%{namedreltag}%{?dist}
+Release:          4%{namedreltag}%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -81,6 +81,9 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-4.SP4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sun Mar 25 2012 Asaf Shakarchi <asaf@redhat.com> 1.0-3.SP4
 - Fixed changelog versions.
 
