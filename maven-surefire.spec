@@ -2,7 +2,7 @@
 
 Name:           maven-surefire
 Version:        2.12
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -368,6 +368,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.12-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Tue Mar 06 2012 Jaromir Capik <jcapik@redhat.com> - 0:2.12-3
 - Removing bootstrap condition for Patch1 inclusion (always needed in SRPM)
 
