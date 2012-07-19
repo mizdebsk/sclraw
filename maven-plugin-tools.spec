@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.7
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -251,6 +251,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_mavendepmapfragdir}/maven-plugin-plugin
 
 %changelog
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.7-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.7-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
