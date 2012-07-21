@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and Plexus
 Group:          Development/Libraries
@@ -214,6 +214,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.5-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Fri Feb 17 2012 Deepak Bhole <dbhole@redhat.com> - 1.5.5-5
 - Resolves rhbz#791339
 - Applied fix from Omair Majid <omajid at redhat dot com> to build with Java 7
