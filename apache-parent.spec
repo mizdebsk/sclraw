@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        10
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -16,6 +16,12 @@ This package contains the parent pom file for apache projects.
 
 
 %prep
+%setup -n %{name}-%{version} -Tc
+
+# This simplifies work with child projects that can use generics
+cp %{SOURCE0} .
+sed -i 's:<source>1.4</source>:<source>1.5</source>:' pom.xml
+sed -i 's:<target>1.4</target>:<target>1.5</target>:' pom.xml
 
 
 %build
@@ -33,6 +39,9 @@ install -pm 644 %{SOURCE0} \
 %{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Thu Jul 26 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 10-5
+- Make sure we generate 1.5 version bytecode
+
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
