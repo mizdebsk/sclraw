@@ -2,7 +2,7 @@
 
 Name:           maven-surefire
 Version:        2.12
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -159,6 +159,9 @@ Javadoc for %{name}.
 %if %{bootstrap}
 %patch1 -p1 -b .sav
 %endif
+
+sed -i 's:${shadedVersion}:%{version}:' surefire-integration-tests/pom.xml
+
 
 %build
 # tests turned off because they need jmock
@@ -368,6 +371,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/*
 
 %changelog
+* Fri Jul 27 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.12-5
+- Fix build problem and rebuild with target 1.5
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.12-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
