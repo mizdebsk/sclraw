@@ -1,8 +1,8 @@
 %global bootstrap 0
 
 Name:           maven-surefire
-Version:        2.12
-Release:        5%{?dist}
+Version:        2.12.1
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -303,12 +303,9 @@ ln -s %{_javadir}/maven-surefire/maven-plugin.jar \
 ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
       $RPM_BUILD_ROOT%{_datadir}/maven2/plugins/surefire-report-plugin.jar
 
-%pre javadoc
-# workaround for rpm bug, can be removed in F-18
-[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
-rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
 %files
+%doc LICENSE NOTICE
 %dir %{_javadir}/maven-surefire
 %{_javadir}/maven-surefire/api.jar
 %{_javadir}/maven-surefire/booter.jar
@@ -368,9 +365,15 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_javadir}/maven-failsafe-plugin.jar
 
 %files javadoc
+%doc LICENSE NOTICE
 %doc %{_javadocdir}/*
 
 %changelog
+* Fri Aug  3 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.1-1
+- Update to upstream version 2.12.1
+- Install LICENSE and NOTICE files
+- Remove RPM bug workaround
+
 * Fri Jul 27 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.12-5
 - Fix build problem and rebuild with target 1.5
 
