@@ -34,7 +34,7 @@
 
 Name:       plexus-compiler
 Version:    1.9.1
-Release:    2%{?dist}
+Release:    3%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 License:    MIT
@@ -44,7 +44,7 @@ URL:        http://plexus.codehaus.org/
 # wget  https://github.com/sonatype/plexus-compiler/tarball/plexus-compiler-1.8.3
 Source0:    sonatype-plexus-compiler-plexus-compiler-1.9.1-0-%{githash}.tar.gz
 
-Patch0:     0001-Remove-aspecj-support.patch
+Patch0:     plexus-compiler-ignoreOptionalProblems.patch
 
 BuildArch:      noarch
 BuildRequires:  maven
@@ -90,9 +90,10 @@ API documentation for %{name}.
 %setup -q -n sonatype-plexus-compiler-%{dirhash}
 %patch0 -p1
 
+%pom_disable_module plexus-compiler-aspectj plexus-compilers/pom.xml
 
 # don't build/install compiler-test module, it needs maven2 test harness
-sed -i 's:<module>plexus-compiler-test</module>::' pom.xml
+%pom_disable_module plexus-compiler-test
 
 %build
 mvn-rpmbuild -e \
@@ -172,6 +173,10 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Aug  8 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.9.1-3
+- Fix FTBFS by adding ignoreOptionalProblems function
+- Use new pom_ macros instead of patches
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.9.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
