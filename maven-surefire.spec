@@ -1,7 +1,7 @@
 %global bootstrap 0
 
 Name:           maven-surefire
-Version:        2.12.1
+Version:        2.12.2
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
@@ -18,6 +18,7 @@ Patch1:         0004-Surefire-2.12-bootstrap.patch
 
 BuildArch:      noarch
 BuildRequires:  ant
+BuildRequires:  apache-commons-lang3
 BuildRequires:  classworlds
 BuildRequires:  jpackage-utils >= 0:1.7.2
 BuildRequires:  junit >= 3.8.2
@@ -32,6 +33,7 @@ BuildRequires:  maven-install-plugin
 BuildRequires:  maven-invoker-plugin
 BuildRequires:  maven-jar-plugin
 BuildRequires:  maven-javadoc-plugin
+BuildRequires:  maven-plugin-annotations
 BuildRequires:  maven-plugin-plugin
 BuildRequires:  maven-resources-plugin
 BuildRequires:  maven-site-plugin
@@ -50,6 +52,7 @@ BuildRequires:  maven-plugin-testing-harness
 BuildRequires:  bsf
 BuildRequires:  javacc-maven-plugin
 
+Requires:       apache-commons-lang3
 Requires:       classworlds
 Requires:       maven
 Requires:       maven-toolchain
@@ -369,6 +372,9 @@ ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Aug 13 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.2-1
+- Update to upstream version 2.12.2
+
 * Fri Aug  3 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.1-1
 - Update to upstream version 2.12.1
 - Install LICENSE and NOTICE files
