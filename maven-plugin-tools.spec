@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.7
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -40,7 +40,8 @@ Requires:       jpackage-utils
 Requires:       java
 
 %description
-The Maven Plugin Tools contains the necessary tools to be able to produce Maven Plugins in a variety of languages.
+The Maven Plugin Tools contains the necessary tools to be able to produce Maven
+Plugins in a variety of languages.
 
 %package javadocs
 Group:          Documentation
@@ -102,7 +103,8 @@ Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: %{name}-java
 
 %description javadoc
-The Maven Plugin Tools Javadoc provides several Javadoc taglets to be used when generating Javadoc.
+The Maven Plugin Tools Javadoc provides several Javadoc taglets to be used when
+generating Javadoc.
 
 %package model
 Summary: Maven Plugin Metadata Model
@@ -113,7 +115,8 @@ Obsoletes: maven-shared-plugin-tools-model < 0:%{version}-%{release}
 Provides: maven-shared-plugin-tools-model = 0:%{version}-%{release}
 
 %description model
-The Maven Plugin Metadata Model provides an API to play with the Metadata model.
+The Maven Plugin Metadata Model provides an API to play with the Metadata
+model.
 
 %package -n maven-plugin-plugin
 Summary: Maven Plugin Plugin
@@ -128,9 +131,10 @@ Obsoletes: maven2-plugin-plugin < 0:%{version}-%{release}
 Provides: maven2-plugin-plugin = 0:%{version}-%{release}
 
 %description -n maven-plugin-plugin
-The Plugin Plugin is used to create a Maven plugin descriptor for any Mojo's found in the source tree,
-to include in the JAR. It is also used to generate Xdoc files for the Mojos as well as for updating the
-plugin registry, the artifact metadata and a generic help goal.
+The Plugin Plugin is used to create a Maven plugin descriptor for any Mojo's
+found in the source tree, to include in the JAR. It is also used to generate
+Xdoc files for the Mojos as well as for updating the plugin registry, the
+artifact metadata and a generic help goal.
 
 %prep
 %setup -q
@@ -209,10 +213,12 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}/
 rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
 %files
+%doc LICENSE NOTICE
 %{_mavenpomdir}/JPP.%{name}-%{name}.pom
 %{_mavendepmapfragdir}/%{name}
 
 %files javadocs
+%doc LICENSE NOTICE
 %{_javadocdir}/%{name}
 
 %files ant
@@ -251,6 +257,10 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_mavendepmapfragdir}/maven-plugin-plugin
 
 %changelog
+* Tue Aug 28 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.7-6
+- Wrap descriptions at column 80
+- Install LICENSE and NOTICE files
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.7-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
