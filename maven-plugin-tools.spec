@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        2.7
-Release:        6%{?dist}
+Release:        7%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -43,12 +43,14 @@ Requires:       java
 The Maven Plugin Tools contains the necessary tools to be able to produce Maven
 Plugins in a variety of languages.
 
-%package javadocs
+%package javadoc
 Group:          Documentation
 Summary:        Javadoc for %{name}
 Requires:       jpackage-utils
+Obsoletes:      %{name}-javadocs < 0:%{version}-%{release}
+Provides:       %{name}-javadocs = 0:%{version}-%{release}
 
-%description javadocs
+%description javadoc
 API documentation for %{name}.
 
 %package ant
@@ -207,17 +209,12 @@ install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
 
 cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}/
 
-%pre javadoc
-# workaround for rpm bug, can be removed in F-17
-[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
-rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
-
 %files
 %doc LICENSE NOTICE
 %{_mavenpomdir}/JPP.%{name}-%{name}.pom
 %{_mavendepmapfragdir}/%{name}
 
-%files javadocs
+%files javadoc
 %doc LICENSE NOTICE
 %{_javadocdir}/%{name}
 
@@ -257,6 +254,10 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_mavendepmapfragdir}/maven-plugin-plugin
 
 %changelog
+* Thu Sep  6 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.7-7
+- Rename javadocs subpackage to javadoc
+- Remove rpm bug workaround
+
 * Tue Aug 28 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.7-6
 - Wrap descriptions at column 80
 - Install LICENSE and NOTICE files
