@@ -43,14 +43,16 @@ Requires:       java
 The Maven Plugin Tools contains the necessary tools to be able to produce Maven
 Plugins in a variety of languages.
 
-%package javadoc
+# This "javadocs" package violates packaging guidelines as of Sep 6 2012. The
+# subpackage name "javadocs" instead of "javadoc" is intentional. There was a
+# consensus that current naming scheme should be kept, even if it doesn't
+# conform to the guidelines.  mizdebsk, September 2012
+%package javadocs
 Group:          Documentation
 Summary:        Javadoc for %{name}
 Requires:       jpackage-utils
-Obsoletes:      %{name}-javadocs < 0:%{version}-%{release}
-Provides:       %{name}-javadocs = 0:%{version}-%{release}
 
-%description javadoc
+%description javadocs
 API documentation for %{name}.
 
 %package ant
@@ -98,6 +100,8 @@ Provides: maven-shared-plugin-tools-java = 0:%{version}-%{release}
 %description java
 Descriptor extractor for plugins written in Java.
 
+# Note that this package contains code, not documentation.
+# See comments about "javadocs" subpackage above.
 %package javadoc
 Summary: Maven Plugin Tools Javadoc
 Group: Development/Libraries
@@ -107,6 +111,9 @@ Requires: %{name}-java
 %description javadoc
 The Maven Plugin Tools Javadoc provides several Javadoc taglets to be used when
 generating Javadoc.
+
+Java API documentation for %{name} is contained in
+%{name}-javadocs package. This package does not contain it.
 
 %package model
 Summary: Maven Plugin Metadata Model
@@ -214,7 +221,7 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}/
 %{_mavenpomdir}/JPP.%{name}-%{name}.pom
 %{_mavendepmapfragdir}/%{name}
 
-%files javadoc
+%files javadocs
 %doc LICENSE NOTICE
 %{_javadocdir}/%{name}
 
@@ -255,7 +262,6 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}/
 
 %changelog
 * Thu Sep  6 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.7-7
-- Rename javadocs subpackage to javadoc
 - Remove rpm bug workaround
 
 * Tue Aug 28 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.7-6
