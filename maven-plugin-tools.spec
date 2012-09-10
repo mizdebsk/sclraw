@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -310,6 +310,9 @@ cp %{SOURCE666} %{buildroot}%{_javadir}/%{name}/maven-plugin-plugin.jar
 
 
 %changelog
+* Mon Sep 10 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-2
+- Bump release
+
 * Fri Sep  7 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-1
 - Update to upstream version 3.1
 - Bootstrap using prebuilt upstream binaries
