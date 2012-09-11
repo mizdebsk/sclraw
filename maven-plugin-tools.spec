@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -13,32 +13,44 @@ BuildArch:      noarch
 BuildRequires:  java-devel >= 1:1.6.0
 BuildRequires:  jpackage-utils
 BuildRequires:  maven
-BuildRequires:  maven-compiler-plugin
+BuildRequires:  ant
+BuildRequires:  bsh
+BuildRequires:  jtidy
+BuildRequires:  maven-artifact-manager
+BuildRequires:  maven-doxia
 BuildRequires:  maven-doxia-sitetools
-BuildRequires:  maven-doxia-tools
 BuildRequires:  maven-enforcer-plugin
-BuildRequires:  maven-install-plugin
-BuildRequires:  maven-jar-plugin
-BuildRequires:  maven-javadoc-plugin
+BuildRequires:  maven-plugin-annotations
 BuildRequires:  maven-plugin-descriptor
-BuildRequires:  maven-plugin-plugin
-BuildRequires:  maven-plugin-testing-harness
-BuildRequires:  maven-resources-plugin
+BuildRequires:  maven-plugin-registry
+BuildRequires:  maven-plugin-tools-annotations
+BuildRequires:  maven-plugin-tools-api
+BuildRequires:  maven-plugin-tools-generators
+BuildRequires:  maven-plugin-tools-java
+BuildRequires:  maven-plugin-tools-model
+BuildRequires:  maven-project
+BuildRequires:  maven-shared-reporting-api
 BuildRequires:  maven-shared-reporting-impl
-BuildRequires:  maven-site-plugin
-BuildRequires:  maven-source-plugin
-BuildRequires:  maven-surefire-plugin
-BuildRequires:  maven-surefire-provider-junit
-BuildRequires:  maven-test-tools
+BuildRequires:  objectweb-asm
 BuildRequires:  plexus-ant-factory
+BuildRequires:  plexus-archiver
 BuildRequires:  plexus-bsh-factory
+BuildRequires:  plexus-containers-component-annotations
+BuildRequires:  plexus-containers-container-default
+BuildRequires:  plexus-utils
+BuildRequires:  plexus-velocity
+BuildRequires:  qdox
+BuildRequires:  velocity
+# Test dependencies:
+BuildRequires:  easymock
 BuildRequires:  fest-assert
-BuildRequires:  modello
+BuildRequires:  junit
+BuildRequires:  maven-plugin-testing-harness
+BuildRequires:  plexus-compiler
 BuildRequires:  xmlunit
 
-Requires:       jpackage-utils
 Requires:       java
-Requires:       maven
+Requires:       jpackage-utils
 
 
 %description
@@ -48,6 +60,9 @@ Plugins in a variety of languages.
 %package -n maven-plugin-annotations
 Summary:        Maven Plugin Java 5 Annotations
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       maven
 Obsoletes:      maven-plugin-annotations < 0:%{version}-%{release}
 
 %description -n maven-plugin-annotations
@@ -56,9 +71,26 @@ This package contains Java 5 annotations to use in Mojos.
 %package -n maven-plugin-plugin
 Summary:        Maven Plugin Plugin
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       %{name}-beanshell
-Requires:       %{name}-java
-Requires:       %{name}-model
+Requires:       java
+Requires:       jpackage-utils
+Requires:       maven
+Requires:       maven-artifact-manager
+Requires:       maven-doxia
+Requires:       maven-doxia-sitetools
+Requires:       maven-plugin-descriptor
+Requires:       maven-plugin-registry
+Requires:       maven-plugin-tools-annotations
+Requires:       maven-plugin-tools-api
+Requires:       maven-plugin-tools-beanshell
+Requires:       maven-plugin-tools-generators
+Requires:       maven-plugin-tools-java
+Requires:       maven-plugin-tools-model
+Requires:       maven-project
+Requires:       maven-shared-reporting-api
+Requires:       maven-shared-reporting-impl
+Requires:       plexus-utils
+Requires:       plexus-velocity
+Requires:       velocity
 Obsoletes:      maven2-plugin-plugin < 0:%{version}-%{release}
 Provides:       maven2-plugin-plugin = 0:%{version}-%{release}
 
@@ -71,6 +103,19 @@ artifact metadata and a generic help goal.
 %package annotations
 Summary:        Maven Plugin Tool for Annotations
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       maven
+Requires:       maven-plugin-annotations
+Requires:       maven-plugin-descriptor
+Requires:       maven-plugin-tools-api
+Requires:       maven-project
+Requires:       objectweb-asm
+Requires:       plexus-archiver
+Requires:       plexus-containers-component-annotations
+Requires:       plexus-containers-container-default
+Requires:       plexus-utils
+Requires:       qdox
 
 %description annotations
 This package provides Java 5 annotation tools for use with Apache Maven.
@@ -78,6 +123,15 @@ This package provides Java 5 annotation tools for use with Apache Maven.
 %package ant
 Summary:        Maven Plugin Tool for Ant
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       maven-plugin-descriptor
+Requires:       maven-plugin-tools-api
+Requires:       maven-plugin-tools-model
+Requires:       maven-project
+Requires:       plexus-containers-component-annotations
+Requires:       plexus-containers-container-default
+Requires:       plexus-utils
 Obsoletes:      maven-shared-plugin-tools-ant < 0:%{version}-%{release}
 Provides:       maven-shared-plugin-tools-ant = 0:%{version}-%{release}
 
@@ -87,6 +141,13 @@ Descriptor extractor for plugins written in Ant.
 %package api
 Summary:        Maven Plugin Tools APIs
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       maven
+Requires:       maven-plugin-descriptor
+Requires:       maven-project
+Requires:       plexus-containers-container-default
+Requires:       plexus-utils
 Obsoletes:      maven-shared-plugin-tools-api < 0:%{version}-%{release}
 Provides:       maven-shared-plugin-tools-api = 0:%{version}-%{release}
 
@@ -97,6 +158,12 @@ and generate documentation for Maven Plugins.
 %package beanshell
 Summary:        Maven Plugin Tool for Beanshell
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       bsh
+Requires:       maven-plugin-descriptor
+Requires:       maven-plugin-tools-api
+Requires:       plexus-containers-component-annotations
 Obsoletes:      maven-shared-plugin-tools-beanshell < 0:%{version}-%{release}
 Provides:       maven-shared-plugin-tools-beanshell = 0:%{version}-%{release}
 
@@ -106,6 +173,19 @@ Descriptor extractor for plugins written in Beanshell.
 %package generators
 Summary:        Maven Plugin Tools Generators
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       jtidy
+Requires:       maven
+Requires:       maven-plugin-descriptor
+Requires:       maven-plugin-tools-api
+Requires:       maven-project
+Requires:       maven-shared-reporting-api
+Requires:       objectweb-asm
+Requires:       plexus-containers-container-default
+Requires:       plexus-utils
+Requires:       plexus-velocity
+Requires:       velocity
 
 %description generators
 The Maven Plugin Tools Generators provides content generation
@@ -114,6 +194,16 @@ The Maven Plugin Tools Generators provides content generation
 %package java
 Summary:        Maven Plugin Tool for Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       maven
+Requires:       maven-plugin-descriptor
+Requires:       maven-plugin-tools-api
+Requires:       maven-project
+Requires:       plexus-containers-component-annotations
+Requires:       plexus-containers-container-default
+Requires:       plexus-utils
+Requires:       qdox
 Obsoletes:      maven-shared-plugin-tools-java < 0:%{version}-%{release}
 Provides:       maven-shared-plugin-tools-java = 0:%{version}-%{release}
 
@@ -125,6 +215,9 @@ Descriptor extractor for plugins written in Java.
 %package javadoc
 Summary:        Maven Plugin Tools Javadoc
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       maven-plugin-tools-java
 
 %description javadoc
 The Maven Plugin Tools Javadoc provides several Javadoc taglets to be used when
@@ -136,6 +229,11 @@ Java API documentation for %{name} is contained in
 %package model
 Summary:        Maven Plugin Metadata Model
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       maven-plugin-descriptor
+Requires:       plexus-containers-container-default
+Requires:       plexus-utils
 Obsoletes:      maven-shared-plugin-tools-model < 0:%{version}-%{release}
 Provides:       maven-shared-plugin-tools-model = 0:%{version}-%{release}
 
@@ -146,6 +244,7 @@ model.
 %package -n maven-script
 Summary:        Maven Script Mojo Support
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       jpackage-utils
 
 %description -n maven-script
 Maven Script Mojo Support lets developer write Maven plugins/goals
@@ -154,6 +253,15 @@ with scripting languages instead of compiled Java.
 %package -n maven-script-ant
 Summary:        Maven Ant Mojo Support
 Requires:       maven-script = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       ant
+Requires:       maven
+Requires:       maven-plugin-descriptor
+Requires:       maven-project
+Requires:       plexus-ant-factory
+Requires:       plexus-archiver
+Requires:       plexus-containers-container-default
 
 %description -n maven-script-ant
 This package provides %{summary}, which write Maven plugins with
@@ -162,6 +270,10 @@ Ant scripts.
 %package -n maven-script-beanshell
 Summary:        Maven Beanshell Mojo Support
 Requires:       maven-script = %{epoch}:%{version}-%{release}
+Requires:       java
+Requires:       jpackage-utils
+Requires:       maven
+Requires:       plexus-bsh-factory
 
 %description -n maven-script-beanshell
 This package provides %{summary}, which write Maven plugins with
@@ -304,6 +416,9 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Tue Sep 11 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-5
+- Add missing requires
+
 * Tue Sep 11 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-4
 - Rebuild without bootstrap
 
