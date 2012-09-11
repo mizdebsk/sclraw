@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -50,6 +50,7 @@ Plugins in a variety of languages.
 %package -n maven-plugin-annotations
 Summary:        Maven Plugin Java 5 Annotations
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Obsoletes:      maven-plugin-annotations < 0:%{version}-%{release}
 
 %description -n maven-plugin-annotations
 This package contains Java 5 annotations to use in Mojos.
@@ -310,6 +311,9 @@ cp %{SOURCE666} %{buildroot}%{_javadir}/%{name}/maven-plugin-plugin.jar
 
 
 %changelog
+* Tue Sep 11 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-3
+- Add obsoletes for maven-plugin-annotations
+
 * Mon Sep 10 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-2
 - Bump release
 
