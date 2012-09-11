@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -39,8 +39,6 @@ BuildRequires:  xmlunit
 Requires:       jpackage-utils
 Requires:       java
 Requires:       maven
-
-Source666:      http://search.maven.org/remotecontent?filepath=org/apache/maven/plugins/maven-plugin-plugin/3.1/maven-plugin-plugin-3.1.jar
 
 
 %description
@@ -187,9 +185,6 @@ API documentation for %{name}.
 # For easier installation
 ln -s maven-script/maven-script-{ant,beanshell} .
 
-# For bootstrapping only
-sed -i "s|<packaging>maven-plugin</packaging>|<packaging>jar</packaging>|" maven-plugin-plugin/pom.xml
-
 %pom_xpath_inject "pom:project/pom:properties" "
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>"
@@ -233,8 +228,6 @@ done
 # javadoc
 cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
-# bootstrap
-cp %{SOURCE666} %{buildroot}%{_javadir}/%{name}/maven-plugin-plugin.jar
 
 %files
 %doc LICENSE NOTICE
@@ -311,6 +304,9 @@ cp %{SOURCE666} %{buildroot}%{_javadir}/%{name}/maven-plugin-plugin.jar
 
 
 %changelog
+* Tue Sep 11 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-4
+- Rebuild without bootstrap
+
 * Tue Sep 11 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-3
 - Add obsoletes for maven-plugin-annotations
 
