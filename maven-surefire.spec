@@ -1,7 +1,7 @@
 %global bootstrap 0
 
 Name:           maven-surefire
-Version:        2.12.2
+Version:        2.12.3
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
@@ -372,6 +372,9 @@ ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
 %doc %{_javadocdir}/*
 
 %changelog
+* Tue Sep 25 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.3-1
+- Update to upstream version 2.12.3
+
 * Mon Aug 13 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.2-1
 - Update to upstream version 2.12.2
 
