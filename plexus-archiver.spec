@@ -57,6 +57,7 @@ BuildRequires: maven-surefire-plugin
 BuildRequires: maven-surefire-provider-junit4
 BuildRequires: maven-shared-reporting-impl
 BuildRequires: maven-doxia-sitetools
+BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
 Requires:       classworlds >= 0:1.1
 Requires:       plexus-container-default 
 Requires:       plexus-utils 
