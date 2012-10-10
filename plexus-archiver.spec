@@ -29,16 +29,15 @@
 #
 
 Name:           plexus-archiver
-Version:        2.1.1
-Release:        2%{?dist}
+Version:        2.2
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
-# git clone https://github.com/sonatype/plexus-archiver
-# Fetched from https://github.com/sonatype/plexus-archiver/tarball/plexus-archiver-2.1.1
-Source0:        sonatype-plexus-archiver-plexus-archiver-2.1.1-0-ge64d181.tar.gz
+# Fetched from https://github.com/sonatype/plexus-archiver/tarball/plexus-archiver-2.2
+Source0:        sonatype-plexus-archiver-plexus-archiver-2.2-0-g450d320.tar.gz
 
 
 BuildArch:      noarch
@@ -83,7 +82,7 @@ Javadoc for %{name}.
 
 
 %prep
-%setup -q -n sonatype-plexus-archiver-25364f5
+%setup -q -n sonatype-plexus-archiver-c4de57d
 
 %build
 mvn-rpmbuild -Dmaven.test.skip=true install javadoc:javadoc
@@ -113,6 +112,9 @@ cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Oct 10 2012 Alexander Kurtakov <akurtako@redhat.com> 0:2.2-1
+- Update to upstream 2.2.
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.1.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
