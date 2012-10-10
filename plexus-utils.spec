@@ -32,15 +32,14 @@
 %global subname utils
 
 Name:           plexus-utils
-Version:        3.0
-Release:        3%{?dist}
+Version:        3.0.9
+Release:        1%{?dist}
 Summary:        Plexus Common Utilities
 License:        ASL 1.1 and ASL 2.0 and MIT
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/
-# git clone git://github.com/sonatype/plexus-utils
-# git archive --prefix="plexus-utils-3.0/" --format=tar plexus-utils-3.0 | xz > plexus-utils-3.0.tar.xz
-Source0:        plexus-utils-%{version}.tar.xz
+# fetched from https://github.com/sonatype/plexus-utils/tarball/plexus-utils-3.0.9
+Source0:        sonatype-plexus-utils-plexus-utils-3.0.9-0-g64c7726.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  jpackage-utils >= 0:1.6
@@ -55,6 +54,8 @@ BuildRequires:  maven-resources-plugin
 BuildRequires:  maven-surefire-plugin
 BuildRequires:  maven-doxia-sitetools
 BuildRequires:  maven-surefire-provider-junit
+BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
+Requires:       java >= 1:1.7.0
 
 %description
 The Plexus project seeks to create end-to-end developer tools for
@@ -73,7 +74,7 @@ Requires:         jpackage-utils
 Javadoc for %{name}.
 
 %prep
-%setup -q
+%setup -q -n sonatype-plexus-utils-c307dd9
 
 %build
 mvn-rpmbuild install javadoc:javadoc -Dmaven.test.failure.ignore=true
@@ -88,9 +89,7 @@ install -pm 644 target/%{name}-%{version}.jar \
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
 install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-%{subname}.pom
 
-%add_to_maven_depmap org.codehaus.plexus %{name} %{version} JPP/%{parent} %{subname}
-# compatibility depmap
-%add_to_maven_depmap plexus %{name} %{version} JPP/%{parent} %{subname}
+%add_maven_depmap -a "plexus:plexus-utils" JPP.%{name}.pom plexus/utils.jar
 
 # javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
@@ -106,6 +105,9 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Oct 10 2012 Alexander Kurtakov <akurtako@redhat.com> 3.0.9-1
+- Update to upstream 3.0.9.
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
