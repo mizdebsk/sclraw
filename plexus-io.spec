@@ -24,6 +24,7 @@ BuildRequires: maven-javadoc-plugin
 BuildRequires: maven-surefire-plugin
 BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-doxia-sitetools
+BuildRequires: mvn(org.apache.maven.plugins:maven-enforcer-plugin)
 Requires:  jpackage-utils
 Requires: plexus-utils
 Requires: plexus-container-default
