@@ -2,7 +2,7 @@
 
 Name:           maven-surefire
 Version:        2.12.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0
@@ -170,6 +170,7 @@ sed -i 's:${shadedVersion}:%{version}:' surefire-integration-tests/pom.xml
 # tests turned off because they need jmock
 mvn-rpmbuild -e \
         -Dmaven.test.skip=true \
+        -Dmaven.local.depmap.file=%{SOURCE1} \
         install javadoc:aggregate
 
 %install
@@ -372,6 +373,9 @@ ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
 %doc %{_javadocdir}/*
 
 %changelog
+* Mon Oct 22 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-2
+- Add maven depmap for org.beanshell:bsh
+
 * Fri Oct  5 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-1
 - Update to upstream version 2.12.4
 
