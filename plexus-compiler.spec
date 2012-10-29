@@ -29,20 +29,18 @@
 #
 
 %global parent  plexus
-%global dirhash 113d7de
-%global githash g233d1ab
+%global dirhash 56a0f9b
 
 Name:       plexus-compiler
-Version:    1.9.1
-Release:    3%{?dist}
+Version:    1.9.2
+Release:    1%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 License:    MIT
 Group:      Development/Java
 URL:        http://plexus.codehaus.org/
 
-# wget  https://github.com/sonatype/plexus-compiler/tarball/plexus-compiler-1.8.3
-Source0:    sonatype-plexus-compiler-plexus-compiler-1.9.1-0-%{githash}.tar.gz
+Source0:    https://github.com/sonatype/%{name}/tarball/%{name}-%{version}#/%{name}-%{version}.tar.gz
 
 Patch0:     plexus-compiler-ignoreOptionalProblems.patch
 
@@ -173,6 +171,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Mon Oct 29 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.9.2-1
+- Update to upstream version 1.9.2
+
 * Wed Aug  8 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.9.1-3
 - Fix FTBFS by adding ignoreOptionalProblems function
 - Use new pom_ macros instead of patches
