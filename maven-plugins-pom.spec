@@ -2,7 +2,7 @@
 
 Name:           %{short_name}-pom
 Version:        23
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -32,9 +32,13 @@ install -p -m 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
 %add_maven_depmap JPP-%{name}.pom
 
 %files
+%doc LICENSE NOTICE
 %{_mavenpomdir}/JPP-%{name}.pom
 %{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Fri Nov  2 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 23-2
+- Install license files
+
 * Wed Oct 31 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 23-1
 - Initial packaging
