@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        10
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -8,8 +8,14 @@ URL:            http://apache.org/
 Source0:        http://svn.apache.org/repos/asf/maven/pom/tags/apache-10/pom.xml
 BuildArch:      noarch
 
+BuildRequires:  maven
 BuildRequires:  jpackage-utils
+BuildRequires:  apache-resource-bundles
+BuildRequires:  maven-remote-resources-plugin
+
 Requires:       jpackage-utils
+Requires:       apache-resource-bundles
+Requires:       maven-remote-resources-plugin
 
 %description
 This package contains the parent pom file for apache projects.
@@ -34,11 +40,18 @@ install -pm 644 %{SOURCE0} \
 
 %add_maven_depmap JPP-%{name}.pom
 
+%check
+mvn-rpmbuild verify
+
 %files
 %{_mavenpomdir}/JPP-%{name}.pom
 %{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Fri Nov  2 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 10-6
+- Add missing R: maven-remote-resources-plugin, apache-resource-bundles
+- Add %%check to verify dependencies during build
+
 * Thu Jul 26 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 10-5
 - Make sure we generate 1.5 version bytecode
 
