@@ -33,10 +33,12 @@
 
 Name:       plexus-compiler
 Version:    1.9.2
-Release:    1%{?dist}
+Release:    2%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
-License:    MIT
+# extras subpackage has a bit different licensing
+# parts of compiler-api are ASL2.0/MIT
+License:    MIT and ASL 2.0
 Group:      Development/Java
 URL:        http://plexus.codehaus.org/
 
@@ -69,6 +71,10 @@ additional compilers see %{name}-extras package.
 %package extras
 Summary:        Extra compiler support for %{name}
 Group:          Development/Libraries
+# ASL 2.0: src/main/java/org/codehaus/plexus/compiler/util/scan/
+#          ...codehaus/plexus/compiler/csharp/CSharpCompiler.java
+# ASL 1.1/MIT: ...codehaus/plexus/compiler/jikes/JikesCompiler.java
+License:        MIT and ASL 2.0 and ASL 1.1
 Requires:       jpackage-utils
 Requires:       eclipse-ecj
 Requires:       %{name} = %{version}-%{release}
@@ -171,6 +177,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue Nov 13 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.9.2-2
+- Fix up licensing properly
+
 * Mon Oct 29 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.9.2-1
 - Update to upstream version 1.9.2
 
