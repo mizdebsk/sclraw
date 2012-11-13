@@ -1,33 +1,34 @@
 Name:           plexus-io
 Version:        2.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://plexus.codehaus.org/plexus-components/plexus-io
-# fetched from https://github.com/sonatype/plexus-io/tarball/plexus-io-2.0.5
-Source0:        sonatype-plexus-io-plexus-io-2.0.5-0-g4a31728.tar.gz
+Source0:        https://github.com/sonatype/plexus-io/tarball/plexus-io-%{version}#/%{name}-%{version}.tar.gz
 BuildArch: noarch
 
 BuildRequires: java-devel >= 1:1.6.0
-BuildRequires:  jpackage-utils
+BuildRequires: jpackage-utils
 
 BuildRequires: plexus-utils
 BuildRequires: plexus-container-default
+BuildRequires: plexus-components-pom
 BuildRequires: maven
-BuildRequires: maven-resources-plugin
 BuildRequires: maven-compiler-plugin
+BuildRequires: maven-enforcer-plugin
 BuildRequires: maven-jar-plugin
 BuildRequires: maven-install-plugin
 BuildRequires: maven-javadoc-plugin
+BuildRequires: maven-resources-plugin
 BuildRequires: maven-surefire-plugin
 BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-doxia-sitetools
 BuildRequires: mvn(org.apache.maven.plugins:maven-enforcer-plugin)
 Requires:  jpackage-utils
-Requires: plexus-utils
-Requires: plexus-container-default
+Requires:  plexus-utils
+Requires:  plexus-container-default
 
 %description
 Plexus IO is a set of plexus components, which are designed for use
@@ -46,7 +47,9 @@ API documentation for %{name}.
 %setup -q -n sonatype-plexus-io-1a0010b
 
 %build
-mvn-rpmbuild install javadoc:aggregate
+mvn-rpmbuild -Dmaven.compiler.source=1.5 \
+             -Dmaven.compiler.target=1.5 \
+             install javadoc:aggregate
 
 %install
 # jars
@@ -66,16 +69,18 @@ install -d -m 0755 %{buildroot}%{_javadocdir}/%{name}
 cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
 
 
-%files
+%files -f .mfiles
 %doc NOTICE.txt
-%{_javadir}/plexus/io.jar
-%{_mavenpomdir}/JPP.%{name}.pom
-%{_mavendepmapfragdir}/%{name}
 
 %files javadoc
 %{_javadocdir}/%{name}
 
 %changelog
+* Tue Nov 13 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.0.5-2
+- Use ordinary URL for Source0
+- Make sure we use 1.5 source/target 
+- Add enforcer plugin to BR
+
 * Wed Oct 10 2012 Alexander Kurtakov <akurtako@redhat.com> 2.0.5-1
 - Update to upstream 2.0.5 release.
 
