@@ -6,13 +6,13 @@
 
 # this needs to be exact version of maven-javadoc-plugin for
 # integration tests
-%global javadoc_plugin_version 2.8.1
+%global javadoc_plugin_version 2.9
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Containers for Plexus
-License:        ASL 2.0 and Plexus
+License:        ASL 2.0 and MIT
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/
 # svn export \
@@ -43,7 +43,6 @@ BuildRequires:  maven-surefire-maven-plugin
 BuildRequires:  maven-surefire-provider-junit
 BuildRequires:  maven-doxia
 BuildRequires:  maven-doxia-sitetools
-BuildRequires:  maven2-common-poms >= 1.0
 BuildRequires:  maven-release
 BuildRequires:  maven-plugin-plugin
 BuildRequires:  plexus-classworlds
@@ -180,40 +179,21 @@ install -pm 644 plexus-component-javadoc/pom.xml \
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
-%pre javadoc
-# workaround for rpm bug, can be removed in F-18
-[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
-rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
-
-%files
-%{_mavenpomdir}/JPP.%{parent}-%{subname}.pom
-%{_mavendepmapfragdir}/%{name}
-
-%files component-annotations
-%{_mavendepmapfragdir}/%{name}-component-annotations
-%{_mavenpomdir}/JPP.%{parent}-%{subname}-component-annotations.pom
-%{_javadir}/%{parent}/containers-component-annotations.jar
-
-%files container-default
-%{_mavendepmapfragdir}/%{name}-container-default
-%{_mavenpomdir}/JPP.%{parent}-%{subname}-container-default.pom
-%{_javadir}/%{parent}/containers-container-default.jar
-
-%files component-metadata
-%{_mavendepmapfragdir}/%{name}-component-metadata
-%{_mavenpomdir}/JPP.%{parent}-%{subname}-component-metadata.pom
-%{_javadir}/%{parent}/containers-component-metadata.jar
-
-%files component-javadoc
-%{_mavendepmapfragdir}/%{name}-component-javadoc
-%{_mavenpomdir}/JPP.%{parent}-%{subname}-component-javadoc.pom
-%{_javadir}/%{parent}/containers-component-javadoc.jar
+%files -f .mfiles
+%files component-annotations -f .mfiles-component-annotations
+%files container-default -f .mfiles-container-default
+%files component-metadata -f .mfiles-component-metadata
+%files component-javadoc -f .mfiles-component-javadoc
 
 %files javadoc
 %doc %{_javadocdir}/*
 
 %changelog
+* Wed Nov 14 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-7
+- Fix license tag (Plexus license was replaced by MIT some time ago)
+- Update javadoc plugin BR version
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.5-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
