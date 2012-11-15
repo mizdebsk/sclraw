@@ -2,7 +2,7 @@
 
 Name:           %{short_name}-pom
 Version:        23
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -15,6 +15,8 @@ BuildRequires:  maven
 BuildRequires:  maven-enforcer-plugin
 
 Requires:       jpackage-utils
+Requires:       maven
+Requires:       maven-enforcer-plugin
 
 %description
 This package provides Maven Plugins parent POM used by different
@@ -37,6 +39,9 @@ install -p -m 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
 %{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Thu Nov 15 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 23-3
+- Add missing R: maven-enforcer-plugin
+
 * Fri Nov  2 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 23-2
 - Install license files
 
