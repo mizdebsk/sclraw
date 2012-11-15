@@ -30,14 +30,14 @@
 
 Name:           modello
 Version:        1.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
-License:        MIT
+License:        ASL 2.0 and BSD and MIT
 Group:          Development/Libraries
 URL:            http://modello.codehaus.org/
 Source0:        http://repo2.maven.org/maven2/org/codehaus/%{name}/%{name}/%{version}/%{name}-%{version}-source-release.zip
-
+Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 Source2:        %{name}-jpp-depmap.xml
 
 
@@ -83,8 +83,6 @@ Requires:       guava
 Requires:       xbean
 
 Requires:          jpackage-utils
-Requires(post):    jpackage-utils
-Requires(postun):  jpackage-utils
 
 Provides:       modello-maven-plugin = %{epoch}:%{version}-%{release}
 Obsoletes:      modello-maven-plugin < 0:1.0-0.a8.3jpp
@@ -114,6 +112,7 @@ API documentation for %{name}.
 
 %prep
 %setup -q 
+cp -p %{SOURCE1} LICENSE
 
 %build
 
@@ -153,15 +152,21 @@ install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 %files
+%doc LICENSE
 %{_mavenpomdir}/*
 %{_javadir}/%{name}
 %{_bindir}/*
 %{_mavendepmapfragdir}/*
 
 %files javadoc
+%doc LICENSE
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Nov 15 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.5-4
+- Fix license tag
+- Install text of Apache license
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
