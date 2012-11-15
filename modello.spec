@@ -30,7 +30,7 @@
 
 Name:           modello
 Version:        1.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        ASL 2.0 and BSD and MIT
@@ -51,6 +51,7 @@ BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-install-plugin
 BuildRequires:  maven-jar-plugin
 BuildRequires:  maven-javadoc-plugin
+BuildRequires:  maven-project
 BuildRequires:  maven-resources-plugin
 BuildRequires:  maven-surefire-plugin
 BuildRequires:  maven-site-plugin
@@ -70,10 +71,11 @@ BuildRequires:  maven-doxia-tools
 BuildRequires:  plexus-build-api
 BuildRequires:  ws-jaxme
 BuildRequires:  xmlunit
-BuildRequires:  jpa_api = 3.0
 BuildRequires:  geronimo-parent-poms
 
 Requires:       classworlds >= 0:1.1
+Requires:       maven
+Requires:       maven-project
 Requires:       plexus-containers-container-default
 Requires:       plexus-build-api
 Requires:       plexus-utils
@@ -81,8 +83,7 @@ Requires:       plexus-velocity
 Requires:       velocity
 Requires:       guava
 Requires:       xbean
-
-Requires:          jpackage-utils
+Requires:       jpackage-utils
 
 Provides:       modello-maven-plugin = %{epoch}:%{version}-%{release}
 Obsoletes:      modello-maven-plugin < 0:1.0-0.a8.3jpp
@@ -163,6 +164,11 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Nov 15 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.5-5
+- Add JPP depmap for maven-project to override versionless depmap
+- Add missing BR/R: maven-project
+- Remove unneeded BR: jpa_api
+
 * Thu Nov 15 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.5-4
 - Fix license tag
 - Install text of Apache license
