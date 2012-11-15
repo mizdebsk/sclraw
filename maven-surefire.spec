@@ -2,15 +2,16 @@
 
 Name:           maven-surefire
 Version:        2.12.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Test framework project
-License:        ASL 2.0
+License:        ASL 2.0 and CPL
 Group:          Development/Libraries
 URL:            http://maven.apache.org/surefire/
 
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/surefire/surefire/%{version}/surefire-%{version}-source-release.zip
 Source1:        %{name}-jpp-depmap.xml
+Source2:        http://junit.sourceforge.net/cpl-v10.html
 
 # provide compatibility for maven3
 Patch0:         0003-Fix-maven3-compatibility.patch
@@ -156,6 +157,7 @@ Javadoc for %{name}.
 
 %prep
 %setup -q -n surefire-%{version}
+cp -p %{SOURCE2} .
 
 %patch0 -p1 -b .sav
 
@@ -309,7 +311,7 @@ ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
 
 
 %files
-%doc LICENSE NOTICE
+%doc LICENSE NOTICE cpl-v10.html
 %dir %{_javadir}/maven-surefire
 %{_javadir}/maven-surefire/api.jar
 %{_javadir}/maven-surefire/booter.jar
@@ -369,10 +371,13 @@ ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
 %{_javadir}/maven-failsafe-plugin.jar
 
 %files javadoc
-%doc LICENSE NOTICE
+%doc LICENSE NOTICE cpl-v10.html
 %doc %{_javadocdir}/*
 
 %changelog
+* Thu Nov 15 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-3
+- Add CPL license
+
 * Mon Oct 22 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-2
 - Add maven depmap for org.beanshell:bsh
 
