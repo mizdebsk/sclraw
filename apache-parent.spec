@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        10
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -35,7 +35,7 @@ sed -i 's:<target>1.4</target>:<target>1.5</target>:' pom.xml
 
 %install
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
-install -pm 644 %{SOURCE0} \
+install -pm 644 pom.xml \
         $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}.pom
 
 %add_maven_depmap JPP-%{name}.pom
@@ -48,6 +48,9 @@ mvn-rpmbuild verify
 %{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Wed Nov 21 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 10-7
+- Install patched pom not the original
+
 * Fri Nov  2 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 10-6
 - Add missing R: maven-remote-resources-plugin, apache-resource-bundles
 - Add %%check to verify dependencies during build
