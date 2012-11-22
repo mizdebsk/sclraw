@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        2.0.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
@@ -13,7 +13,7 @@ BuildRequires: java-devel >= 1:1.6.0
 BuildRequires: jpackage-utils
 
 BuildRequires: plexus-utils
-BuildRequires: plexus-container-default
+BuildRequires: plexus-containers-container-default
 BuildRequires: plexus-components-pom
 BuildRequires: maven
 BuildRequires: maven-compiler-plugin
@@ -28,7 +28,7 @@ BuildRequires: maven-doxia-sitetools
 BuildRequires: mvn(org.apache.maven.plugins:maven-enforcer-plugin)
 Requires:  jpackage-utils
 Requires:  plexus-utils
-Requires:  plexus-container-default
+Requires:  plexus-containers-container-default
 
 %description
 Plexus IO is a set of plexus components, which are designed for use
@@ -76,9 +76,12 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Nov 22 2012 Jaromir Capik <jcapik@redhat.com> - 2.0.5-3
+- Migration to plexus-containers-container-default
+
 * Tue Nov 13 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.0.5-2
 - Use ordinary URL for Source0
-- Make sure we use 1.5 source/target 
+- Make sure we use 1.5 source/target
 - Add enforcer plugin to BR
 
 * Wed Oct 10 2012 Alexander Kurtakov <akurtako@redhat.com> 2.0.5-1
