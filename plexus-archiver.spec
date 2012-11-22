@@ -30,7 +30,7 @@
 
 Name:           plexus-archiver
 Version:        2.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
@@ -43,8 +43,8 @@ BuildArch:      noarch
 BuildRequires:  jpackage-utils >= 0:1.6
 BuildRequires:  ant >= 0:1.6
 BuildRequires:  classworlds >= 0:1.1
-BuildRequires:  plexus-container-default 
-BuildRequires:  plexus-utils 
+BuildRequires:  plexus-containers-container-default
+BuildRequires:  plexus-utils
 BuildRequires:  plexus-io
 BuildRequires: maven
 BuildRequires: maven-resources-plugin
@@ -58,17 +58,17 @@ BuildRequires: maven-shared-reporting-impl
 BuildRequires: maven-doxia-sitetools
 BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
 Requires:       classworlds >= 0:1.1
-Requires:       plexus-container-default 
-Requires:       plexus-utils 
+Requires:       plexus-containers-container-default
+Requires:       plexus-utils
 Requires:       jpackage-utils
 Requires:       plexus-io
 
 %description
-The Plexus project seeks to create end-to-end developer tools for 
-writing applications. At the core is the container, which can be 
-embedded or for a full scale application server. There are many 
-reusable components for hibernate, form processing, jndi, i18n, 
-velocity, etc. Plexus also includes an application server which 
+The Plexus project seeks to create end-to-end developer tools for
+writing applications. At the core is the container, which can be
+embedded or for a full scale application server. There are many
+reusable components for hibernate, form processing, jndi, i18n,
+velocity, etc. Plexus also includes an application server which
 is like a J2EE application server, without all the baggage.
 
 
@@ -92,7 +92,7 @@ mvn-rpmbuild -Dmaven.test.skip=true install javadoc:javadoc
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/plexus
 install -pm 644 target/%{name}-%{version}.jar \
   $RPM_BUILD_ROOT%{_javadir}/plexus/archiver.jar
-                  
+
 # pom
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
 install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}.pom
@@ -112,6 +112,9 @@ cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Nov 22 2012 Jaromir Capik <jcapik@redhat.com> - 0:2.2-3
+- Migration to plexus-containers-container-default
+
 * Mon Nov 19 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.2-2
 - Fix source URL to be stable
 
