@@ -33,13 +33,20 @@
 
 Name:           plexus-utils
 Version:        3.0.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus Common Utilities
-License:        ASL 1.1 and ASL 2.0 and MIT
+# ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
+# xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
+# ASL 2.0 and BSD:
+#      src/main/java/org/codehaus/plexus/util/cli/StreamConsumer
+#      src/main/java/org/codehaus/plexus/util/cli/StreamPumper
+#      src/main/java/org/codehaus/plexus/util/cli/Commandline            
+# rest is ASL 2.0
+License:        ASL 1.1 and ASL 2.0 and xpp and BSD
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/
-# fetched from https://github.com/sonatype/plexus-utils/tarball/plexus-utils-3.0.9
-Source0:        sonatype-plexus-utils-plexus-utils-3.0.9-0-g64c7726.tar.gz
+Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
+Source1:        http://apache.org/licenses/LICENSE-2.0.txt
 
 BuildArch:      noarch
 BuildRequires:  jpackage-utils >= 0:1.6
@@ -74,7 +81,8 @@ Requires:         jpackage-utils
 Javadoc for %{name}.
 
 %prep
-%setup -q -n sonatype-plexus-utils-c307dd9
+%setup -q -n %{name}-%{name}-%{version}
+cp %{SOURCE1} .
 
 %build
 mvn-rpmbuild install javadoc:javadoc -Dmaven.test.failure.ignore=true
@@ -95,16 +103,17 @@ install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-%{subname}.
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
-%files
-%{_javadir}/*
-%{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
-%doc NOTICE.txt
+%files -f .mfiles
+%doc NOTICE.txt LICENSE-2.0.txt
 
 %files javadoc
+%doc NOTICE.txt LICENSE-2.0.txt
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Fri Nov 23 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.0.9-2
+- Fix license tag and ASL 2.0 license text
+
 * Wed Oct 10 2012 Alexander Kurtakov <akurtako@redhat.com> 3.0.9-1
 - Update to upstream 3.0.9.
 
