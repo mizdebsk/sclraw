@@ -30,13 +30,14 @@
 
 Name:           plexus-archiver
 Version:        2.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
+Source1:        http://apache.org/licenses/LICENSE-2.0.txt
 
 
 BuildArch:      noarch
@@ -83,6 +84,7 @@ Javadoc for %{name}.
 
 %prep
 %setup -q -n %{name}-%{name}-%{version}
+cp %{SOURCE1} .
 
 %build
 mvn-rpmbuild -Dmaven.test.skip=true install javadoc:javadoc
@@ -103,15 +105,17 @@ install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}.pom
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
-%files
-%{_javadir}/*
-%{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
+%files -f .mfiles
+%doc LICENSE-2.0.txt
 
 %files javadoc
+%doc LICENSE-2.0.txt
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Fri Nov 23 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.2-4
+- Add ASL 2.0 license text to packages
+
 * Thu Nov 22 2012 Jaromir Capik <jcapik@redhat.com> - 0:2.2-3
 - Migration to plexus-containers-container-default
 
