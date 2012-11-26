@@ -33,7 +33,7 @@
 
 Name:           plexus-utils
 Version:        3.0.9
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
 # xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
@@ -41,8 +41,9 @@ Summary:        Plexus Common Utilities
 #      src/main/java/org/codehaus/plexus/util/cli/StreamConsumer
 #      src/main/java/org/codehaus/plexus/util/cli/StreamPumper
 #      src/main/java/org/codehaus/plexus/util/cli/Commandline            
+# Public domain: src/main/java/org/codehaus/plexus/util/TypeFormat.java
 # rest is ASL 2.0
-License:        ASL 1.1 and ASL 2.0 and xpp and BSD
+License:        ASL 1.1 and ASL 2.0 and xpp and BSD and Public Domain
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
@@ -111,6 +112,9 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Mon Nov 26 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.0.9-3
+- Add license from one Public Domain class 
+
 * Fri Nov 23 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.0.9-2
 - Fix license tag and ASL 2.0 license text
 
