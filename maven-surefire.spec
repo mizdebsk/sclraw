@@ -1,8 +1,6 @@
-%global bootstrap 0
-
 Name:           maven-surefire
 Version:        2.12.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -10,12 +8,7 @@ Group:          Development/Libraries
 URL:            http://maven.apache.org/surefire/
 
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/surefire/surefire/%{version}/surefire-%{version}-source-release.zip
-Source1:        %{name}-jpp-depmap.xml
 Source2:        http://junit.sourceforge.net/cpl-v10.html
-
-# provide compatibility for maven3
-Patch0:         0003-Fix-maven3-compatibility.patch
-Patch1:         0004-Surefire-2.12-bootstrap.patch
 
 BuildArch:      noarch
 BuildRequires:  ant
@@ -27,7 +20,7 @@ BuildRequires:  plexus-utils
 BuildRequires:  junit4
 BuildRequires:  testng
 
-BuildRequires:  maven
+BuildRequires:  maven-local, xmvn
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-help-plugin
 BuildRequires:  maven-install-plugin
@@ -158,223 +151,37 @@ Javadoc for %{name}.
 %prep
 %setup -q -n surefire-%{version}
 cp -p %{SOURCE2} .
-
-%patch0 -p1 -b .sav
-
-%if %{bootstrap}
-%patch1 -p1 -b .sav
-%endif
+%pom_add_dep org.apache.maven:maven-compat maven-surefire-common
 
 sed -i 's:${shadedVersion}:%{version}:' surefire-integration-tests/pom.xml
 
 
 %build
 # tests turned off because they need jmock
-mvn-rpmbuild -e \
-        -Dmaven.test.skip=true \
-        -Dmaven.local.depmap.file=%{SOURCE1} \
-        install javadoc:aggregate
+%mvn_build -f -L (surefire-plugin|report-plugin|junit3|junit4|testng|failsafe-plugin)=>@1
 
 %install
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/maven-surefire
-install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
+%mvn_install
 
 
-install -pm 644 maven-surefire-plugin/target/maven-surefire-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/maven-plugin.jar
-install -pm 644 maven-surefire-plugin/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-maven-plugin.pom
-%add_maven_depmap JPP.maven-surefire-maven-plugin.pom maven-surefire/maven-plugin.jar -f maven-plugin
-
-
-%if %{bootstrap}
-  install -pm 644 maven-surefire-common/target/maven-surefire-common-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common.jar
-%else
-  install -pm 644 maven-surefire-common/target/original-maven-surefire-common-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common.jar
-%endif
-install -pm 644 maven-surefire-common/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common.pom
-%add_maven_depmap JPP.maven-surefire-common.pom maven-surefire/common.jar
-
-
-install -pm 644 maven-surefire-report-plugin/target/maven-surefire-report-plugin-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/report-maven-plugin.jar
-install -pm 644 maven-surefire-report-plugin/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-report-maven-plugin.pom
-%add_maven_depmap JPP.maven-surefire-report-maven-plugin.pom maven-surefire/report-maven-plugin.jar -f report-plugin
-
-
-%if %{bootstrap}
-  install -pm 644 surefire-api/target/surefire-api-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/api.jar
-%else
-  install -pm 644 surefire-api/target/original-surefire-api-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/api.jar
-%endif
-install -pm 644 surefire-api/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-api.pom
-%add_maven_depmap JPP.maven-surefire-api.pom maven-surefire/api.jar
-
-
-%if %{bootstrap}
-install -pm 644 surefire-booter/target/surefire-booter-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/booter.jar
-%else
-install -pm 644 surefire-booter/target/original-surefire-booter-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/booter.jar
-%endif
-install -pm 644 surefire-booter/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-booter.pom
-%add_maven_depmap JPP.maven-surefire-booter.pom maven-surefire/booter.jar
-
-install -pm 644 surefire-providers/common-junit3/target/common-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common-junit.jar
-install -pm 644 surefire-providers/common-junit3/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common-junit.pom
-%add_maven_depmap JPP.maven-surefire-common-junit.pom maven-surefire/common-junit.jar -f junit
-
-
-%if %{bootstrap}
-  install -pm 644 surefire-providers/surefire-junit3/target/surefire-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit.jar
-%else
-  install -pm 644 surefire-providers/surefire-junit3/target/original-surefire-junit3-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit.jar
-%endif
-install -pm 644 surefire-providers/surefire-junit3/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit.pom
-%add_maven_depmap JPP.maven-surefire-junit.pom maven-surefire/junit.jar -a "org.apache.maven.surefire:surefire-junit" -f junit
-
-
-install -pm 644 surefire-providers/common-junit4/target/common-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common-junit4.jar
-install -pm 644 surefire-providers/common-junit4/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common-junit4.pom
-%add_maven_depmap JPP.maven-surefire-common-junit4.pom maven-surefire/common-junit4.jar -f junit4
-
-
-%if %{bootstrap}
-  install -pm 644 surefire-providers/surefire-junit4/target/surefire-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit4.jar
-%else
-  install -pm 644 surefire-providers/surefire-junit4/target/original-surefire-junit4-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit4.jar
-%endif
-install -pm 644 surefire-providers/surefire-junit4/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit4.pom
-%add_maven_depmap JPP.maven-surefire-junit4.pom maven-surefire/junit4.jar -f junit4
-
-
-%if %{bootstrap}
-  install -pm 644 surefire-providers/surefire-junit47/target/surefire-junit47-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit47.jar
-%else
-  install -pm 644 surefire-providers/surefire-junit47/target/original-surefire-junit47-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/junit47.jar
-%endif
-install -pm 644 surefire-providers/surefire-junit47/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-junit47.pom
-%add_maven_depmap JPP.maven-surefire-junit47.pom maven-surefire/junit47.jar -f junit4
-
-
-%if %{bootstrap}
-  install -pm 644 surefire-providers/common-junit48/target/common-junit48-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common-junit48.jar
-%else
-  install -pm 644 surefire-providers/common-junit48/target/original-common-junit48-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/common-junit48.jar
-%endif
-install -pm 644 surefire-providers/common-junit48/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-common-junit48.pom
-%add_maven_depmap JPP.maven-surefire-common-junit48.pom maven-surefire/common-junit48.jar -f junit4
-
-
-install -pm 644 surefire-providers/surefire-testng/target/surefire-testng-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/testng.jar
-install -pm 644 surefire-providers/surefire-testng/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-testng.pom
-%add_maven_depmap JPP.maven-surefire-testng.pom maven-surefire/testng.jar -f testng
-
-
-%if %{bootstrap}
-  install -pm 644 surefire-providers/surefire-testng-utils/target/surefire-testng-utils-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/testng-utils.jar
-%else
-  install -pm 644 surefire-providers/surefire-testng-utils/target/original-surefire-testng-utils-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/testng-utils.jar
-%endif
-install -pm 644 surefire-providers/surefire-testng-utils/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-testng-utils.pom
-%add_maven_depmap JPP.maven-surefire-testng-utils.pom maven-surefire/testng-utils.jar -f testng
-
-
-install -pm 644 surefire-providers/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-providers.pom
-%add_maven_depmap JPP.maven-surefire-providers.pom
-
-
-install -pm 644 maven-failsafe-plugin/target/maven-failsafe-plugin*.jar $RPM_BUILD_ROOT%{_javadir}/maven-failsafe-plugin.jar
-install -pm 644 maven-failsafe-plugin/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-maven-failsafe-plugin.pom
-%add_maven_depmap JPP-maven-failsafe-plugin.pom maven-failsafe-plugin.jar -f failsafe-plugin
-
-
-install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-main.pom
-%add_maven_depmap JPP.maven-surefire-main.pom
-
-
-install -pm 644 surefire-grouper/target/surefire-grouper-*.jar $RPM_BUILD_ROOT%{_javadir}/maven-surefire/grouper.jar
-install -pm 644 surefire-grouper/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.maven-surefire-grouper.pom
-%add_maven_depmap JPP.maven-surefire-grouper.pom maven-surefire/grouper.jar
-
-
-# javadoc
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-
-# Create compatibility links
-ln -s %{_javadir}/maven-surefire/api.jar \
-      $RPM_BUILD_ROOT%{_javadir}/maven-surefire/surefire.jar
-
-install -dm 755 $RPM_BUILD_ROOT%{_datadir}/maven2/plugins
-ln -s %{_javadir}/maven-surefire/maven-plugin.jar \
-      $RPM_BUILD_ROOT%{_datadir}/maven2/plugins/surefire-plugin.jar
-
-ln -s %{_javadir}/maven-surefire/report-maven-plugin.jar \
-      $RPM_BUILD_ROOT%{_datadir}/maven2/plugins/surefire-report-plugin.jar
-
-
-%files
+%files -f .mfiles
 %doc LICENSE NOTICE cpl-v10.html
 %dir %{_javadir}/maven-surefire
-%{_javadir}/maven-surefire/api.jar
-%{_javadir}/maven-surefire/booter.jar
-%{_javadir}/maven-surefire/surefire.jar
-%{_javadir}/maven-surefire/common.jar
-%{_javadir}/maven-surefire/grouper.jar
-%{_mavenpomdir}/JPP.%{name}-api.pom
-%{_mavenpomdir}/JPP.%{name}-booter.pom
-%{_mavenpomdir}/JPP.%{name}-common.pom
-%{_mavenpomdir}/JPP.%{name}-main.pom
-%{_mavenpomdir}/JPP.%{name}-providers.pom
-%{_mavenpomdir}/JPP.%{name}-grouper.pom
-%{_mavendepmapfragdir}/%{name}
 
-%files plugin
-%{_javadir}/maven-surefire/maven-plugin.jar
-%{_mavenpomdir}/JPP.%{name}-maven-plugin.pom
-%{_mavendepmapfragdir}/%{name}-maven-plugin
-%dir %{_datadir}/maven2/plugins
-%{_datadir}/maven2/plugins/surefire-plugin.jar
+%files plugin -f .mfiles-surefire-plugin
+%files report-plugin -f .mfiles-report-plugin
+%files provider-junit -f .mfiles-junit3
+%files provider-junit4 -f .mfiles-junit4
+%files provider-testng -f .mfiles-testng
+%files -n maven-failsafe-plugin -f .mfiles-failsafe-plugin
 
-%files report-plugin
-%{_javadir}/maven-surefire/report-maven-plugin.jar
-%{_mavenpomdir}/JPP.%{name}-report-maven-plugin.pom
-%{_mavendepmapfragdir}/%{name}-report-plugin
-%dir %{_datadir}/maven2/plugins
-%{_datadir}/maven2/plugins/surefire-report-plugin.jar
-
-%files provider-junit
-%{_mavendepmapfragdir}/%{name}-junit
-%{_mavenpomdir}/JPP.%{name}-junit.pom
-%{_mavenpomdir}/JPP.%{name}-common-junit.pom
-%{_javadir}/maven-surefire/junit.jar
-%{_javadir}/maven-surefire/common-junit.jar
-
-%files provider-junit4
-%{_mavendepmapfragdir}/%{name}-junit4
-%{_mavenpomdir}/JPP.%{name}-junit4.pom
-%{_mavenpomdir}/JPP.%{name}-junit47.pom
-%{_mavenpomdir}/JPP.%{name}-common-junit4.pom
-%{_mavenpomdir}/JPP.%{name}-common-junit48.pom
-%{_javadir}/maven-surefire/junit4.jar
-%{_javadir}/maven-surefire/junit47.jar
-%{_javadir}/maven-surefire/common-junit4.jar
-%{_javadir}/maven-surefire/common-junit48.jar
-
-%files provider-testng
-%{_mavendepmapfragdir}/%{name}-testng
-%{_mavenpomdir}/JPP.%{name}-testng.pom
-%{_mavenpomdir}/JPP.%{name}-testng-utils.pom
-%{_javadir}/maven-surefire/testng.jar
-%{_javadir}/maven-surefire/testng-utils.jar
-
-%files -n maven-failsafe-plugin
-%{_mavendepmapfragdir}/%{name}-failsafe-plugin
-%{_mavenpomdir}/JPP-maven-failsafe-plugin.pom
-%{_javadir}/maven-failsafe-plugin.jar
-
-%files javadoc
+%files javadoc -f .mfiles-javadoc
 %doc LICENSE NOTICE cpl-v10.html
-%doc %{_javadocdir}/*
 
 %changelog
+* Thu Nov 29 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-4
+- Build with xmvn
+
 * Thu Nov 15 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-3
 - Add CPL license
 
