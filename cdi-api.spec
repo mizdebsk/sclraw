@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.0
-Release:          5%{namedreltag}%{?dist}
+Release:          6%{namedreltag}%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -23,6 +23,7 @@ BuildRequires:    maven-install-plugin
 BuildRequires:    maven-jar-plugin
 BuildRequires:    maven-javadoc-plugin
 BuildRequires:    maven-surefire-provider-testng
+BuildRequires:    maven-enforcer-plugin
 BuildRequires:    testng
 BuildRequires:    jboss-el-2.2-api
 BuildRequires:    jboss-interceptors-1.1-api
@@ -80,6 +81,9 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Tue Dec 04 2012 Marek Goldmann <mgoldman@redhat.com> - 1.0-6.SP4
+- Added missing BR
+
 * Tue Dec 04 2012 Marek Goldmann <mgoldman@redhat.com> - 1.0-5.SP4
 - Added missing BR/R
 - Simplified the spec file
