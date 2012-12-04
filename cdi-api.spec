@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.0
-Release:          4%{namedreltag}%{?dist}
+Release:          5%{namedreltag}%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -11,9 +11,7 @@ URL:              http://seamframework.org/Weld
 
 # svn export http://anonsvn.jboss.org/repos/weld/cdi-api/tags/1.0-SP4/ cdi-api-1.0.SP4
 # tar cafJ cdi-api-1.0.SP4.tar.xz cdi-api-1.0.SP4
-Source0:          %{name}-%{namedversion}.tar.xz
-
-Patch0:           %{name}-%{namedversion}-pom.patch
+Source0:          cdi-api-%{namedversion}.tar.xz
 
 BuildArch:        noarch
 
@@ -29,12 +27,15 @@ BuildRequires:    testng
 BuildRequires:    jboss-el-2.2-api
 BuildRequires:    jboss-interceptors-1.1-api
 BuildRequires:    jboss-ejb-3.1-api
+BuildRequires:    geronimo-annotation
+BuildRequires:    weld-parent
 
 Requires:         jpackage-utils
 Requires:         java
 Requires:         jboss-el-2.2-api
 Requires:         jboss-interceptors-1.1-api
 Requires:         jboss-ejb-3.1-api
+Requires:         geronimo-annotation
 
 %description
 APIs for JSR-299: Contexts and Dependency Injection for Java EE
@@ -48,12 +49,10 @@ Requires:         jpackage-utils
 This package contains the API documentation for %{name}.
 
 %prep
-%setup -q -n %{name}-%{namedversion}
-
-%patch0 -p1
+%setup -q -n cdi-api-%{namedversion}
 
 %build
-mvn-rpmbuild install javadoc:aggregate
+mvn-rpmbuild package javadoc:aggregate
 
 %install
 install -d -m 755 %{buildroot}%{_javadir}
@@ -67,7 +66,7 @@ install -pm 644 target/cdi-api-%{version}-SP4.jar %{buildroot}%{_javadir}/%{name
 install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
 
 # DEPMAP
-%add_maven_depmap JPP-%{name}.pom %{name}.jar
+%add_maven_depmap
 
 # APIDOCS
 cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
@@ -81,6 +80,11 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Tue Dec 04 2012 Marek Goldmann <mgoldman@redhat.com> - 1.0-5.SP4
+- Added missing BR/R
+- Simplified the spec file
+- Removed unnecessary patch
+
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-4.SP4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
