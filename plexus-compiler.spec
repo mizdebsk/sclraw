@@ -33,7 +33,7 @@
 
 Name:       plexus-compiler
 Version:    1.9.2
-Release:    2%{?dist}
+Release:    3%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -52,14 +52,14 @@ BuildRequires:  jpackage-utils
 BuildRequires:  junit
 BuildRequires:  classworlds
 BuildRequires:  eclipse-ecj
-BuildRequires:  plexus-container-default
+BuildRequires:  plexus-containers-container-default
 BuildRequires:  plexus-utils
 BuildRequires:  plexus-containers-component-metadata
 BuildRequires:  junit4
 BuildRequires:  plexus-pom
 
 Requires:       classworlds
-Requires:       plexus-container-default
+Requires:       plexus-containers-container-default
 Requires:       plexus-utils
 Requires:       junit4
 
@@ -177,6 +177,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Dec 5 2012 Michal Srb <msrb@redhat.com> - 0:1.9.2-3
+- Replaced dependency to plexus-container-default with plexus-containers-container-default
+
 * Tue Nov 13 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.9.2-2
 - Fix up licensing properly
 
