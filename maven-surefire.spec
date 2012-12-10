@@ -20,7 +20,7 @@ BuildRequires:  plexus-utils
 BuildRequires:  junit4
 BuildRequires:  testng
 
-BuildRequires:  maven-local, xmvn
+BuildRequires:  xmvn
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-help-plugin
 BuildRequires:  maven-install-plugin
@@ -158,7 +158,7 @@ sed -i 's:${shadedVersion}:%{version}:' surefire-integration-tests/pom.xml
 
 %build
 # tests turned off because they need jmock
-%mvn_build -f -L (surefire-plugin|report-plugin|junit3|junit4|testng|failsafe-plugin)=>@1
+%mvn_build -f -L "(surefire-plugin|report-plugin|junit3|junit4|testng|failsafe-plugin)=>@1"
 
 %install
 %mvn_install
