@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.12.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -78,7 +78,7 @@ Summary:                JUnit provider for Maven Surefire
 Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4O
 Provides:               maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
 Obsoletes:              %{name}-provider-junit4 < %{epoch}:%{version}-%{release}
-Provides:               %{name}-provider-junit4 < %{epoch}:%{version}-%{release}
+Provides:               %{name}-provider-junit4 = %{epoch}:%{version}-%{release}
 
 %description provider-junit
 JUnit provider for Maven Surefire.
@@ -152,6 +152,9 @@ cp -p %{SOURCE2} .
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Fri Dec 14 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-7
+- Fix Provides: maven-surefire-provider-junit4
+
 * Fri Dec 14 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-6
 - Merge junit3 and junit4 providers
 - Disable dependency on shadefire
