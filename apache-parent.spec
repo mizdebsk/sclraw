@@ -1,11 +1,12 @@
 Name:           apache-parent
 Version:        10
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://apache.org/
 Source0:        http://svn.apache.org/repos/asf/maven/pom/tags/apache-10/pom.xml
+Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 BuildArch:      noarch
 
 BuildRequires:  maven
@@ -29,6 +30,7 @@ cp %{SOURCE0} .
 sed -i 's:<source>1.4</source>:<source>1.5</source>:' pom.xml
 sed -i 's:<target>1.4</target>:<target>1.5</target>:' pom.xml
 
+cp %{SOURCE1} LICENSE
 
 %build
 
@@ -44,10 +46,14 @@ install -pm 644 pom.xml \
 mvn-rpmbuild verify
 
 %files
+%doc LICENSE
 %{_mavenpomdir}/JPP-%{name}.pom
 %{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Tue Dec 18 2012 Michal Srb <msrb@redhat.com> - 10-8
+- Added license (Resolves: #888287)
+
 * Wed Nov 21 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 10-7
 - Install patched pom not the original
 
