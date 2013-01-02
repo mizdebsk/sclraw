@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -17,7 +17,7 @@ BuildRequires:  ant
 BuildRequires:  bsh
 BuildRequires:  jtidy
 BuildRequires:  maven-artifact-manager
-BuildRequires:  maven-doxia
+BuildRequires:  maven-doxia-sink-api
 BuildRequires:  maven-doxia-sitetools
 BuildRequires:  maven-enforcer-plugin
 BuildRequires:  maven-plugin-annotations
@@ -41,6 +41,10 @@ BuildRequires:  plexus-utils
 BuildRequires:  plexus-velocity
 BuildRequires:  qdox
 BuildRequires:  velocity
+# This is parent POM of the plexus-ant-factory. It is not pulled in
+# as a dependency of plexus-ant-factory, but we need it, because
+# maven-script-ant subpackage fails to build without it.
+BuildRequires:  plexus-component-factories-pom
 # Test dependencies:
 %if 0
 BuildRequires:  easymock
@@ -77,7 +81,7 @@ Requires:       java
 Requires:       jpackage-utils
 Requires:       maven
 Requires:       maven-artifact-manager
-Requires:       maven-doxia
+Requires:       maven-doxia-sink-api
 Requires:       maven-doxia-sitetools
 Requires:       maven-plugin-descriptor
 Requires:       maven-plugin-registry
@@ -264,6 +268,7 @@ Requires:       maven-project
 Requires:       plexus-ant-factory
 Requires:       plexus-archiver
 Requires:       plexus-containers-container-default
+Requires:       plexus-component-factories-pom
 
 %description -n maven-script-ant
 This package provides %{summary}, which write Maven plugins with
@@ -418,6 +423,9 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Fri Dec 21 2012 Michal Srb <msrb@redhat.com> - 0:3.1-7
+- Migrated from maven-doxia to doxia subpackage (Resolves: #889147)
+
 * Wed Nov 14 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-6
 - Skip running tests because they are failing
 
