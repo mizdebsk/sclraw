@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.12.4
-Release:        7%{?dist}
+Release:        8%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -46,6 +46,9 @@ BuildRequires:  tomcat6-servlet-2.5-api
 BuildRequires:  maven-plugin-testing-harness
 BuildRequires:  bsf
 BuildRequires:  javacc-maven-plugin
+BuildRequires:  maven-doxia-sink-api
+BuildRequires:  maven-doxia-core
+BuildRequires:  maven-doxia-sitetools
 
 Obsoletes:      maven-surefire-booter <= 0:1.5.3
 Provides:       maven-surefire-booter = %{epoch}:%{version}-%{release}
@@ -152,6 +155,9 @@ cp -p %{SOURCE2} .
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Fri Dec 21 2012 Michal Srb <msrb@redhat.com> - 0:2.12.4-8
+- Migrated from maven-doxia to doxia subpackages (Resolves: #889149)
+
 * Fri Dec 14 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-7
 - Fix Provides: maven-surefire-provider-junit4
 
