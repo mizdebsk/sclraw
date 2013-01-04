@@ -2,7 +2,7 @@
 
 Name:           %{short_name}-pom
 Version:        23
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -10,13 +10,7 @@ License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/
 Source:         http://repo.maven.apache.org/maven2/org/apache/maven/plugins/%{short_name}/%{version}/%{short_name}-%{version}-source-release.zip
 
-BuildRequires:  jpackage-utils
-BuildRequires:  maven
-BuildRequires:  maven-enforcer-plugin
-
-Requires:       jpackage-utils
-Requires:       maven
-Requires:       maven-enforcer-plugin
+BuildRequires:  xmvn
 
 %description
 This package provides Maven Plugins parent POM used by different
@@ -24,21 +18,23 @@ Apache Maven plugins.
 
 %prep
 %setup -q -n %{short_name}-%{version}
+# Enforcer plugin is used to ban plexus-component-api.
+%pom_remove_plugin :maven-enforcer-plugin
 
-%check
-mvn-rpmbuild verify
+%build
+%mvn_build
 
 %install
-install -d -m 755 %{buildroot}%{_mavenpomdir}
-install -p -m 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-%add_maven_depmap JPP-%{name}.pom
+%mvn_install
 
-%files
+%files -f .mfiles
 %doc LICENSE NOTICE
-%{_mavenpomdir}/JPP-%{name}.pom
-%{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Fri Jan  4 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 23-4
+- Disable maven-enforcer-plugin
+- Build with xmvn
+
 * Thu Nov 15 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 23-3
 - Add missing R: maven-enforcer-plugin
 
