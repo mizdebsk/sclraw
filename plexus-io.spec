@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        2.0.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
@@ -15,7 +15,7 @@ BuildRequires: jpackage-utils
 BuildRequires: plexus-utils
 BuildRequires: plexus-containers-container-default
 BuildRequires: plexus-components-pom
-BuildRequires: maven
+BuildRequires: xmvn
 BuildRequires: maven-compiler-plugin
 BuildRequires: maven-enforcer-plugin
 BuildRequires: maven-jar-plugin
@@ -26,9 +26,6 @@ BuildRequires: maven-surefire-plugin
 BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-doxia-sitetools
 BuildRequires: mvn(org.apache.maven.plugins:maven-enforcer-plugin)
-Requires:  jpackage-utils
-Requires:  plexus-utils
-Requires:  plexus-containers-container-default
 
 %description
 Plexus IO is a set of plexus components, which are designed for use
@@ -37,7 +34,6 @@ in I/O operations.
 %package javadoc
 Group:          Documentation
 Summary:        Javadoc for %{name}
-Requires:       jpackage-utils
 
 %description javadoc
 API documentation for %{name}.
@@ -47,35 +43,23 @@ API documentation for %{name}.
 %setup -q -n sonatype-plexus-io-1a0010b
 
 %build
-mvn-rpmbuild -Dmaven.compiler.source=1.5 \
-             -Dmaven.compiler.target=1.5 \
-             install javadoc:aggregate
+export XMVN_COMPILER_SOURCE="1.5"
+%mvn_file  : plexus/io
+%mvn_build
 
 %install
-# jars
-install -d -m 0755 %{buildroot}%{_javadir}/plexus
-install -m 644 target/%{name}-%{version}.jar   %{buildroot}%{_javadir}/plexus/io.jar
-
-
-# poms
-install -d -m 755 %{buildroot}%{_mavenpomdir}
-install -pm 644 pom.xml \
-    %{buildroot}%{_mavenpomdir}/JPP.%{name}.pom
-
-%add_maven_depmap JPP.%{name}.pom plexus/io.jar
-
-# javadoc
-install -d -m 0755 %{buildroot}%{_javadocdir}/%{name}
-cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
-
+%mvn_install
 
 %files -f .mfiles
 %doc NOTICE.txt
 
-%files javadoc
-%{_javadocdir}/%{name}
+%files javadoc -f .mfiles-javadoc
+
 
 %changelog
+* Thu Jan 17 2013 Michal Srb <msrb@redhat.com> - 2.0.5-4
+- Build with xmvn
+
 * Thu Nov 22 2012 Jaromir Capik <jcapik@redhat.com> - 2.0.5-3
 - Migration to plexus-containers-container-default
 
