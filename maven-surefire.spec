@@ -1,6 +1,6 @@
 Name:           maven-surefire
-Version:        2.12.4
-Release:        7%{?dist}
+Version:        2.13
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -32,6 +32,7 @@ BuildRequires:  maven-plugin-plugin
 BuildRequires:  maven-resources-plugin
 BuildRequires:  maven-site-plugin
 BuildRequires:  maven-shade-plugin
+BuildRequires:  maven-shared-utils
 BuildRequires:  maven-shared-verifier
 BuildRequires:  maven-enforcer-plugin
 BuildRequires:  maven-failsafe-plugin
@@ -89,12 +90,6 @@ Summary:                TestNG provider for Maven Surefire
 %description provider-testng
 TestNG provider for Maven Surefire.
 
-%package tests
-Summary:                Integration tests for Maven Surefire
-
-%description tests
-Integration tests for Maven Surefire.
-
 %package -n maven-failsafe-plugin
 Summary:                Maven plugin for running integration tests
 
@@ -131,13 +126,17 @@ cp -p %{SOURCE2} .
 
 %build
 # tests turned off because they need jmock
-%mvn_build -f -D %{SOURCE3} -L "(surefire-plugin|report-plugin|junit|testng|tests|failsafe-plugin)=>@1"
+%mvn_package ":*{surefire-plugin,report-plugin,junit,testng,failsafe-plugin}*" @1
+%mvn_package ":*tests*" __noinstall
+export XMVN_RESOLV_DEPMAPS=",%{SOURCE3}"
+%mvn_build -f
 
 %install
 %mvn_install
 
 
 %files -f .mfiles
+%doc README.TXT
 %doc LICENSE NOTICE cpl-v10.html
 %dir %{_javadir}/maven-surefire
 
@@ -145,13 +144,15 @@ cp -p %{SOURCE2} .
 %files report-plugin -f .mfiles-report-plugin
 %files provider-junit -f .mfiles-junit
 %files provider-testng -f .mfiles-testng
-%files tests -f .mfiles-tests
 %files -n maven-failsafe-plugin -f .mfiles-failsafe-plugin
 
 %files javadoc -f .mfiles-javadoc
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Wed Jan 23 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.13-1
+- Update to upstream version 2.13
+
 * Fri Dec 14 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-7
 - Fix Provides: maven-surefire-provider-junit4
 
