@@ -33,13 +33,13 @@
 
 Name:       plexus-compiler
 Version:    1.9.2
-Release:    3%{?dist}
+Release:    4%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
 # parts of compiler-api are ASL2.0/MIT
 License:    MIT and ASL 2.0
-Group:      Development/Java
+Group:      Development/Libraries
 URL:        http://plexus.codehaus.org/
 
 Source0:    https://github.com/sonatype/%{name}/tarball/%{name}-%{version}#/%{name}-%{version}.tar.gz
@@ -47,7 +47,7 @@ Source0:    https://github.com/sonatype/%{name}/tarball/%{name}-%{version}#/%{na
 Patch0:     plexus-compiler-ignoreOptionalProblems.patch
 
 BuildArch:      noarch
-BuildRequires:  maven
+BuildRequires:  xmvn
 BuildRequires:  jpackage-utils
 BuildRequires:  junit
 BuildRequires:  classworlds
@@ -58,10 +58,6 @@ BuildRequires:  plexus-containers-component-metadata
 BuildRequires:  junit4
 BuildRequires:  plexus-pom
 
-Requires:       classworlds
-Requires:       plexus-containers-container-default
-Requires:       plexus-utils
-Requires:       junit4
 
 %description
 Plexus Compiler adds support for using various compilers from a
@@ -75,8 +71,6 @@ Group:          Development/Libraries
 #          ...codehaus/plexus/compiler/csharp/CSharpCompiler.java
 # ASL 1.1/MIT: ...codehaus/plexus/compiler/jikes/JikesCompiler.java
 License:        MIT and ASL 2.0 and ASL 1.1
-Requires:       jpackage-utils
-Requires:       eclipse-ecj
 Requires:       %{name} = %{version}-%{release}
 
 %description extras
@@ -85,7 +79,6 @@ Additional support for csharp, eclipse and jikes compilers
 %package javadoc
 Summary:        Javadoc for %{name}
 Group:          Documentation
-Requires:       jpackage-utils
 
 %description javadoc
 API documentation for %{name}.
@@ -100,83 +93,44 @@ API documentation for %{name}.
 %pom_disable_module plexus-compiler-test
 
 %build
-mvn-rpmbuild -e \
-        -Dmaven.test.skip=true \
-        install javadoc:aggregate
+# plexus-compiler-jikes
+%mvn_package "org.codehaus.plexus:plexus-compiler-jikes" plexus-compiler-extras
+%mvn_file "org.codehaus.plexus:plexus-compiler-jikes" plexus/compiler-jikes
 
+# plexus-compiler-eclipse
+%mvn_package "org.codehaus.plexus:plexus-compiler-eclipse" plexus-compiler-extras
+%mvn_file "org.codehaus.plexus:plexus-compiler-eclipse" plexus/compiler-eclipse
+
+# plexus-compiler-csharp
+%mvn_package "org.codehaus.plexus:plexus-compiler-csharp" plexus-compiler-extras
+%mvn_file "org.codehaus.plexus:plexus-compiler-csharp" plexus/compiler-csharp
+
+# plexus-compiler-api
+%mvn_file "org.codehaus.plexus:plexus-compiler-api" plexus/compiler-api
+
+# plexus-compiler-manager
+%mvn_file "org.codehaus.plexus:plexus-compiler-manager" plexus/compiler-manager
+
+# plexus-compiler-javac
+%mvn_file "org.codehaus.plexus:plexus-compiler-javac" plexus/compiler-javac
+
+
+%mvn_build -f
 
 %install
-# jars
-install -d -m 755 %{buildroot}%{_javadir}/%{parent}
-install -d -m 755 %{buildroot}%{_mavenpomdir}
+%mvn_install
 
-for mod in plexus-compiler-{api,manager}; do
-    jarname=${mod/plexus-}
-    install -pm 644 $mod/target/${mod}-%{version}.jar \
-                    %{buildroot}%{_javadir}/%{parent}/$jarname.jar
+%files -f .mfiles
 
-    install -pm 644 $mod/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-$jarname.pom
-    %add_maven_depmap JPP.%{parent}-$jarname.pom %{parent}/$jarname.jar
-done
+%files extras -f .mfiles-plexus-compiler-extras
 
-pushd plexus-compilers
-for mod in plexus-compiler-{csharp,eclipse,jikes,javac}; do
-    jarname=${mod/plexus-}
-    install -pm 644 $mod/target/${mod}-%{version}.jar \
-                    %{buildroot}%{_javadir}/%{parent}/$jarname.jar
-
-    install -pm 644 $mod/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-$jarname.pom
-    %add_maven_depmap JPP.%{parent}-$jarname.pom %{parent}/$jarname.jar -f extras
-done
-
-install -pm 644 plexus-compiler-javac/target/plexus-compiler-javac-%{version}.jar \
-                    %{buildroot}%{_javadir}/%{parent}/compiler-javac.jar
-
-install -pm 644 plexus-compiler-javac/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-compiler-javac.pom
-%add_maven_depmap JPP.%{parent}-compiler-javac.pom %{parent}/compiler-javac.jar
-
-install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-compilers.pom
-%add_maven_depmap JPP.%{parent}-compilers.pom
-popd
-
-install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-compiler.pom
-%add_maven_depmap JPP.%{parent}-compiler.pom
-
-
-# javadocs
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-
-%pre javadoc
-# workaround for rpm bug, can be removed in F-17
-[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
-rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
-
-
-%files
-%{_javadir}/%{parent}/compiler-api.jar
-%{_javadir}/%{parent}/compiler-manager.jar
-%{_javadir}/%{parent}/compiler-javac.jar
-%{_mavenpomdir}/JPP.%{parent}-compilers.pom
-%{_mavenpomdir}/JPP.%{parent}-compiler.pom
-%{_mavenpomdir}/JPP.%{parent}-compiler-api.pom
-%{_mavenpomdir}/JPP.%{parent}-compiler-manager.pom
-%{_mavenpomdir}/JPP.%{parent}-compiler-javac.pom
-%{_mavendepmapfragdir}/%{name}
-
-%files extras
-%{_mavendepmapfragdir}/%{name}-extras
-%{_javadir}/%{parent}/compiler-csharp.jar
-%{_javadir}/%{parent}/compiler-eclipse.jar
-%{_javadir}/%{parent}/compiler-jikes.jar
-%{_mavenpomdir}/JPP.%{parent}-compiler-jikes.pom
-%{_mavenpomdir}/JPP.%{parent}-compiler-eclipse.pom
-%{_mavenpomdir}/JPP.%{parent}-compiler-csharp.pom
-
-%files javadoc
-%doc %{_javadocdir}/%{name}
+%files javadoc -f .mfiles-javadoc
 
 %changelog
+* Thu Jan 24 2013 Michal Srb <msrb@redhat.com> - 0:1.9.2-4
+- Build with xmvn
+- Fixed rpmlint warning
+
 * Wed Dec 5 2012 Michal Srb <msrb@redhat.com> - 0:1.9.2-3
 - Replaced dependency to plexus-container-default with plexus-containers-container-default
 
