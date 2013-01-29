@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.13
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -9,7 +9,6 @@ URL:            http://maven.apache.org/surefire/
 
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/surefire/surefire/%{version}/surefire-%{version}-source-release.zip
 Source2:        http://junit.sourceforge.net/cpl-v10.html
-Source3:        shadefire-depmap.xml
 
 BuildArch:      noarch
 BuildRequires:  apache-commons-lang3
@@ -123,12 +122,18 @@ cp -p %{SOURCE2} .
 %pom_add_dep org.apache.maven:maven-compat maven-surefire-common
 %pom_disable_module surefire-shadefire
 
+for module in . maven-failsafe-plugin maven-surefire-common \
+        maven-surefire-plugin surefire-api surefire-booter \
+        surefire-grouper surefire-providers \
+        surefire-setup-integration-tests; do
+    %pom_remove_dep org.apache.maven.surefire:surefire-shadefire $module
+done
 
 %build
-# tests turned off because they need jmock
-%mvn_package ":*{surefire-plugin,report-plugin,junit,testng,failsafe-plugin}*" @1
+%mvn_package ":*{surefire-plugin,report-plugin}*" @1
+%mvn_package ":*{junit,testng,failsafe-plugin}*"  @1
 %mvn_package ":*tests*" __noinstall
-export XMVN_RESOLV_DEPMAPS=",%{SOURCE3}"
+# tests turned off because they need jmock
 %mvn_build -f
 
 %install
@@ -150,6 +155,9 @@ export XMVN_RESOLV_DEPMAPS=",%{SOURCE3}"
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Tue Jan 29 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.13-2
+- Get rid of custom depmap
+
 * Wed Jan 23 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.13-1
 - Update to upstream version 2.13
 
