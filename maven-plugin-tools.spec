@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -12,7 +12,7 @@ BuildArch:      noarch
 
 BuildRequires:  java-devel >= 1:1.6.0
 BuildRequires:  jpackage-utils
-BuildRequires:  maven
+BuildRequires:  maven-local
 BuildRequires:  ant
 BuildRequires:  bsh
 BuildRequires:  jtidy
@@ -423,6 +423,10 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 0:3.1-8
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
 * Fri Dec 21 2012 Michal Srb <msrb@redhat.com> - 0:3.1-7
 - Migrated from maven-doxia to doxia subpackage (Resolves: #889147)
 
