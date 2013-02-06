@@ -33,7 +33,7 @@
 
 Name:       plexus-compiler
 Version:    1.9.2
-Release:    4%{?dist}
+Release:    5%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -47,7 +47,7 @@ Source0:    https://github.com/sonatype/%{name}/tarball/%{name}-%{version}#/%{na
 Patch0:     plexus-compiler-ignoreOptionalProblems.patch
 
 BuildArch:      noarch
-BuildRequires:  xmvn
+BuildRequires:  maven-local
 BuildRequires:  jpackage-utils
 BuildRequires:  junit
 BuildRequires:  classworlds
@@ -127,6 +127,10 @@ API documentation for %{name}.
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 0:1.9.2-5
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
 * Thu Jan 24 2013 Michal Srb <msrb@redhat.com> - 0:1.9.2-4
 - Build with xmvn
 - Fixed rpmlint warning
