@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 Group:          Development/Libraries
@@ -30,7 +30,7 @@ Patch2:         0003-Fix-OpenJDK7-compatibility.patch
 BuildArch:      noarch
 
 BuildRequires:  jpackage-utils >= 0:1.7.3
-BuildRequires:  maven
+BuildRequires:  maven-local
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-install-plugin
 BuildRequires:  maven-invoker-plugin
@@ -190,6 +190,10 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/*
 
 %changelog
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 1.5.5-8
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
 * Wed Nov 14 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-7
 - Fix license tag (Plexus license was replaced by MIT some time ago)
 - Update javadoc plugin BR version
