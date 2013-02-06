@@ -30,7 +30,7 @@
 
 Name:           modello
 Version:        1.5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        ASL 2.0 and BSD and MIT
@@ -45,7 +45,7 @@ BuildArch:      noarch
 
 BuildRequires:  ant >= 0:1.6
 BuildRequires:  jpackage-utils >= 0:1.7.2
-BuildRequires:  maven
+BuildRequires:  maven-local
 BuildRequires:  maven-assembly-plugin
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-install-plugin
@@ -164,6 +164,10 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 0:1.5-6
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
 * Thu Nov 15 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.5-5
 - Add JPP depmap for maven-project to override versionless depmap
 - Add missing BR/R: maven-project
