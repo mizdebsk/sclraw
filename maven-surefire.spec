@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.13
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -19,7 +19,7 @@ BuildRequires:  plexus-utils
 BuildRequires:  junit4
 BuildRequires:  testng
 
-BuildRequires:  xmvn
+BuildRequires:  maven-local
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-help-plugin
 BuildRequires:  maven-install-plugin
@@ -155,6 +155,10 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 0:2.13-3
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
 * Tue Jan 29 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.13-2
 - Get rid of custom depmap
 
