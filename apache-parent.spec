@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        10
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -9,7 +9,7 @@ Source0:        http://svn.apache.org/repos/asf/maven/pom/tags/apache-10/pom.xml
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 BuildArch:      noarch
 
-BuildRequires:  maven
+BuildRequires:  maven-local
 BuildRequires:  jpackage-utils
 BuildRequires:  apache-resource-bundles
 BuildRequires:  maven-remote-resources-plugin
@@ -51,6 +51,10 @@ mvn-rpmbuild verify
 %{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 10-9
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
 * Tue Dec 18 2012 Michal Srb <msrb@redhat.com> - 10-8
 - Added license (Resolves: #888287)
 
