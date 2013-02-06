@@ -33,7 +33,7 @@
 
 Name:           plexus-utils
 Version:        3.0.9
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
 # xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
@@ -53,7 +53,7 @@ BuildArch:      noarch
 BuildRequires:  jpackage-utils >= 0:1.6
 Requires:       jpackage-utils
 
-BuildRequires:  maven
+BuildRequires:  maven-local
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-install-plugin
 BuildRequires:  maven-jar-plugin
@@ -112,6 +112,10 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 3.0.9-4
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
 * Mon Nov 26 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.0.9-3
 - Add license from one Public Domain class 
 
