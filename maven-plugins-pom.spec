@@ -2,7 +2,7 @@
 
 Name:           %{short_name}-pom
 Version:        23
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -10,7 +10,7 @@ License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/
 Source:         http://repo.maven.apache.org/maven2/org/apache/maven/plugins/%{short_name}/%{version}/%{short_name}-%{version}-source-release.zip
 
-BuildRequires:  xmvn
+BuildRequires:  maven-local
 
 %description
 This package provides Maven Plugins parent POM used by different
@@ -31,6 +31,10 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 23-5
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
 * Fri Jan  4 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 23-4
 - Disable maven-enforcer-plugin
 - Build with xmvn
