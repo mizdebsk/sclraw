@@ -46,6 +46,9 @@ BuildRequires:  tomcat6-servlet-2.5-api
 BuildRequires:  maven-plugin-testing-harness
 BuildRequires:  bsf
 BuildRequires:  javacc-maven-plugin
+BuildRequires:  maven-doxia-sink-api
+BuildRequires:  maven-doxia-core
+BuildRequires:  maven-doxia-sitetools
 
 Obsoletes:      maven-surefire-booter <= 0:1.5.3
 Provides:       maven-surefire-booter = %{epoch}:%{version}-%{release}
@@ -164,6 +167,9 @@ done
 
 * Wed Jan 23 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.13-1
 - Update to upstream version 2.13
+
+* Fri Dec 21 2012 Michal Srb <msrb@redhat.com> - 0:2.12.4-8
+- Migrated from maven-doxia to doxia subpackages (Resolves: #889149)
 
 * Fri Dec 14 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.12.4-7
 - Fix Provides: maven-surefire-provider-junit4
