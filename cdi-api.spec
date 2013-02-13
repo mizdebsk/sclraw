@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.0
-Release:          7%{namedreltag}%{?dist}
+Release:          8%{namedreltag}%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -81,6 +81,9 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-8.SP4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 1.0-7.SP4
 - Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
 - Replace maven BuildRequires with maven-local
