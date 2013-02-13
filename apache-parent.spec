@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        10
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -51,6 +51,9 @@ mvn-rpmbuild verify
 %{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 10-9
 - Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
 - Replace maven BuildRequires with maven-local
