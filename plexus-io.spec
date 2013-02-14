@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        2.0.5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.5-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 2.0.5-5
 - Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
 - Replace maven BuildRequires with maven-local
