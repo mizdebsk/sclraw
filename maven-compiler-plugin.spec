@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
 Version:        2.5.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
@@ -81,6 +81,9 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 2.5.1-3
 - Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
 - Replace maven BuildRequires with maven-local
