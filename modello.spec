@@ -30,7 +30,7 @@
 
 Name:           modello
 Version:        1.5
-Release:        6%{?dist}
+Release:        7%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        ASL 2.0 and BSD and MIT
@@ -164,6 +164,9 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 0:1.5-6
 - Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
 - Replace maven BuildRequires with maven-local
