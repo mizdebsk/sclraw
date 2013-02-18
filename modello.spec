@@ -29,8 +29,8 @@
 #
 
 Name:           modello
-Version:        1.5
-Release:        7%{?dist}
+Version:        1.6
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 License:        ASL 2.0 and BSD and MIT
@@ -61,7 +61,7 @@ BuildRequires:  maven-plugin-plugin
 BuildRequires:  maven-shared-reporting-impl
 BuildRequires:  maven-shared-invoker
 BuildRequires:  classworlds >= 0:1.1
-BuildRequires:  plexus-container-default
+BuildRequires:  plexus-containers-container-default
 BuildRequires:  plexus-utils
 BuildRequires:  plexus-velocity
 BuildRequires:  velocity
@@ -114,6 +114,8 @@ API documentation for %{name}.
 %prep
 %setup -q 
 cp -p %{SOURCE1} LICENSE
+# We don't generate site; don't pull extra dependencies.
+%pom_remove_plugin :maven-site-plugin
 
 %build
 
@@ -164,6 +166,9 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Mon Feb 18 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.6-1
+- Update to upstream version 1.6
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
