@@ -29,7 +29,7 @@
 #
 
 Name:           modello
-Version:        1.6
+Version:        1.7
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
@@ -38,8 +38,6 @@ Group:          Development/Libraries
 URL:            http://modello.codehaus.org/
 Source0:        http://repo2.maven.org/maven2/org/codehaus/%{name}/%{name}/%{version}/%{name}-%{version}-source-release.zip
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
-Source2:        %{name}-jpp-depmap.xml
-
 
 BuildArch:      noarch
 
@@ -116,12 +114,13 @@ API documentation for %{name}.
 cp -p %{SOURCE1} LICENSE
 # We don't generate site; don't pull extra dependencies.
 %pom_remove_plugin :maven-site-plugin
+# Tests require Plexus compiler >= 2.0
+%pom_disable_module modello-test
 
 %build
 
 # skip tests because we have too old xmlunit in Fedora now (1.0.8)
 mvn-rpmbuild \
-        -Dmaven.local.depmap.file=%{SOURCE2} \
         -Dmaven.test.skip=true \
         install javadoc:aggregate
 
@@ -166,6 +165,9 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Feb 21 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.7-1
+- Update to upstream version 1.7
+
 * Mon Feb 18 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.6-1
 - Update to upstream version 1.6
 
