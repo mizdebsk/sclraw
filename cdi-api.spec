@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.0
-Release:          8%{namedreltag}%{?dist}
+Release:          9%{namedreltag}%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -29,6 +29,7 @@ BuildRequires:    jboss-el-2.2-api
 BuildRequires:    jboss-interceptors-1.1-api
 BuildRequires:    jboss-ejb-3.1-api
 BuildRequires:    geronimo-annotation
+BuildRequires:    geronimo-parent-poms
 BuildRequires:    weld-parent
 
 Requires:         jpackage-utils
@@ -81,6 +82,9 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Sat Mar 02 2013 Mat Booth <fedora@matbooth.co.uk> - 1.0-9.SP4
+- Add missing BR, fixes FTBFS rhbz #913916
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-8.SP4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
