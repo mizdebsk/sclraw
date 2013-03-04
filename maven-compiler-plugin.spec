@@ -7,11 +7,12 @@ Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-compiler-plugin
 Source0:        http://repo1.maven.org/maven2/org/apache/maven/plugins/%{name}/%{version}/%{name}-%{version}-source-release.zip
+Patch0:         0001-Build-against-newer-version-of-plexus-compiler.patch
 
 BuildArch: noarch
 
 BuildRequires:  java-devel >= 1:1.6.0
-BuildRequires:  xmvn >= 0.2.4
+BuildRequires:  maven-local
 BuildRequires:  maven-plugin-plugin
 BuildRequires:  maven-shared-incremental
 BuildRequires:  maven-surefire-provider-junit
@@ -35,6 +36,8 @@ API documentation for %{name}.
 
 %prep
 %setup -q 
+
+%patch0 -p1
 
 %build
 %mvn_build -f
