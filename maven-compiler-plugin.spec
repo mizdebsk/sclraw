@@ -1,13 +1,12 @@
 Name:           maven-compiler-plugin
 Version:        3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-compiler-plugin
 Source0:        http://repo1.maven.org/maven2/org/apache/maven/plugins/%{name}/%{version}/%{name}-%{version}-source-release.zip
-Patch0:         0001-Build-against-newer-version-of-plexus-compiler.patch
 
 BuildArch: noarch
 
@@ -37,8 +36,6 @@ API documentation for %{name}.
 %prep
 %setup -q 
 
-%patch0 -p1
-
 %build
 %mvn_build -f
 
@@ -52,6 +49,9 @@ API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 3.0-2
+- Build against proper plexus-compiler
+
 * Tue Jan 15 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0-1
 - Update to upstream version 3.0
 - Build with xmvn
