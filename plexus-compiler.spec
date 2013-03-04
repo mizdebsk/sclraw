@@ -43,7 +43,6 @@ Group:      Development/Java
 URL:        http://plexus.codehaus.org/
 
 Source0:    https://github.com/sonatype/%{name}/tarball/%{name}-%{version}#/%{name}-%{version}.tar.gz
-Patch0:     0001-change-artifactIds.patch
 
 BuildArch:      noarch
 BuildRequires:  maven-local
@@ -89,16 +88,16 @@ API documentation for %{name}.
 %prep
 %setup -q -n sonatype-plexus-compiler-%{dirhash}
 
-%patch0 -p1
-
 %pom_disable_module plexus-compiler-aspectj plexus-compilers/pom.xml
 
 # don't build/install compiler-test module, it needs maven2 test harness
 %pom_disable_module plexus-compiler-test
 
 %build
-%mvn_package ":plexus-compiler-temp" pom
-%mvn_package ":plexus-compilers-temp" pom
+# temporary solution only
+%mvn_alias ":{*}" :@1-temp
+
+%mvn_package ":plexus-compiler{,s}" pom
 %mvn_package ":*{csharp,eclipse,jikes}*" extras
 # Tests are skipped because of unavailable plexus-compiler-test artifact
 %mvn_build -f
@@ -106,32 +105,7 @@ API documentation for %{name}.
 %install
 %mvn_install
 
-# only temporary solution
-# we need to preserve older JARs and POMs for a while, because current maven-compiler-plugin
-# won't work with this newer version of plexus-compiler and we can't update maven-compiler-plugin
-# because it requires this newer version of plexus-compiler.
-# thus temporarly we need both versions of plexus-compiler
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/plexus
-cp /usr/share/java/plexus/compiler-api.jar     %{buildroot}/usr/share/java/plexus/compiler-api.jar
-cp /usr/share/java/plexus/compiler-javac.jar   %{buildroot}/usr/share/java/plexus/compiler-javac.jar
-cp /usr/share/java/plexus/compiler-manager.jar %{buildroot}/usr/share/java/plexus/compiler-manager.jar
-cp /usr/share/java/plexus/compiler-csharp.jar  %{buildroot}/usr/share/java/plexus/compiler-csharp.jar
-cp /usr/share/java/plexus/compiler-eclipse.jar %{buildroot}/usr/share/java/plexus/compiler-eclipse.jar
-cp /usr/share/java/plexus/compiler-jikes.jar   %{buildroot}/usr/share/java/plexus/compiler-jikes.jar
-cp /usr/share/maven-poms/JPP.plexus-compiler-api.pom     %{buildroot}/usr/share/maven-poms/JPP.plexus-compiler-api.pom
-cp /usr/share/maven-poms/JPP.plexus-compiler-javac.pom   %{buildroot}/usr/share/maven-poms/JPP.plexus-compiler-javac.pom
-cp /usr/share/maven-poms/JPP.plexus-compiler-manager.pom %{buildroot}/usr/share/maven-poms/JPP.plexus-compiler-manager.pom
-cp /usr/share/maven-poms/JPP.plexus-compiler-org.codehaus.plexus@plexus-compiler.pom %{buildroot}/usr/share/maven-poms/JPP.plexus-compiler-org.codehaus.plexus@plexus-compiler.pom
-cp /usr/share/maven-poms/JPP.plexus-compiler-org.codehaus.plexus@plexus-compilers.pom %{buildroot}/usr/share/maven-poms/JPP.plexus-compiler-org.codehaus.plexus@plexus-compilers.pom
-cp /usr/share/maven-poms/JPP.plexus-compiler-csharp.pom  %{buildroot}/usr/share/maven-poms/JPP.plexus-compiler-csharp.pom
-cp /usr/share/maven-poms/JPP.plexus-compiler-eclipse.pom %{buildroot}/usr/share/maven-poms/JPP.plexus-compiler-eclipse.pom
-cp /usr/share/maven-poms/JPP.plexus-compiler-jikes.pom   %{buildroot}/usr/share/maven-poms/JPP.plexus-compiler-jikes.pom
-cp /usr/share/maven-fragments/plexus-compiler.xml %{buildroot}/usr/share/maven-fragments/plexus-compiler-orig.xml
-
 %files -f .mfiles
-%{_javadir}/plexus/*
-%{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
 %files extras -f .mfiles-extras
 %files pom -f .mfiles-pom
 
