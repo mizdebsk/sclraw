@@ -29,7 +29,6 @@
 #
 
 %global parent  plexus
-%global dirhash 16e340d
 
 Name:       plexus-compiler
 Version:    2.2
@@ -42,7 +41,8 @@ License:    MIT and ASL 2.0
 Group:      Development/Java
 URL:        http://plexus.codehaus.org/
 
-Source0:    https://github.com/sonatype/%{name}/tarball/%{name}-%{version}#/%{name}-%{version}.tar.gz
+Source0:    https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
+Source1:    http://www.apache.org/licenses/LICENSE-2.0.txt
 
 BuildArch:      noarch
 BuildRequires:  maven-local
@@ -86,7 +86,9 @@ Group:          Documentation
 API documentation for %{name}.
 
 %prep
-%setup -q -n sonatype-plexus-compiler-%{dirhash}
+%setup -q -n %{name}-%{name}-%{version}
+
+cp %{SOURCE1} LICENSE
 
 %pom_disable_module plexus-compiler-aspectj plexus-compilers/pom.xml
 
@@ -103,15 +105,17 @@ API documentation for %{name}.
 %mvn_install
 
 %files -f .mfiles
+%doc LICENSE
 %files extras -f .mfiles-extras
 %files pom -f .mfiles-pom
 
-%files javadoc
-%doc %{_javadocdir}/%{name}
+%files javadoc -f .mfiles-javadoc
+%doc LICENSE
 
 %changelog
 * Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 0:2.2-1
 - Update to upstream version 2.2
+- Add license file (Resolves: #903268)
 
 * Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 0:2.1-3
 - Remove auxiliary aliases
