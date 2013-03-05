@@ -33,7 +33,7 @@
 
 Name:       plexus-compiler
 Version:    2.1
-Release:    2%{?dist}
+Release:    3%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -94,9 +94,6 @@ API documentation for %{name}.
 %pom_disable_module plexus-compiler-test
 
 %build
-# temporary solution only
-%mvn_alias ":{*}" :@1-temp
-
 %mvn_package ":plexus-compiler{,s}" pom
 %mvn_package ":*{csharp,eclipse,jikes}*" extras
 # Tests are skipped because of unavailable plexus-compiler-test artifact
@@ -113,6 +110,9 @@ API documentation for %{name}.
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 0:2.1-3
+- Remove auxiliary aliases
+
 * Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 0:2.1-2
 - Build with original POM files
 
