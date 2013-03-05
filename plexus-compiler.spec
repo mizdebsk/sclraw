@@ -32,8 +32,8 @@
 %global dirhash 16e340d
 
 Name:       plexus-compiler
-Version:    2.1
-Release:    3%{?dist}
+Version:    2.2
+Release:    1%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -110,6 +110,9 @@ API documentation for %{name}.
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 0:2.2-1
+- Update to upstream version 2.2
+
 * Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 0:2.1-3
 - Remove auxiliary aliases
 
