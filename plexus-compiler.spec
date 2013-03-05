@@ -33,7 +33,7 @@
 
 Name:       plexus-compiler
 Version:    2.1
-Release:    1%{?dist}
+Release:    2%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -113,6 +113,9 @@ API documentation for %{name}.
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 0:2.1-2
+- Build with original POM files
+
 * Wed Jan 23 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.1-1
 - Update to upstream version 2.1
 - Build with xmvn
