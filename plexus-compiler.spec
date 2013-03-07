@@ -29,11 +29,10 @@
 #
 
 %global parent  plexus
-%global dirhash 56a0f9b
 
 Name:       plexus-compiler
-Version:    1.9.2
-Release:    6%{?dist}
+Version:    2.2
+Release:    1%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -42,15 +41,15 @@ License:    MIT and ASL 2.0
 Group:      Development/Libraries
 URL:        http://plexus.codehaus.org/
 
-Source0:    https://github.com/sonatype/%{name}/tarball/%{name}-%{version}#/%{name}-%{version}.tar.gz
-
-Patch0:     plexus-compiler-ignoreOptionalProblems.patch
+Source0:    https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
+Source1:    http://www.apache.org/licenses/LICENSE-2.0.txt
 
 BuildArch:      noarch
 BuildRequires:  maven-local
 BuildRequires:  jpackage-utils
 BuildRequires:  junit
 BuildRequires:  classworlds
+BuildRequires:  plexus-compiler-extras
 BuildRequires:  eclipse-ecj
 BuildRequires:  plexus-containers-container-default
 BuildRequires:  plexus-utils
@@ -66,15 +65,19 @@ additional compilers see %{name}-extras package.
 
 %package extras
 Summary:        Extra compiler support for %{name}
-Group:          Development/Libraries
 # ASL 2.0: src/main/java/org/codehaus/plexus/compiler/util/scan/
 #          ...codehaus/plexus/compiler/csharp/CSharpCompiler.java
 # ASL 1.1/MIT: ...codehaus/plexus/compiler/jikes/JikesCompiler.java
 License:        MIT and ASL 2.0 and ASL 1.1
-Requires:       %{name} = %{version}-%{release}
 
 %description extras
 Additional support for csharp, eclipse and jikes compilers
+
+%package pom
+Summary:        Maven POM files for %{name}
+
+%description pom
+This package provides %{summary}.
 
 %package javadoc
 Summary:        Javadoc for %{name}
@@ -84,8 +87,9 @@ Group:          Documentation
 API documentation for %{name}.
 
 %prep
-%setup -q -n sonatype-plexus-compiler-%{dirhash}
-%patch0 -p1
+%setup -q -n %{name}-%{name}-%{version}
+
+cp %{SOURCE1} LICENSE
 
 %pom_disable_module plexus-compiler-aspectj plexus-compilers/pom.xml
 
@@ -93,50 +97,36 @@ API documentation for %{name}.
 %pom_disable_module plexus-compiler-test
 
 %build
-# plexus-compiler-jikes
-%mvn_package "org.codehaus.plexus:plexus-compiler-jikes" plexus-compiler-extras
-%mvn_file "org.codehaus.plexus:plexus-compiler-jikes" plexus/compiler-jikes
-
-# plexus-compiler-eclipse
-%mvn_package "org.codehaus.plexus:plexus-compiler-eclipse" plexus-compiler-extras
-%mvn_file "org.codehaus.plexus:plexus-compiler-eclipse" plexus/compiler-eclipse
-
-# plexus-compiler-csharp
-%mvn_package "org.codehaus.plexus:plexus-compiler-csharp" plexus-compiler-extras
-%mvn_file "org.codehaus.plexus:plexus-compiler-csharp" plexus/compiler-csharp
-
-# plexus-compiler-api
-%mvn_file "org.codehaus.plexus:plexus-compiler-api" plexus/compiler-api
-
-# plexus-compiler-manager
-%mvn_file "org.codehaus.plexus:plexus-compiler-manager" plexus/compiler-manager
-
-# plexus-compiler-javac
-%mvn_file "org.codehaus.plexus:plexus-compiler-javac" plexus/compiler-javac
-
-
+%mvn_package ":plexus-compiler{,s}" pom
+%mvn_package ":*{csharp,eclipse,jikes}*" extras
+# Tests are skipped because of unavailable plexus-compiler-test artifact
 %mvn_build -f
 
 %install
 %mvn_install
 
 %files -f .mfiles
-
-%files extras -f .mfiles-plexus-compiler-extras
+%doc LICENSE
+%files extras -f .mfiles-extras
+%files pom -f .mfiles-pom
 
 %files javadoc -f .mfiles-javadoc
+%doc LICENSE
 
 %changelog
-* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.9.2-6
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+* Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 0:2.2-1
+- Update to upstream version 2.2
+- Add license file (Resolves: #903268)
 
-* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 0:1.9.2-5
-- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
-- Replace maven BuildRequires with maven-local
+* Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 0:2.1-3
+- Remove auxiliary aliases
 
-* Thu Jan 24 2013 Michal Srb <msrb@redhat.com> - 0:1.9.2-4
+* Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 0:2.1-2
+- Build with original POM files
+
+* Wed Jan 23 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.1-1
+- Update to upstream version 2.1
 - Build with xmvn
-- Fixed rpmlint warning
 
 * Wed Dec 5 2012 Michal Srb <msrb@redhat.com> - 0:1.9.2-3
 - Replaced dependency to plexus-container-default with plexus-containers-container-default
