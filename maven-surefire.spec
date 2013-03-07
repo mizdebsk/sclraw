@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.13
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -18,6 +18,7 @@ BuildRequires:  junit >= 3.8.2
 BuildRequires:  plexus-utils
 BuildRequires:  junit4
 BuildRequires:  testng
+BuildRequires:  mockito
 
 BuildRequires:  maven-local
 BuildRequires:  maven-compiler-plugin
@@ -158,6 +159,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Thu Mar  7 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.13-4
+- Add missing BR: mockito
+
 * Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 0:2.13-3
 - Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
 - Replace maven BuildRequires with maven-local
