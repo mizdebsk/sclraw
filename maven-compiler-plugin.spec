@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
-Version:        2.5.1
-Release:        4%{?dist}
+Version:        3.0
+Release:        2%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
@@ -10,28 +10,15 @@ Source0:        http://repo1.maven.org/maven2/org/apache/maven/plugins/%{name}/%
 
 BuildArch: noarch
 
-BuildRequires: java-devel >= 1:1.6.0
-BuildRequires: maven-local
-BuildRequires: maven-plugin-plugin
-BuildRequires: maven-compiler-plugin
-BuildRequires: maven-jar-plugin
-BuildRequires: maven-install-plugin
-BuildRequires: maven-resources-plugin
-BuildRequires: maven-javadoc-plugin
-BuildRequires: maven-surefire-plugin
-BuildRequires: maven-surefire-provider-junit
-BuildRequires: maven-doxia-sitetools
-BuildRequires: maven-plugin-testing-harness
-BuildRequires: maven-toolchain
-BuildRequires: plexus-utils
-BuildRequires: plexus-compiler
-
-Requires:      maven
-Requires:      maven-toolchain
-Requires:      plexus-utils
-Requires:      plexus-compiler
-Requires:      jpackage-utils
-Requires:      java
+BuildRequires:  java-devel >= 1:1.6.0
+BuildRequires:  maven-local
+BuildRequires:  maven-plugin-plugin
+BuildRequires:  maven-shared-incremental
+BuildRequires:  maven-surefire-provider-junit
+BuildRequires:  maven-doxia-sitetools
+BuildRequires:  maven-plugin-testing-harness
+BuildRequires:  maven-toolchain
+BuildRequires:  plexus-compiler >= 2.0
 
 Provides:       maven2-plugin-compiler = %{version}-%{release}
 Obsoletes:      maven2-plugin-compiler <= 0:2.0.8
@@ -42,51 +29,33 @@ The Compiler Plugin is used to compile the sources of your project.
 %package javadoc
 Group:          Documentation
 Summary:        Javadoc for %{name}
-Requires:       jpackage-utils
 
 %description javadoc
 API documentation for %{name}.
-
 
 %prep
 %setup -q 
 
 %build
-mvn-rpmbuild install javadoc:aggregate -Dmaven.test.failure.ignore
+%mvn_build -f
 
 %install
+%mvn_install
 
-# jars
-install -d -m 0755 %{buildroot}%{_javadir}
-install -m 644 target/%{name}-%{version}.jar   %{buildroot}%{_javadir}/%{name}.jar
+%files -f .mfiles
+%doc LICENSE NOTICE
 
-# poms
-install -d -m 755 %{buildroot}%{_mavenpomdir}
-install -pm 644 pom.xml \
-    %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-
-
-%add_maven_depmap JPP-%{name}.pom %{name}.jar
-
-# javadoc
-install -d -m 0755 %{buildroot}%{_javadocdir}/%{name}
-cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}
-
-%files
-%{_javadir}/*
-%{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
-
-%files javadoc
-%{_javadocdir}/%{name}
+%files javadoc -f .mfiles-javadoc
+%doc LICENSE NOTICE
 
 %changelog
-* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.1-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+* Tue Mar 05 2013 Michal Srb <msrb@redhat.com> - 3.0-2
+- Build against proper plexus-compiler
 
-* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 2.5.1-3
-- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
-- Replace maven BuildRequires with maven-local
+* Tue Jan 15 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0-1
+- Update to upstream version 3.0
+- Build with xmvn
+- Install license files, resolves: rhbz#895544
 
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
