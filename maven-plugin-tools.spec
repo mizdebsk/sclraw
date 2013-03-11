@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        9%{?dist}
+Release:        10%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -9,6 +9,10 @@ License:        ASL 2.0
 URL:            http://maven.apache.org/plugin-tools/
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/plugin-tools/%{name}/%{version}/%{name}-%{version}-source-release.zip
 BuildArch:      noarch
+
+# Fix NullPointerException in MojoClassVisitor.visit()
+# See: rhbz#920042, http://jira.codehaus.org/browse/MPLUGIN-242
+Patch0:         %{name}-rhbz-920042.patch
 
 BuildRequires:  java-devel >= 1:1.6.0
 BuildRequires:  jpackage-utils
@@ -301,6 +305,8 @@ API documentation for %{name}.
 
 %prep
 %setup -q
+%patch0 -p1
+
 # For easier installation
 ln -s maven-script/maven-script-{ant,beanshell} .
 
@@ -423,6 +429,10 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Mon Mar 11 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-10
+- Add patch for MPLUGIN-242
+- Resolves: rhbz#920042
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:3.1-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
