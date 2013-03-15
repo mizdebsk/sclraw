@@ -1,6 +1,6 @@
 Name:           maven-surefire
-Version:        2.13
-Release:        4%{?dist}
+Version:        2.14
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -77,6 +77,7 @@ Provides:               maven-surefire-report-maven-plugin = %{epoch}:%{version}
 %description report-plugin
 Plugin for generating reports from surefire test runs.
 
+
 %package provider-junit
 Summary:                JUnit provider for Maven Surefire
 Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4O
@@ -92,6 +93,12 @@ Summary:                TestNG provider for Maven Surefire
 
 %description provider-testng
 TestNG provider for Maven Surefire.
+
+%package report-parser
+Summary:                Parses report output files from surefire
+
+%description report-parser
+Plugin for parsing report output files from surefire.
 
 %package -n maven-failsafe-plugin
 Summary:                Maven plugin for running integration tests
@@ -129,13 +136,14 @@ cp -p %{SOURCE2} .
 for module in . maven-failsafe-plugin maven-surefire-common \
         maven-surefire-plugin surefire-api surefire-booter \
         surefire-grouper surefire-providers \
-        surefire-setup-integration-tests; do
+        surefire-setup-integration-tests \
+        surefire-report-parser; do
     %pom_remove_dep org.apache.maven.surefire:surefire-shadefire $module
 done
 
 %build
 %mvn_package ":*{surefire-plugin,report-plugin}*" @1
-%mvn_package ":*{junit,testng,failsafe-plugin}*"  @1
+%mvn_package ":*{junit,testng,failsafe-plugin,report-parser}*"  @1
 %mvn_package ":*tests*" __noinstall
 # tests turned off because they need jmock
 %mvn_build -f
@@ -151,6 +159,7 @@ done
 
 %files plugin -f .mfiles-surefire-plugin
 %files report-plugin -f .mfiles-report-plugin
+%files report-parser -f .mfiles-report-parser
 %files provider-junit -f .mfiles-junit
 %files provider-testng -f .mfiles-testng
 %files -n maven-failsafe-plugin -f .mfiles-failsafe-plugin
@@ -159,6 +168,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Fri Mar 15 2013 Michal Srb <msrb@redhat.com> - 0:2.14-1
+- Update to upstream version 2.14
+
 * Thu Mar  7 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.13-4
 - Add missing BR: mockito
 
