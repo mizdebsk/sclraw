@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.14
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -43,9 +43,7 @@ BuildRequires:  maven-project
 BuildRequires:  maven-shared-common-artifact-filters
 BuildRequires:  modello
 BuildRequires:  plexus-containers-component-api >= 1.0-0.a34
-BuildRequires:  tomcat6-servlet-2.5-api
 BuildRequires:  maven-plugin-testing-harness
-BuildRequires:  bsf
 BuildRequires:  javacc-maven-plugin
 BuildRequires:  maven-doxia-sink-api
 BuildRequires:  maven-doxia-core
@@ -168,6 +166,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Fri Mar 15 2013 Michal Srb <msrb@redhat.com> - 0:2.14-2
+- Remove unneeded dependencies
+
 * Fri Mar 15 2013 Michal Srb <msrb@redhat.com> - 0:2.14-1
 - Update to upstream version 2.14
 
