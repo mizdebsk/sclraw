@@ -130,10 +130,6 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %install
 %mvn_install
 
-# javadoc
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-
 
 %files -f .mfiles
 %files component-annotations -f .mfiles-plexus-component-annotations
