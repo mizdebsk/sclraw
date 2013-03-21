@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
@@ -124,8 +124,11 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 # plexus-containers pom goes into main package
 %mvn_package ":plexus-containers" ""
 
+# keep compat symlink for maven's sake
+%mvn_file ":plexus-component-annotations" %{name}/plexus-component-annotations plexus/containers-component-annotations
+
 %build
-%mvn_build -f -s -d
+%mvn_build -f -s
 
 %install
 %mvn_install
@@ -140,6 +143,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Thu Mar 21 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-11
+- Add compat symlinks to keep Maven working
+
 * Wed Mar 20 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-10
 - Update to latest packaging guidelines
 - Remove several unneeded buildrequires
