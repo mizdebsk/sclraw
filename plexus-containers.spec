@@ -121,9 +121,6 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 # plexus-component-api has been merged into plexus-container-default
 %mvn_alias ":plexus-container-default" "org.codehaus.plexus:containers-component-api"
 
-# plexus-containers pom goes into main package
-%mvn_package ":plexus-containers" ""
-
 # keep compat symlink for maven's sake
 %mvn_file ":plexus-component-annotations" %{name}/plexus-component-annotations plexus/containers-component-annotations
 
@@ -134,7 +131,8 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %mvn_install
 
 
-%files -f .mfiles
+# plexus-containers pom goes into main package
+%files -f .mfiles -f .mfiles-plexus-containers
 %files component-annotations -f .mfiles-plexus-component-annotations
 %files container-default -f .mfiles-plexus-container-default
 %files component-metadata -f .mfiles-plexus-component-metadata
@@ -143,6 +141,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Mar 22 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-11
+- Correctly place plexus-containers POM in the main package
+
 * Thu Mar 21 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-11
 - Add compat symlinks to keep Maven working
 
