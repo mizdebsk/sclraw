@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.14
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -18,7 +18,6 @@ BuildRequires:  junit >= 3.8.2
 BuildRequires:  plexus-utils
 BuildRequires:  junit4
 BuildRequires:  testng
-BuildRequires:  mockito
 
 BuildRequires:  maven-local
 BuildRequires:  maven-compiler-plugin
@@ -166,6 +165,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Fri Apr 05 2013 Michal Srb <msrb@redhat.com> - 0:2.14-3
+- Remove unnecessary dependency on mockito
+
 * Fri Mar 15 2013 Michal Srb <msrb@redhat.com> - 0:2.14-2
 - Remove unneeded dependencies
 
