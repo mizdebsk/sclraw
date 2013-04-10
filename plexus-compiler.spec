@@ -32,7 +32,7 @@
 
 Name:       plexus-compiler
 Version:    2.2
-Release:    2%{?dist}
+Release:    3%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -96,9 +96,6 @@ cp %{SOURCE1} LICENSE
 # don't build/install compiler-test module, it needs maven2 test harness
 %pom_disable_module plexus-compiler-test
 
-# temporary solution only
-%mvn_alias ":{*}" :@1-temp
-
 %build
 %mvn_package ":plexus-compiler{,s}" pom
 %mvn_package ":*{csharp,eclipse,jikes}*" extras
@@ -117,6 +114,9 @@ cp %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Wed Apr 10 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.2-3
+- Remove auxiliary aliases
+
 * Wed Apr 10 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.2-2
 - Add auxiliary aliases
 
