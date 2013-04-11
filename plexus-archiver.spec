@@ -29,8 +29,8 @@
 #
 
 Name:           plexus-archiver
-Version:        2.2
-Release:        6%{?dist}
+Version:        2.3
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        MIT and ASL 2.0
@@ -39,9 +39,12 @@ URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
 Source1:        http://apache.org/licenses/LICENSE-2.0.txt
 
+Patch0:         %{name}-CVE-2012-2098.patch
+
 
 BuildArch:      noarch
 BuildRequires:  jpackage-utils >= 0:1.6
+BuildRequires:  apache-commons-compress >= 1.4.1
 BuildRequires:  ant >= 0:1.6
 BuildRequires:  classworlds >= 0:1.1
 BuildRequires:  plexus-containers-container-default
@@ -58,6 +61,7 @@ BuildRequires: maven-surefire-provider-junit4
 BuildRequires: maven-shared-reporting-impl
 BuildRequires: maven-doxia-sitetools
 BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
+BuildRequires:  apache-commons-compress >= 1.4.1
 Requires:       classworlds >= 0:1.1
 Requires:       plexus-containers-container-default
 Requires:       plexus-utils
@@ -85,6 +89,7 @@ Javadoc for %{name}.
 %prep
 %setup -q -n %{name}-%{name}-%{version}
 cp %{SOURCE1} .
+%patch0 -p1
 
 %build
 mvn-rpmbuild -Dmaven.test.skip=true install javadoc:javadoc
@@ -113,6 +118,11 @@ cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Apr 11 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.3-1
+- Update to upstream version 2.3
+- Use apache-commons-compress for bzip2 (de)compression
+- Resolves: CVE-2012-2098
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
