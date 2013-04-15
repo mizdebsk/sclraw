@@ -32,17 +32,17 @@
 
 Name:       plexus-compiler
 Version:    2.2
-Release:    3%{?dist}
+Release:    4%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
 # parts of compiler-api are ASL2.0/MIT
 License:    MIT and ASL 2.0
-Group:      Development/Libraries
 URL:        http://plexus.codehaus.org/
 
 Source0:    https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
 Source1:    http://www.apache.org/licenses/LICENSE-2.0.txt
+Source2:    LICENSE.MIT
 
 BuildArch:      noarch
 BuildRequires:  maven-local
@@ -81,7 +81,7 @@ This package provides %{summary}.
 
 %package javadoc
 Summary:        Javadoc for %{name}
-Group:          Documentation
+License:        MIT and ASL 2.0 and ASL 1.1
 
 %description javadoc
 API documentation for %{name}.
@@ -90,6 +90,7 @@ API documentation for %{name}.
 %setup -q -n %{name}-%{name}-%{version}
 
 cp %{SOURCE1} LICENSE
+cp %{SOURCE2} LICENSE.MIT
 
 %pom_disable_module plexus-compiler-aspectj plexus-compilers/pom.xml
 
@@ -106,14 +107,18 @@ cp %{SOURCE1} LICENSE
 %mvn_install
 
 %files -f .mfiles
-%doc LICENSE
+%doc LICENSE LICENSE.MIT
 %files extras -f .mfiles-extras
 %files pom -f .mfiles-pom
 
 %files javadoc -f .mfiles-javadoc
-%doc LICENSE
+%doc LICENSE LICENSE.MIT
 
 %changelog
+* Mon Apr 15 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.2-4
+- Fix license tag
+- Install MIT license file
+
 * Wed Apr 10 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.2-3
 - Remove auxiliary aliases
 
