@@ -1,6 +1,6 @@
 Name:           maven-surefire
-Version:        2.14
-Release:        3%{?dist}
+Version:        2.14.1
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -130,7 +130,7 @@ cp -p %{SOURCE2} .
 %pom_add_dep org.apache.maven:maven-compat maven-surefire-common
 %pom_disable_module surefire-shadefire
 
-for module in . maven-failsafe-plugin maven-surefire-common \
+for module in maven-failsafe-plugin maven-surefire-common \
         maven-surefire-plugin surefire-api surefire-booter \
         surefire-grouper surefire-providers \
         surefire-setup-integration-tests \
@@ -165,6 +165,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Mon Apr 15 2013 Michal Srb <msrb@redhat.com> - 0:2.14.1-1
+- Update to upstream version 2.14.1
+
 * Fri Apr 05 2013 Michal Srb <msrb@redhat.com> - 0:2.14-3
 - Remove unnecessary dependency on mockito
 
