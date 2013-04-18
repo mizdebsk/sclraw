@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        10%{?dist}
+Release:        11%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -314,6 +314,9 @@ ln -s maven-script/maven-script-{ant,beanshell} .
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>"
 
+# Remove test dependencies because tests are skipped anyways.
+%pom_xpath_remove "pom:dependency[pom:scope[text()='test']]"
+
 %build
 mvn-rpmbuild package javadoc:aggregate -Dmaven.test.skip=true
 
@@ -429,6 +432,9 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Thu Apr 18 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-11
+- Remove test dependencies
+
 * Mon Mar 11 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-10
 - Add patch for MPLUGIN-242
 - Resolves: rhbz#920042
