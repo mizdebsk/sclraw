@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
 Version:        3.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
@@ -36,9 +36,6 @@ API documentation for %{name}.
 %prep
 %setup -q 
 
-# temporarily build against maven-shared-incremental with fake artifactId
-%pom_xpath_replace "pom:dependency[pom:artifactId[text()='maven-shared-incremental']]/pom:artifactId" "<artifactId>maven-shared-incremental-fake</artifactId>"
-
 %build
 %mvn_build -f
 
@@ -52,6 +49,9 @@ API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Wed Apr 24 2013 Michal Srb <msrb@redhat.com> - 3.1-2
+- Build against proper maven-shared-incremental artifactId
+
 * Wed Apr 24 2013 Michal Srb <msrb@redhat.com> - 3.1-1
 - Update to upstream version 3.1
 
