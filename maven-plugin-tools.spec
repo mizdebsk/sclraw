@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        11%{?dist}
+Release:        12%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -314,8 +314,8 @@ ln -s maven-script/maven-script-{ant,beanshell} .
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>"
 
-# Remove test dependencies because tests are skipped anyways.
-%pom_xpath_remove "pom:dependency[pom:scope[text()='test']]"
+# Disable resolution of test artifacts (tests are skipped anyways).
+%mvn_config buildSettings/skipTests true
 
 %build
 mvn-rpmbuild package javadoc:aggregate -Dmaven.test.skip=true
@@ -432,6 +432,9 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Tue May  7 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-12
+- Disable resolution of test artifacts
+
 * Thu Apr 18 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-11
 - Remove test dependencies
 
