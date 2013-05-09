@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.14.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -12,7 +12,6 @@ Source2:        http://junit.sourceforge.net/cpl-v10.html
 
 BuildArch:      noarch
 BuildRequires:  apache-commons-lang3
-BuildRequires:  classworlds
 BuildRequires:  jpackage-utils >= 0:1.7.2
 BuildRequires:  junit >= 3.8.2
 BuildRequires:  plexus-utils
@@ -20,23 +19,16 @@ BuildRequires:  junit4
 BuildRequires:  testng
 
 BuildRequires:  maven-local
-BuildRequires:  maven-compiler-plugin
-BuildRequires:  maven-help-plugin
-BuildRequires:  maven-install-plugin
 BuildRequires:  maven-invoker-plugin
-BuildRequires:  maven-jar-plugin
-BuildRequires:  maven-javadoc-plugin
 BuildRequires:  maven-plugin-annotations
 BuildRequires:  maven-plugin-plugin
 BuildRequires:  maven-resources-plugin
-BuildRequires:  maven-site-plugin
 BuildRequires:  maven-shade-plugin
 BuildRequires:  maven-shared-utils
 BuildRequires:  maven-shared-verifier
 BuildRequires:  maven-enforcer-plugin
 BuildRequires:  maven-failsafe-plugin
 BuildRequires:  maven-surefire-plugin >= 0:2.12-1
-BuildRequires:  maven-surefire-provider-junit
 BuildRequires:  maven-toolchain
 BuildRequires:  maven-project
 BuildRequires:  maven-shared-common-artifact-filters
@@ -138,6 +130,10 @@ for module in maven-failsafe-plugin maven-surefire-common \
     %pom_remove_dep org.apache.maven.surefire:surefire-shadefire $module
 done
 
+# Help plugin is needed only to evaluate effective Maven settings.
+# For building RPM package default settings will suffice.
+%pom_remove_plugin :maven-help-plugin surefire-setup-integration-tests
+
 %build
 %mvn_package ":*{surefire-plugin,report-plugin}*" @1
 %mvn_package ":*{junit,testng,failsafe-plugin,report-parser}*"  @1
@@ -165,6 +161,10 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Thu May  9 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.14.1-2
+- Remove unneeded BR
+- Resolves: rhbz#961467
+
 * Mon Apr 15 2013 Michal Srb <msrb@redhat.com> - 0:2.14.1-1
 - Update to upstream version 2.14.1
 
