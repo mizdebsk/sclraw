@@ -29,7 +29,7 @@
 #
 
 Name:           plexus-archiver
-Version:        2.3
+Version:        2.4.2
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
@@ -37,9 +37,6 @@ License:        MIT and ASL 2.0
 Group:          Development/Libraries
 URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
-Source1:        http://apache.org/licenses/LICENSE-2.0.txt
-
-Patch0:         %{name}-CVE-2012-2098.patch
 
 
 BuildArch:      noarch
@@ -88,8 +85,6 @@ Javadoc for %{name}.
 
 %prep
 %setup -q -n %{name}-%{name}-%{version}
-cp %{SOURCE1} .
-%patch0 -p1
 
 %build
 mvn-rpmbuild -Dmaven.test.skip=true install javadoc:javadoc
@@ -111,13 +106,17 @@ install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 %files -f .mfiles
-%doc LICENSE-2.0.txt
+%doc LICENSE
 
 %files javadoc
-%doc LICENSE-2.0.txt
+%doc LICENSE
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Fri May 24 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.4.2-1
+- Update to upstream version 2.4.2
+- Remove patch for CVE-2012-2098 (accepted upstream)
+
 * Thu Apr 11 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.3-1
 - Update to upstream version 2.3
 - Use apache-commons-compress for bzip2 (de)compression
