@@ -30,40 +30,22 @@
 
 Name:           plexus-archiver
 Version:        2.4.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
-License:        MIT and ASL 2.0
-Group:          Development/Libraries
+License:        ASL 2.0
 URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
 
 
 BuildArch:      noarch
-BuildRequires:  jpackage-utils >= 0:1.6
-BuildRequires:  apache-commons-compress >= 1.4.1
-BuildRequires:  ant >= 0:1.6
-BuildRequires:  classworlds >= 0:1.1
+
+BuildRequires:  maven-local
 BuildRequires:  plexus-containers-container-default
-BuildRequires:  plexus-utils
 BuildRequires:  plexus-io
-BuildRequires: maven-local
-BuildRequires: maven-resources-plugin
-BuildRequires: maven-compiler-plugin
-BuildRequires: maven-jar-plugin
-BuildRequires: maven-install-plugin
-BuildRequires: maven-javadoc-plugin
-BuildRequires: maven-surefire-plugin
-BuildRequires: maven-surefire-provider-junit4
-BuildRequires: maven-shared-reporting-impl
-BuildRequires: maven-doxia-sitetools
-BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
-BuildRequires:  apache-commons-compress >= 1.4.1
-Requires:       classworlds >= 0:1.1
-Requires:       plexus-containers-container-default
-Requires:       plexus-utils
-Requires:       jpackage-utils
-Requires:       plexus-io
+BuildRequires:  plexus-utils
+BuildRequires:  apache-commons-compress
+
 
 %description
 The Plexus project seeks to create end-to-end developer tools for
@@ -76,8 +58,6 @@ is like a J2EE application server, without all the baggage.
 
 %package javadoc
 Summary:        Javadoc for %{name}
-Group:          Documentation
-Requires:       jpackage-utils
 
 %description javadoc
 Javadoc for %{name}.
@@ -85,34 +65,25 @@ Javadoc for %{name}.
 
 %prep
 %setup -q -n %{name}-%{name}-%{version}
+%mvn_file :%{name} plexus/archiver
 
 %build
-mvn-rpmbuild -Dmaven.test.skip=true install javadoc:javadoc
+%mvn_build -f
 
 %install
-# jars
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/plexus
-install -pm 644 target/%{name}-%{version}.jar \
-  $RPM_BUILD_ROOT%{_javadir}/plexus/archiver.jar
-
-# pom
-install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
-install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}.pom
-
-%add_maven_depmap JPP.%{name}.pom plexus/archiver.jar
-
-# javadoc
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -pr target/site/api*/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+%mvn_install
 
 %files -f .mfiles
 %doc LICENSE
 
-%files javadoc
+%files javadoc -f .mfiles-javadoc
 %doc LICENSE
-%doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Jun 13 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.4.2-2
+- Update to latest packaging guidelines
+- Remove MIT license (only applies to test cases not binary rpm)
+
 * Fri May 24 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.4.2-1
 - Update to upstream version 2.4.2
 - Remove patch for CVE-2012-2098 (accepted upstream)
