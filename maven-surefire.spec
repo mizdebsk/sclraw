@@ -1,6 +1,6 @@
 Name:           maven-surefire
-Version:        2.14.1
-Release:        2%{?dist}
+Version:        2.15
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -161,6 +161,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Tue Jun 18 2013 Michal Srb <msrb@redhat.com> - 0:2.15-1
+- Update to upstream version 2.15
+
 * Thu May  9 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.14.1-2
 - Remove unneeded BR
 - Resolves: rhbz#961467
