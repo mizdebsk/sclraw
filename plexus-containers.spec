@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
@@ -112,6 +112,25 @@ cp %{SOURCE2} plexus-component-annotations/build.xml
  </activation>
 " plexus-component-javadoc
 
+# Generate OSGI info
+%pom_xpath_inject "pom:project" "
+    <packaging>bundle</packaging>
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <extensions>true</extensions>
+          <configuration>
+            <instructions>
+              <_nouses>true</_nouses>
+              <Export-Package>org.codehaus.plexus.component.annotations.*</Export-Package>
+            </instructions>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>" plexus-component-annotations
+
 # to prevent ant from failing
 mkdir -p plexus-component-annotations/src/test/java
 
@@ -141,6 +160,10 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Tue Jul 23 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-12
+- Generate OSGi metadata
+- Resolves: rhbz#987116
+
 * Fri Mar 22 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-11
 - Correctly place plexus-containers POM in the main package
 
