@@ -33,7 +33,7 @@
 
 Name:           plexus-utils
 Version:        3.0.9
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
 # xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
@@ -85,6 +85,21 @@ Javadoc for %{name}.
 %setup -q -n %{name}-%{name}-%{version}
 cp %{SOURCE1} .
 
+# Generate OSGI info
+%pom_xpath_inject "pom:project" "<packaging>bundle</packaging>"
+%pom_xpath_inject "pom:build/pom:plugins" "
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <extensions>true</extensions>
+          <configuration>
+            <instructions>
+              <_nouses>true</_nouses>
+              <Export-Package>org.codehaus.plexus.util.*;org.codehaus.plexus.util.cli.*;org.codehaus.plexus.util.cli.shell.*;org.codehaus.plexus.util.dag.*;org.codehaus.plexus.util.introspection.*;org.codehaus.plexus.util.io.*;org.codehaus.plexus.util.reflection.*;org.codehaus.plexus.util.xml.*;org.codehaus.plexus.util.xml.pull.*</Export-Package>
+            </instructions>
+          </configuration>
+        </plugin>"
+
 %build
 mvn-rpmbuild install javadoc:javadoc -Dmaven.test.failure.ignore=true
 
@@ -112,6 +127,10 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue Jul 23 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0.9-6
+- Generate OSGi metadata
+- Resolves: rhbz#987117
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.9-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
