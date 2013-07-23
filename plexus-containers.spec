@@ -6,7 +6,7 @@
 
 # this needs to be exact version of maven-javadoc-plugin for
 # integration tests
-%global javadoc_plugin_version 2.9
+%global javadoc_plugin_version 2.9.1
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
@@ -163,6 +163,7 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 * Tue Jul 23 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-12
 - Generate OSGi metadata
 - Resolves: rhbz#987116
+- Bump maven-javadoc-plugin version to 2.9.1
 
 * Fri Mar 22 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-11
 - Correctly place plexus-containers POM in the main package
