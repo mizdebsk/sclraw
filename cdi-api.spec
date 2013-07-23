@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.1
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -40,6 +40,25 @@ This package contains the API documentation for %{name}.
 %prep
 %setup -q -n cdi-%{version}
 
+# Generate OSGI info
+%pom_xpath_set pom:project/pom:packaging bundle api
+%pom_xpath_inject "pom:project" "
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <extensions>true</extensions>
+          <configuration>
+            <instructions>
+              <_nouses>true</_nouses>
+              <Export-Package>javax.decorator.*;javax.enterprise.context.*;javax.enterprise.event.*;javax.enterprise.inject.*;javax.enterprise.util.*</Export-Package>
+            </instructions>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>" api
+
 %build
 cd api
 %mvn_build
@@ -54,6 +73,10 @@ cd api
 %files javadoc -f api/.mfiles-javadoc
 
 %changelog
+* Tue Jul 23 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.1-2
+- Generate OSGi metadata
+- Resolves: rhbz#987111
+
 * Thu Jul 04 2013 Marek Goldmann <mgoldman@redhat.com> - 1.1-1
 - Upstream release 1.1
 - New guidelines
