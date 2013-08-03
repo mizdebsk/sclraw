@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        12%{?dist}
+Release:        13%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -432,6 +432,9 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:3.1-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Tue May  7 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-12
 - Disable resolution of test artifacts
 
