@@ -1,6 +1,6 @@
 Name:           modello
 Version:        1.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 # The majority of files are under MIT license, but some of them are
@@ -69,6 +69,9 @@ cp -p %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.7-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Fri Apr 19 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.7-2
 - Build with xmvn
 - Use better description
