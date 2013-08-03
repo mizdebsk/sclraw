@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.1
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -73,6 +73,9 @@ cd api
 %files javadoc -f api/.mfiles-javadoc
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Tue Jul 23 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.1-2
 - Generate OSGi metadata
 - Resolves: rhbz#987111
