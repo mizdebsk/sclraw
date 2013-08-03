@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        10
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -51,6 +51,9 @@ mvn-rpmbuild verify
 %{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
