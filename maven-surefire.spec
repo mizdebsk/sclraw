@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.15
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -161,6 +161,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.15-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Tue Jun 18 2013 Michal Srb <msrb@redhat.com> - 0:2.15-1
 - Update to upstream version 2.15
 
