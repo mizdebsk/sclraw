@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        2.0.5
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.5-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Wed Jun 12 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.0.5-7
 - Add ASL 2.0 license text to rpms
 
