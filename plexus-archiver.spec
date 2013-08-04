@@ -30,7 +30,7 @@
 
 Name:           plexus-archiver
 Version:        2.4.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
@@ -80,6 +80,9 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.4.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Jun 13 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.4.2-2
 - Update to latest packaging guidelines
 - Remove MIT license (only applies to test cases not binary rpm)
