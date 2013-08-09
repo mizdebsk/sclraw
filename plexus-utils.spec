@@ -32,8 +32,8 @@
 %global subname utils
 
 Name:           plexus-utils
-Version:        3.0.9
-Release:        7%{?dist}
+Version:        3.0.14
+Release:        1%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
 # xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
@@ -127,6 +127,9 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Fri Aug  9 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0.14-1
+- Update to upstream version 3.0.14
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.9-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
