@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.1
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -27,6 +27,8 @@ BuildRequires:    geronimo-annotation
 BuildRequires:    geronimo-parent-poms
 BuildRequires:    weld-parent
 BuildRequires:    maven-plugin-build-helper
+
+Provides:         javax.enterprise.inject
 
 %description
 APIs for JSR-299: Contexts and Dependency Injection for Java EE
@@ -59,6 +61,10 @@ This package contains the API documentation for %{name}.
       </plugins>
     </build>" api
 
+cd api
+# J2EE API directory
+%mvn_file :{cdi-api} %{name}/@1 javax.enterprise.inject/@1
+
 %build
 cd api
 %mvn_build
@@ -67,12 +73,19 @@ cd api
 cd api
 %mvn_install
 
+build-jar-repository %{buildroot}%{_javadir}/javax.enterprise.inject/ \
+                     jboss-interceptors-1.1-api geronimo-annotation javax.inject
+
 %files -f api/.mfiles
 %dir %{_javadir}/%{name}
+%{_javadir}/javax.enterprise.inject/
 
 %files javadoc -f api/.mfiles-javadoc
 
 %changelog
+* Tue Aug 13 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.1-4
+- Add javax.enterprise.inject provides and directory
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -113,4 +126,3 @@ cd api
 
 * Mon Feb 20 2012 Marek Goldmann <mgoldman@redhat.com> 1.0-1.SP4
 - Initial packaging
-
