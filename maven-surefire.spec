@@ -1,24 +1,40 @@
 Name:           maven-surefire
-Version:        2.15
-Release:        2%{?dist}
+Version:        2.16
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
-Group:          Development/Libraries
 URL:            http://maven.apache.org/surefire/
-
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/surefire/surefire/%{version}/surefire-%{version}-source-release.zip
 Source2:        http://junit.sourceforge.net/cpl-v10.html
-
 BuildArch:      noarch
-BuildRequires:  apache-commons-lang3
-BuildRequires:  jpackage-utils >= 0:1.7.2
-BuildRequires:  junit >= 3.8.2
-BuildRequires:  plexus-utils
-BuildRequires:  junit4
-BuildRequires:  testng
 
 BuildRequires:  maven-local
+BuildRequires:  mvn(com.google.code.findbugs:jsr305)
+BuildRequires:  mvn(commons-io:commons-io)
+BuildRequires:  mvn(org.apache.commons:commons-lang3)
+BuildRequires:  mvn(org.apache.maven.doxia:doxia-core)
+BuildRequires:  mvn(org.apache.maven.doxia:doxia-decoration-model)
+BuildRequires:  mvn(org.apache.maven.doxia:doxia-sink-api)
+BuildRequires:  mvn(org.apache.maven.doxia:doxia-site-renderer)
+BuildRequires:  mvn(org.apache.maven.plugin-tools:maven-plugin-annotations)
+BuildRequires:  mvn(org.apache.maven.reporting:maven-reporting-api)
+BuildRequires:  mvn(org.apache.maven.reporting:maven-reporting-impl)
+BuildRequires:  mvn(org.apache.maven.shared:maven-common-artifact-filters)
+BuildRequires:  mvn(org.apache.maven.shared:maven-shared-utils)
+BuildRequires:  mvn(org.apache.maven.shared:maven-verifier)
+BuildRequires:  mvn(org.apache.maven:maven-artifact)
+BuildRequires:  mvn(org.apache.maven:maven-compat)
+BuildRequires:  mvn(org.apache.maven:maven-core)
+BuildRequires:  mvn(org.apache.maven:maven-model)
+BuildRequires:  mvn(org.apache.maven:maven-parent)
+BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
+BuildRequires:  mvn(org.apache.maven:maven-plugin-descriptor)
+BuildRequires:  mvn(org.apache.maven:maven-project)
+BuildRequires:  mvn(org.apache.maven:maven-toolchain)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
+BuildRequires:  mvn(org.testng:testng)
+
 BuildRequires:  maven-invoker-plugin
 BuildRequires:  maven-plugin-annotations
 BuildRequires:  maven-plugin-plugin
@@ -36,9 +52,6 @@ BuildRequires:  modello
 BuildRequires:  plexus-containers-component-api >= 1.0-0.a34
 BuildRequires:  maven-plugin-testing-harness
 BuildRequires:  javacc-maven-plugin
-BuildRequires:  maven-doxia-sink-api
-BuildRequires:  maven-doxia-core
-BuildRequires:  maven-doxia-sitetools
 
 Obsoletes:      maven-surefire-booter <= 0:1.5.3
 Provides:       maven-surefire-booter = %{epoch}:%{version}-%{release}
@@ -111,7 +124,6 @@ to execute.
 
 %package javadoc
 Summary:          Javadoc for %{name}
-Group:            Documentation
 
 %description javadoc
 Javadoc for %{name}.
@@ -161,6 +173,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Mon Aug 19 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.16-1
+- Update to upstream version 2.16
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.15-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
