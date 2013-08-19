@@ -1,6 +1,6 @@
 Name:           modello
-Version:        1.7
-Release:        3%{?dist}
+Version:        1.8.1
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 # The majority of files are under MIT license, but some of them are
@@ -13,7 +13,9 @@ Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 BuildArch:      noarch
 
 BuildRequires:  maven-local
-BuildRequires:  java-devel
+BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-annotations)
+BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-core)
+BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-databind)
 BuildRequires:  mvn(junit:junit)
 BuildRequires:  mvn(org.apache.maven.plugin-tools:maven-plugin-annotations)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-dependency-plugin)
@@ -25,6 +27,7 @@ BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-javac)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 BuildRequires:  mvn(org.sonatype.plexus:plexus-build-api)
+BuildRequires:  mvn(org.yaml:snakeyaml)
 
 Provides:       modello-maven-plugin = %{epoch}:%{version}-%{release}
 Obsoletes:      modello-maven-plugin < 0:1.0-0.a8.3jpp
@@ -69,6 +72,9 @@ cp -p %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Mon Aug 19 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.1-1
+- Update to upstream version 1.8.1
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.7-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
