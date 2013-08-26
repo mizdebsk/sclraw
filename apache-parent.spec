@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        10
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -13,10 +13,6 @@ BuildRequires:  maven-local
 BuildRequires:  jpackage-utils
 BuildRequires:  apache-resource-bundles
 BuildRequires:  maven-remote-resources-plugin
-
-Requires:       jpackage-utils
-Requires:       apache-resource-bundles
-Requires:       maven-remote-resources-plugin
 
 %description
 This package contains the parent pom file for apache projects.
@@ -33,24 +29,18 @@ sed -i 's:<target>1.4</target>:<target>1.5</target>:' pom.xml
 cp %{SOURCE1} LICENSE
 
 %build
-
+%mvn_build
 
 %install
-install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
-install -pm 644 pom.xml \
-        $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}.pom
+%mvn_install
 
-%add_maven_depmap JPP-%{name}.pom
-
-%check
-mvn-rpmbuild verify
-
-%files
+%files -f .mfiles
 %doc LICENSE
-%{_mavenpomdir}/JPP-%{name}.pom
-%{_mavendepmapfragdir}/%{name}
 
 %changelog
+* Mon Aug 26 2013 Michal Srb <msrb@redhat.com> - 10-12
+- Migrate away from mvn-rpmbuild
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
