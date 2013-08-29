@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        10
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -13,6 +13,8 @@ BuildRequires:  maven-local
 BuildRequires:  jpackage-utils
 BuildRequires:  apache-resource-bundles
 BuildRequires:  maven-remote-resources-plugin
+
+Requires:       apache-resource-bundles
 
 %description
 This package contains the parent pom file for apache projects.
@@ -38,6 +40,9 @@ cp %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Thu Aug 29 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 10-13
+- Add missing R: apache-resource-bundles
+
 * Mon Aug 26 2013 Michal Srb <msrb@redhat.com> - 10-12
 - Migrate away from mvn-rpmbuild
 
