@@ -31,8 +31,8 @@
 %global parent  plexus
 
 Name:       plexus-compiler
-Version:    2.2
-Release:    5%{?dist}
+Version:    2.3
+Release:    1%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -92,14 +92,23 @@ API documentation for %{name}.
 cp %{SOURCE1} LICENSE
 cp %{SOURCE2} LICENSE.MIT
 
-%pom_disable_module plexus-compiler-aspectj plexus-compilers/pom.xml
+%pom_disable_module plexus-compiler-aspectj plexus-compilers
+# missing com.google.errorprone:error_prone_core
+%pom_disable_module plexus-compiler-javac-errorprone plexus-compilers
 
 # don't build/install compiler-test module, it needs maven2 test harness
 %pom_disable_module plexus-compiler-test
 
-%build
+# don't install sources jars
+%mvn_package ":*::sources:" __noinstall
+
 %mvn_package ":plexus-compiler{,s}" pom
 %mvn_package ":*{csharp,eclipse,jikes}*" extras
+
+# don't generate requires on test dependency (see #1007498)
+pom_xpath_remove "pom:dependency[pom:artifactId[text()='plexus-compiler-test']]" plexus-compilers
+
+%build
 # Tests are skipped because of unavailable plexus-compiler-test artifact
 %mvn_build -f
 
@@ -115,6 +124,9 @@ cp %{SOURCE2} LICENSE.MIT
 %doc LICENSE LICENSE.MIT
 
 %changelog
+* Fri Sep 13 2013 Michal Srb <msrb@redhat.com> - 0:2.3-1
+- Update to upstream version 2.3
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
