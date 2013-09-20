@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        14%{?dist}
+Release:        15%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -187,6 +187,10 @@ API documentation for %{name}.
 # For easier installation
 ln -s maven-script/maven-script-{ant,beanshell} .
 
+# For com.sun:tools use scope "compile" instead of "system"
+%pom_remove_dep com.sun:tools maven-plugin-tools-javadoc
+%pom_add_dep com.sun:tools maven-plugin-tools-javadoc
+
 %pom_xpath_inject "pom:project/pom:properties" "
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>"
@@ -236,6 +240,9 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 
 
 %changelog
+* Fri Sep 20 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-15
+- Fix com.sun:tools dependency
+
 * Thu Aug 29 2013 Michal Srb <msrb@redhat.com> - 0:3.1-14
 - Adapt to current guidelines (Resolves: #960526)
 
