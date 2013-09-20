@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        15%{?dist}
+Release:        16%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -195,8 +195,8 @@ ln -s maven-script/maven-script-{ant,beanshell} .
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>"
 
-# Disable resolution of test artifacts (tests are skipped anyways).
-%mvn_config buildSettings/skipTests true
+# Remove test dependencies because tests are skipped anyways.
+%pom_xpath_remove "pom:dependency[pom:scope[text()='test']]"
 
 %build
 %mvn_build -s -f
@@ -240,6 +240,9 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 
 
 %changelog
+* Fri Sep 20 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-16
+- Disable test dependencies
+
 * Fri Sep 20 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-15
 - Fix com.sun:tools dependency
 
