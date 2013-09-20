@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        10
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -40,6 +40,9 @@ cp %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Fri Sep 20 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 10-14
+- Rebuild to regenerate Maven provides
+
 * Thu Aug 29 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 10-13
 - Add missing R: apache-resource-bundles
 
