@@ -29,8 +29,8 @@
 #
 
 Name:           plexus-archiver
-Version:        2.4.2
-Release:        3%{?dist}
+Version:        2.4.4
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
@@ -80,6 +80,9 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Tue Dec  3 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.4.4-1
+- Update to upstream version 2.4.4
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.4.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
