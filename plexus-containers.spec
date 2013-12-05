@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
@@ -23,6 +23,7 @@ Source2:        plexus-component-annotations-build.xml
 Source3:        plexus-containers-settings.xml
 
 Patch0:         0001-Fix-test-oom.patch
+Patch1:         0002-Update-to-Plexus-Classworlds-2.5.patch
 
 BuildArch:      noarch
 
@@ -34,15 +35,15 @@ BuildRequires:  maven-site-plugin
 BuildRequires:  maven-shared-invoker
 BuildRequires:  maven-release
 BuildRequires:  maven-plugin-plugin
-BuildRequires:  plexus-classworlds
+BuildRequires:  plexus-classworlds >= 2.5
 BuildRequires:  plexus-utils
 BuildRequires:  plexus-cli
-BuildRequires:  xbean
+BuildRequires:  xbean >= 3.14
 BuildRequires:  guava
 
-Requires:       plexus-classworlds >= 2.2.3
+Requires:       plexus-classworlds >= 2.5
 Requires:       plexus-utils
-Requires:       xbean
+Requires:       xbean >= 3.14
 Requires:       guava
 
 
@@ -101,16 +102,13 @@ cp %{SOURCE1} plexus-container-default/build.xml
 cp %{SOURCE2} plexus-component-annotations/build.xml
 
 %patch0 -p1
+%patch1 -p1
 
 # For Maven 3 compat
 %pom_add_dep org.apache.maven:maven-core plexus-component-metadata
 
 # OpenJDK7 compatibility
-%pom_xpath_replace "pom:profile[pom:id[text()='default-tools.jar']]/pom:activation" "
- <activation>
-    <activeByDefault>true</activeByDefault>
- </activation>
-" plexus-component-javadoc
+%pom_add_dep com.sun:tools plexus-component-javadoc
 
 # Generate OSGI info
 %pom_xpath_inject "pom:project" "
@@ -160,6 +158,10 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Thu Dec  5 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-14
+- Update to Plexus Classworlds 2.5, resolves: rhbz#1015124
+- Require xbean >= 3.14, resolves: rhbz#1038607
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.5-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
