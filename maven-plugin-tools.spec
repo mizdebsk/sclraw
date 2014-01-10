@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        16%{?dist}
+Release:        17%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -52,7 +52,6 @@ Plugins in a variety of languages.
 
 %package -n maven-plugin-annotations
 Summary:        Maven Plugin Java 5 Annotations
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 Obsoletes:      maven-plugin-annotations < 0:%{version}-%{release}
 
 %description -n maven-plugin-annotations
@@ -60,7 +59,6 @@ This package contains Java 5 annotations to use in Mojos.
 
 %package -n maven-plugin-plugin
 Summary:        Maven Plugin Plugin
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 Obsoletes:      maven2-plugin-plugin < 0:%{version}-%{release}
 Provides:       maven2-plugin-plugin = 0:%{version}-%{release}
 
@@ -72,14 +70,12 @@ artifact metadata and a generic help goal.
 
 %package annotations
 Summary:        Maven Plugin Tool for Annotations
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description annotations
 This package provides Java 5 annotation tools for use with Apache Maven.
 
 %package ant
 Summary:        Maven Plugin Tool for Ant
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 Obsoletes:      maven-shared-plugin-tools-ant < 0:%{version}-%{release}
 Provides:       maven-shared-plugin-tools-ant = 0:%{version}-%{release}
 
@@ -88,7 +84,6 @@ Descriptor extractor for plugins written in Ant.
 
 %package api
 Summary:        Maven Plugin Tools APIs
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 Obsoletes:      maven-shared-plugin-tools-api < 0:%{version}-%{release}
 Provides:       maven-shared-plugin-tools-api = 0:%{version}-%{release}
 
@@ -98,7 +93,6 @@ and generate documentation for Maven Plugins.
 
 %package beanshell
 Summary:        Maven Plugin Tool for Beanshell
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 Obsoletes:      maven-shared-plugin-tools-beanshell < 0:%{version}-%{release}
 Provides:       maven-shared-plugin-tools-beanshell = 0:%{version}-%{release}
 
@@ -107,7 +101,6 @@ Descriptor extractor for plugins written in Beanshell.
 
 %package generators
 Summary:        Maven Plugin Tools Generators
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description generators
 The Maven Plugin Tools Generators provides content generation
@@ -115,7 +108,6 @@ The Maven Plugin Tools Generators provides content generation
 
 %package java
 Summary:        Maven Plugin Tool for Java
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 Obsoletes:      maven-shared-plugin-tools-java < 0:%{version}-%{release}
 Provides:       maven-shared-plugin-tools-java = 0:%{version}-%{release}
 
@@ -126,7 +118,6 @@ Descriptor extractor for plugins written in Java.
 # See comments about "javadocs" subpackage below.
 %package javadoc
 Summary:        Maven Plugin Tools Javadoc
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description javadoc
 The Maven Plugin Tools Javadoc provides several Javadoc taglets to be used when
@@ -137,7 +128,6 @@ Java API documentation for %{name} is contained in
 
 %package model
 Summary:        Maven Plugin Metadata Model
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 Obsoletes:      maven-shared-plugin-tools-model < 0:%{version}-%{release}
 Provides:       maven-shared-plugin-tools-model = 0:%{version}-%{release}
 
@@ -147,7 +137,6 @@ model.
 
 %package -n maven-script
 Summary:        Maven Script Mojo Support
-Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description -n maven-script
 Maven Script Mojo Support lets developer write Maven plugins/goals
@@ -155,7 +144,6 @@ with scripting languages instead of compiled Java.
 
 %package -n maven-script-ant
 Summary:        Maven Ant Mojo Support
-Requires:       maven-script = %{epoch}:%{version}-%{release}
 
 %description -n maven-script-ant
 This package provides %{summary}, which write Maven plugins with
@@ -163,7 +151,6 @@ Ant scripts.
 
 %package -n maven-script-beanshell
 Summary:        Maven Beanshell Mojo Support
-Requires:       maven-script = %{epoch}:%{version}-%{release}
 
 %description -n maven-script-beanshell
 This package provides %{summary}, which write Maven plugins with
@@ -240,6 +227,10 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 
 
 %changelog
+* Fri Jan 10 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-17
+- Remove explicit requires
+- Resolves: rhbz#1051527
+
 * Fri Sep 20 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-16
 - Disable test dependencies
 
