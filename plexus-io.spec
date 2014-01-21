@@ -1,12 +1,12 @@
 Name:           plexus-io
-Version:        2.0.5
-Release:        8%{?dist}
+Version:        2.0.10
+Release:        1%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://plexus.codehaus.org/plexus-components/plexus-io
-Source0:        https://github.com/sonatype/plexus-io/tarball/plexus-io-%{version}#/%{name}-%{version}.tar.gz
+Source0:        https://github.com/sonatype/plexus-io/archive/plexus-io-%{version}.tar.gz
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 BuildArch: noarch
 
@@ -41,7 +41,7 @@ API documentation for %{name}.
 
 
 %prep
-%setup -q -n sonatype-plexus-io-1a0010b
+%setup -q -n plexus-io-plexus-io-%{version}
 cp %{SOURCE1} .
 
 %build
@@ -60,6 +60,9 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Tue Jan 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.0.10-1
+- Update to upstream version 2.0.10
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.5-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
