@@ -1,6 +1,6 @@
 Name:           modello
 Version:        1.8.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 # The majority of files are under MIT license, but some of them are
@@ -53,10 +53,12 @@ API documentation for %{name}.
 cp -p %{SOURCE1} LICENSE
 # We don't generate site; don't pull extra dependencies.
 %pom_remove_plugin :maven-site-plugin
+# Avoid using Maven 2.x APIs
+sed -i s/maven-project/maven-core/ modello-maven-plugin/pom.xml
 
 %build
 # skip tests because we have too old xmlunit in Fedora now (1.0.8)
-%mvn_build -f
+%mvn_build -f -- -Dmaven.version=3.1.1
 
 %install
 %mvn_install
@@ -72,6 +74,9 @@ cp -p %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Mon Jan 27 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.1-2
+- Use Maven 3.x APIs
+
 * Mon Aug 19 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.1-1
 - Update to upstream version 1.8.1
 
