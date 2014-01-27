@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        17%{?dist}
+Release:        18%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -12,35 +12,39 @@ BuildArch:      noarch
 # Fix NullPointerException in MojoClassVisitor.visit()
 # See: rhbz#920042, http://jira.codehaus.org/browse/MPLUGIN-242
 Patch0:         %{name}-rhbz-920042.patch
+# Use Maven 3.1.1 APIs
+Patch1:         %{name}-maven-3.1.1.patch
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(asm:asm)
 BuildRequires:  mvn(asm:asm-commons)
 BuildRequires:  mvn(bsh:bsh)
+BuildRequires:  mvn(com.sun:tools)
 BuildRequires:  mvn(com.thoughtworks.qdox:qdox)
 BuildRequires:  mvn(net.sf.jtidy:jtidy)
-BuildRequires:  mvn(org.apache:apache-jar-resource-bundle)
 BuildRequires:  mvn(org.apache.ant:ant)
 BuildRequires:  mvn(org.apache.ant:ant-launcher)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-sink-api)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-site-renderer)
-BuildRequires:  mvn(org.apache.maven.reporting:maven-reporting-api)
-BuildRequires:  mvn(org.apache.maven.reporting:maven-reporting-impl)
 BuildRequires:  mvn(org.apache.maven:maven-artifact)
-BuildRequires:  mvn(org.apache.maven:maven-artifact-manager)
+BuildRequires:  mvn(org.apache.maven:maven-compat)
 BuildRequires:  mvn(org.apache.maven:maven-core)
 BuildRequires:  mvn(org.apache.maven:maven-model)
 BuildRequires:  mvn(org.apache.maven:maven-parent)
 BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
-BuildRequires:  mvn(org.apache.maven:maven-plugin-descriptor)
-BuildRequires:  mvn(org.apache.maven:maven-plugin-registry)
-BuildRequires:  mvn(org.apache.maven:maven-project)
 BuildRequires:  mvn(org.apache.maven:maven-repository-metadata)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-plugin-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
+BuildRequires:  mvn(org.apache.maven.reporting:maven-reporting-api)
+BuildRequires:  mvn(org.apache.maven.reporting:maven-reporting-impl)
 BuildRequires:  mvn(org.apache.velocity:velocity)
+BuildRequires:  mvn(org.codehaus.modello:modello-maven-plugin)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-ant-factory)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-archiver)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-bsh-factory)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-component-annotations)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-component-metadata)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-velocity)
@@ -170,6 +174,7 @@ API documentation for %{name}.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 # For easier installation
 ln -s maven-script/maven-script-{ant,beanshell} .
@@ -183,7 +188,7 @@ ln -s maven-script/maven-script-{ant,beanshell} .
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>"
 
 # Remove test dependencies because tests are skipped anyways.
-%pom_xpath_remove "pom:dependency[pom:scope[text()='test']]"
+%pom_xpath_remove "pom:dependency[pom:scope='test']"
 
 %build
 %mvn_build -s -f
@@ -223,10 +228,13 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 %files -n maven-script-beanshell -f .mfiles-maven-script-beanshell
 
 %files javadocs -f .mfiles-javadoc
- %doc LICENSE NOTICE
+%doc LICENSE NOTICE
 
 
 %changelog
+* Mon Jan 27 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-18
+- Use Maven 3.x APIs
+
 * Fri Jan 10 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-17
 - Remove explicit requires
 - Resolves: rhbz#1051527
