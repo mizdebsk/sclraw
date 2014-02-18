@@ -1,6 +1,6 @@
 Name:           modello
 Version:        1.8.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 # The majority of files are under MIT license, but some of them are
@@ -9,6 +9,9 @@ License:        ASL 2.0 and BSD and MIT
 URL:            http://modello.codehaus.org/
 Source0:        http://repo2.maven.org/maven2/org/codehaus/%{name}/%{name}/%{version}/%{name}-%{version}-source-release.zip
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
+
+Patch0001:      0001-MODELLO-284-Fix-handling-of-Boolean-fields-in-StAX-r.patch
+Patch0002:      0002-MODELLO-285-Fix-StAX-reader-in-case-no-field-adder-i.patch
 
 BuildArch:      noarch
 
@@ -49,7 +52,9 @@ Summary:        Javadoc for %{name}
 API documentation for %{name}.
 
 %prep
-%setup -q 
+%setup -q
+%patch0001 -p1
+%patch0002 -p1
 cp -p %{SOURCE1} LICENSE
 # We don't generate site; don't pull extra dependencies.
 %pom_remove_plugin :maven-site-plugin
@@ -74,6 +79,9 @@ sed -i s/maven-project/maven-core/ modello-maven-plugin/pom.xml
 %doc LICENSE
 
 %changelog
+* Tue Feb 18 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.1-3
+- Backport upstream patches for MODELLO-284 and MODELLO-285
+
 * Mon Jan 27 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.1-2
 - Use Maven 3.x APIs
 
