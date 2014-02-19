@@ -106,7 +106,7 @@ cp %{SOURCE2} LICENSE.MIT
 %mvn_package ":*{csharp,eclipse,jikes}*" extras
 
 # don't generate requires on test dependency (see #1007498)
-pom_xpath_remove "pom:dependency[pom:artifactId[text()='plexus-compiler-test']]" plexus-compilers
+%pom_xpath_remove "pom:dependency[pom:artifactId[text()='plexus-compiler-test']]" plexus-compilers
 
 %build
 # Tests are skipped because of unavailable plexus-compiler-test artifact
