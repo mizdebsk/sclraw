@@ -32,7 +32,7 @@
 
 Name:       plexus-compiler
 Version:    2.3
-Release:    1%{?dist}
+Release:    2%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -125,6 +125,9 @@ pom_xpath_remove "pom:dependency[pom:artifactId[text()='plexus-compiler-test']]"
 %doc LICENSE LICENSE.MIT
 
 %changelog
+* Wed Feb 19 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.3-2
+- Fix unowned directory
+
 * Fri Sep 13 2013 Michal Srb <msrb@redhat.com> - 0:2.3-1
 - Update to upstream version 2.3
 
