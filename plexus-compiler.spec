@@ -116,6 +116,7 @@ pom_xpath_remove "pom:dependency[pom:artifactId[text()='plexus-compiler-test']]"
 %mvn_install
 
 %files -f .mfiles
+%dir %{_javadir}/%{name}
 %doc LICENSE LICENSE.MIT
 %files extras -f .mfiles-extras
 %files pom -f .mfiles-pom
