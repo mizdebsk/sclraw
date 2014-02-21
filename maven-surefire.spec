@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.16
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -24,7 +24,6 @@ BuildRequires:  mvn(org.apache.maven.shared:maven-common-artifact-filters)
 BuildRequires:  mvn(org.apache.maven.shared:maven-shared-utils)
 BuildRequires:  mvn(org.apache.maven.shared:maven-verifier)
 BuildRequires:  mvn(org.apache.maven:maven-artifact)
-BuildRequires:  mvn(org.apache.maven:maven-compat)
 BuildRequires:  mvn(org.apache.maven:maven-core)
 BuildRequires:  mvn(org.apache.maven:maven-model)
 BuildRequires:  mvn(org.apache.maven:maven-parent)
@@ -131,7 +130,6 @@ Javadoc for %{name}.
 %prep
 %setup -q -n surefire-%{version}
 cp -p %{SOURCE2} .
-%pom_add_dep org.apache.maven:maven-compat maven-surefire-common
 %pom_disable_module surefire-shadefire
 
 for module in maven-failsafe-plugin maven-surefire-common \
@@ -173,6 +171,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Fri Feb 21 2014 Michal Srb <msrb@redhat.com> - 0:2.16-2
+- Remove dep on maven-compat
+
 * Mon Aug 19 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.16-1
 - Update to upstream version 2.16
 
