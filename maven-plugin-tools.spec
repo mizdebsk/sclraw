@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        18%{?dist}
+Release:        19%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -232,6 +232,9 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:3.1-19
+- Use Requires: java-headless rebuild (#1067528)
+
 * Mon Jan 27 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.1-18
 - Use Maven 3.x APIs
 
