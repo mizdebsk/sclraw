@@ -30,7 +30,7 @@
 
 Name:           plexus-archiver
 Version:        2.4.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
@@ -80,6 +80,9 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.4.4-2
+- Use Requires: java-headless rebuild (#1067528)
+
 * Tue Dec  3 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.4.4-1
 - Update to upstream version 2.4.4
 
