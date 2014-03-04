@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
@@ -158,6 +158,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-15
+- Use Requires: java-headless rebuild (#1067528)
+
 * Thu Dec  5 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-14
 - Update to Plexus Classworlds 2.5, resolves: rhbz#1015124
 - Require xbean >= 3.14, resolves: rhbz#1038607
