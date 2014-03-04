@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        2.0.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.0.10-2
+- Use Requires: java-headless rebuild (#1067528)
+
 * Tue Jan 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.0.10-1
 - Update to upstream version 2.0.10
 
