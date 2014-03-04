@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        10
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -28,6 +28,8 @@ cp %{SOURCE0} .
 sed -i 's:<source>1.4</source>:<source>1.5</source>:' pom.xml
 sed -i 's:<target>1.4</target>:<target>1.5</target>:' pom.xml
 
+%pom_remove_plugin :maven-site-plugin pom.xml
+
 cp %{SOURCE1} LICENSE
 
 %build
@@ -40,6 +42,9 @@ cp %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 10-15
+- Remove maven-site-plugin from dependencies
+
 * Fri Sep 20 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 10-14
 - Rebuild to regenerate Maven provides
 
