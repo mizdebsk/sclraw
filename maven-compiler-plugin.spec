@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
 Version:        3.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.1-5
+- Use Requires: java-headless rebuild (#1067528)
+
 * Wed Feb 19 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.1-4
 - Fix unowned directory
 
