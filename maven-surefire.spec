@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.16
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -171,6 +171,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.16-3
+- Use Requires: java-headless rebuild (#1067528)
+
 * Fri Feb 21 2014 Michal Srb <msrb@redhat.com> - 0:2.16-2
 - Remove dep on maven-compat
 
