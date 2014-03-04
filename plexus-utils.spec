@@ -33,7 +33,7 @@
 
 Name:           plexus-utils
 Version:        3.0.16
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
 # xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
@@ -63,7 +63,7 @@ BuildRequires:  maven-surefire-plugin
 BuildRequires:  maven-doxia-sitetools
 BuildRequires:  maven-surefire-provider-junit
 BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
-Requires:       java >= 1:1.7.0
+Requires:       java-headless >= 1:1.7.0
 
 %description
 The Plexus project seeks to create end-to-end developer tools for
@@ -127,6 +127,9 @@ cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.0.16-2
+- Use Requires: java-headless rebuild (#1067528)
+
 * Mon Jan 27 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0.16-1
 - Update to upstream version 3.0.16
 
