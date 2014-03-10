@@ -1,11 +1,11 @@
 Name:           apache-parent
-Version:        10
-Release:        15%{?dist}
+Version:        14
+Release:        1%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://apache.org/
-Source0:        http://svn.apache.org/repos/asf/maven/pom/tags/apache-10/pom.xml
+Source0:        http://svn.apache.org/repos/asf/maven/pom/tags/apache-%{version}/pom.xml#/%{name}-%{version}.pom
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 BuildArch:      noarch
 
@@ -22,15 +22,10 @@ This package contains the parent pom file for apache projects.
 
 %prep
 %setup -n %{name}-%{version} -Tc
-
-# This simplifies work with child projects that can use generics
-cp %{SOURCE0} .
-sed -i 's:<source>1.4</source>:<source>1.5</source>:' pom.xml
-sed -i 's:<target>1.4</target>:<target>1.5</target>:' pom.xml
+cp %{SOURCE0} pom.xml
+cp %{SOURCE1} LICENSE
 
 %pom_remove_plugin :maven-site-plugin pom.xml
-
-cp %{SOURCE1} LICENSE
 
 %build
 %mvn_build
@@ -42,6 +37,9 @@ cp %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Mon Mar 10 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 14-1
+- Update to upstream version 14
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 10-15
 - Remove maven-site-plugin from dependencies
 
