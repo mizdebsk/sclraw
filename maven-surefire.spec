@@ -1,6 +1,6 @@
 Name:           maven-surefire
-Version:        2.16
-Release:        3%{?dist}
+Version:        2.17
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -171,6 +171,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Mon Mar 17 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.17-1
+- Update to upstream version 2.17
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.16-3
 - Use Requires: java-headless rebuild (#1067528)
 
