@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.1
-Release:          4%{?dist}
+Release:          5%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -83,6 +83,9 @@ build-jar-repository %{buildroot}%{_javadir}/javax.enterprise.inject/ \
 %files javadoc -f api/.mfiles-javadoc
 
 %changelog
+* Fri Mar 28 2014 Michael Simacek <msimacek@redhat.com> - 1.1-5
+- Use Requires: java-headless rebuild (#1067528)
+
 * Tue Aug 13 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.1-4
 - Add javax.enterprise.inject provides and directory
 
