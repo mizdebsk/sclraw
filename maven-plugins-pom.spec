@@ -1,7 +1,7 @@
 %global short_name maven-plugins
 
 Name:           %{short_name}-pom
-Version:        24
+Version:        25
 Release:        1%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
@@ -34,6 +34,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Wed Apr  2 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 25-1
+- Update to upstream version 25
+
 * Mon Mar 10 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 24-1
 - Update to upstream version 24
 - Disable maven-scm-publish-plugin
