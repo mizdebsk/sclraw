@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.17
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -83,8 +83,6 @@ Plugin for generating reports from surefire test runs.
 Summary:                JUnit provider for Maven Surefire
 Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4O
 Provides:               maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
-Obsoletes:              %{name}-provider-junit4 < %{epoch}:%{version}-%{release}
-Provides:               %{name}-provider-junit4 = %{epoch}:%{version}-%{release}
 
 %description provider-junit
 JUnit provider for Maven Surefire.
@@ -171,6 +169,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Thu May 22 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.17-2
+- Drop junit4 virtual provide
+
 * Mon Mar 17 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.17-1
 - Update to upstream version 2.17
 
