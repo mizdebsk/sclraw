@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.17
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -169,6 +169,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Mon May 26 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.17-3
+- Rebuild to regenerate file lists
+
 * Thu May 22 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.17-2
 - Drop junit4 virtual provide
 
