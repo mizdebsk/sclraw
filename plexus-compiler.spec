@@ -2,7 +2,7 @@
 
 Name:       plexus-compiler
 Version:    2.3
-Release:    3%{?dist}
+Release:    4%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -95,6 +95,9 @@ cp %{SOURCE2} LICENSE.MIT
 %doc LICENSE LICENSE.MIT
 
 %changelog
+* Wed May 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.3-4
+- Rebuild to regenerate Maven auto-requires
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:2.3-3
 - Use Requires: java-headless rebuild (#1067528)
 
