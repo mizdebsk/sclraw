@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        14
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -37,6 +37,9 @@ cp %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Wed May 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 14-2
+- Rebuild to regenerate Maven auto-requires
+
 * Mon Mar 10 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 14-1
 - Update to upstream version 14
 
