@@ -2,7 +2,7 @@
 
 Name:           %{short_name}-pom
 Version:        25
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -34,6 +34,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Wed May 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 25-2
+- Rebuild to regenerate Maven auto-requires
+
 * Wed Apr  2 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 25-1
 - Update to upstream version 25
 
