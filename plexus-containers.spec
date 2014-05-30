@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
@@ -149,7 +149,7 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 
 
 # plexus-containers pom goes into main package
-%files -f .mfiles -f .mfiles-plexus-containers
+%files -f .mfiles-plexus-containers
 %files component-annotations -f .mfiles-plexus-component-annotations
 %files container-default -f .mfiles-plexus-container-default
 %files component-metadata -f .mfiles-plexus-component-metadata
@@ -158,6 +158,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri May 30 2014 Michal Srb <msrb@redhat.com> - 1.5.5-16
+- Drop empty .mfiles
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.5.5-15
 - Use Requires: java-headless rebuild (#1067528)
 
