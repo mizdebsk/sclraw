@@ -2,7 +2,7 @@
 
 Name:           %{short_name}-pom
 Version:        25
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -34,6 +34,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 25-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Wed May 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 25-2
 - Rebuild to regenerate Maven auto-requires
 
