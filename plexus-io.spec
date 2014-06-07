@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        2.0.10
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Plexus IO Components
 
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.10-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.0.10-2
 - Use Requires: java-headless rebuild (#1067528)
 
