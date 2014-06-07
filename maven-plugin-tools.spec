@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.1
-Release:        19%{?dist}
+Release:        20%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -232,6 +232,9 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:3.1-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:3.1-19
 - Use Requires: java-headless rebuild (#1067528)
 
