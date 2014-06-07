@@ -2,7 +2,7 @@
 
 Name:       plexus-compiler
 Version:    2.3
-Release:    4%{?dist}
+Release:    5%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -95,6 +95,9 @@ cp %{SOURCE2} LICENSE.MIT
 %doc LICENSE LICENSE.MIT
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Wed May 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.3-4
 - Rebuild to regenerate Maven auto-requires
 
