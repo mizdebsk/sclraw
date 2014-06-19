@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.17
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -26,7 +26,7 @@ BuildRequires:  mvn(org.apache.maven.shared:maven-verifier)
 BuildRequires:  mvn(org.apache.maven:maven-artifact)
 BuildRequires:  mvn(org.apache.maven:maven-core)
 BuildRequires:  mvn(org.apache.maven:maven-model)
-BuildRequires:  mvn(org.apache.maven:maven-parent)
+BuildRequires:  mvn(org.apache.maven:maven-parent:pom:)
 BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
 BuildRequires:  mvn(org.apache.maven:maven-plugin-descriptor)
 BuildRequires:  mvn(org.apache.maven:maven-project)
@@ -169,6 +169,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Thu Jun 19 2014 Michal Srb <msrb@redhat.com> - 0:2.17-5
+- Fix maven-parent BR
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.17-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
