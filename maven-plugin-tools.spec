@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
-Version:        3.1
-Release:        20%{?dist}
+Version:        3.3
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 
@@ -9,16 +9,7 @@ URL:            http://maven.apache.org/plugin-tools/
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/plugin-tools/%{name}/%{version}/%{name}-%{version}-source-release.zip
 BuildArch:      noarch
 
-# Fix NullPointerException in MojoClassVisitor.visit()
-# See: rhbz#920042, http://jira.codehaus.org/browse/MPLUGIN-242
-Patch0:         %{name}-rhbz-920042.patch
-# Use Maven 3.1.1 APIs
-Patch1:         %{name}-maven-3.1.1.patch
-
 BuildRequires:  maven-local
-BuildRequires:  mvn(asm:asm)
-BuildRequires:  mvn(asm:asm-commons)
-BuildRequires:  mvn(bsh:bsh)
 BuildRequires:  mvn(com.sun:tools)
 BuildRequires:  mvn(com.thoughtworks.qdox:qdox)
 BuildRequires:  mvn(net.sf.jtidy:jtidy)
@@ -30,7 +21,7 @@ BuildRequires:  mvn(org.apache.maven:maven-artifact)
 BuildRequires:  mvn(org.apache.maven:maven-compat)
 BuildRequires:  mvn(org.apache.maven:maven-core)
 BuildRequires:  mvn(org.apache.maven:maven-model)
-BuildRequires:  mvn(org.apache.maven:maven-parent)
+BuildRequires:  mvn(org.apache.maven:maven-parent:pom:)
 BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
 BuildRequires:  mvn(org.apache.maven:maven-repository-metadata)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
@@ -39,16 +30,20 @@ BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
 BuildRequires:  mvn(org.apache.maven.reporting:maven-reporting-api)
 BuildRequires:  mvn(org.apache.maven.reporting:maven-reporting-impl)
 BuildRequires:  mvn(org.apache.velocity:velocity)
+BuildRequires:  mvn(org.beanshell:bsh)
 BuildRequires:  mvn(org.codehaus.modello:modello-maven-plugin)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-ant-factory)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-archiver)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-bsh-factory)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-manager)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-component-annotations)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-component-metadata)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-velocity)
-
+BuildRequires:  mvn(org.ow2.asm:asm)
+BuildRequires:  mvn(org.ow2.asm:asm-commons)
+BuildRequires:  mvn(xmlunit:xmlunit)
 
 %description
 The Maven Plugin Tools contains the necessary tools to be able to produce Maven
@@ -173,8 +168,6 @@ API documentation for %{name}.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
 
 # For easier installation
 ln -s maven-script/maven-script-{ant,beanshell} .
@@ -189,6 +182,38 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 
 # Remove test dependencies because tests are skipped anyways.
 %pom_xpath_remove "pom:dependency[pom:scope='test']"
+
+# Use Maven 3.1.1 APIs
+%pom_remove_dep :maven-project maven-plugin-plugin
+%pom_remove_dep :maven-plugin-descriptor maven-plugin-plugin
+%pom_remove_dep :maven-plugin-registry maven-plugin-plugin
+%pom_remove_dep :maven-artifact-manager maven-plugin-plugin
+
+%pom_change_dep :maven-project :maven-core maven-plugin-tools-annotations
+%pom_change_dep :maven-plugin-descriptor :maven-compat maven-plugin-tools-annotations
+
+%pom_remove_dep :maven-plugin-descriptor maven-plugin-tools-ant
+%pom_change_dep :maven-project :maven-core maven-plugin-tools-ant
+
+%pom_remove_dep :maven-plugin-descriptor maven-plugin-tools-api
+%pom_change_dep :maven-project :maven-core maven-plugin-tools-api
+
+%pom_remove_dep :maven-plugin-descriptor maven-plugin-tools-beanshell
+
+%pom_remove_dep :maven-project maven-plugin-tools-generators
+%pom_remove_dep :maven-plugin-descriptor maven-plugin-tools-generators
+
+%pom_change_dep :maven-project :maven-core maven-plugin-tools-java
+%pom_remove_dep :maven-plugin-descriptor maven-plugin-tools-java
+
+%pom_change_dep :maven-plugin-descriptor :maven-plugin-api maven-plugin-tools-model
+
+%pom_remove_dep :maven-project maven-script/maven-script-ant
+%pom_remove_dep :maven-plugin-descriptor maven-script/maven-script-ant
+
+%pom_remove_dep :maven-project
+%pom_remove_dep :maven-plugin-descriptor
+%pom_add_dep org.apache.maven:maven-compat
 
 %build
 %mvn_build -s -f
@@ -232,6 +257,9 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 
 
 %changelog
+* Thu Jun 19 2014 Michal Srb <msrb@redhat.com> - 0:3.3-1
+- Update to upstream version 3.3
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:3.1-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
