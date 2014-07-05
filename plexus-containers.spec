@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
@@ -24,6 +24,7 @@ Source3:        plexus-containers-settings.xml
 
 Patch0:         0001-Fix-test-oom.patch
 Patch1:         0002-Update-to-Plexus-Classworlds-2.5.patch
+Patch2:         0003-Port-to-objectweb-asm-5.patch
 
 BuildArch:      noarch
 
@@ -40,11 +41,13 @@ BuildRequires:  plexus-utils
 BuildRequires:  plexus-cli
 BuildRequires:  xbean >= 3.14
 BuildRequires:  guava
+BuildRequires:  objectweb-asm >= 5.0.2
 
 Requires:       plexus-classworlds >= 2.5
 Requires:       plexus-utils
 Requires:       xbean >= 3.14
 Requires:       guava
+Requires:       objectweb-asm >= 5.0.2
 
 
 %description
@@ -103,6 +106,7 @@ cp %{SOURCE2} plexus-component-annotations/build.xml
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 # For Maven 3 compat
 %pom_add_dep org.apache.maven:maven-core plexus-component-metadata
@@ -158,6 +162,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Jul 04 2014 Mat Booth <mat.booth@redhat.com> - 1.5.5-18
+- Port to lastest objectweb-asm
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.5-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
