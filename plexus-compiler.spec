@@ -2,7 +2,7 @@
 
 Name:       plexus-compiler
 Version:    2.3
-Release:    5%{?dist}
+Release:    6%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -18,7 +18,7 @@ BuildArch:      noarch
 BuildRequires:  maven-local
 BuildRequires:  mvn(junit:junit)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-gpg-plugin)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-api)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-compilers)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-component-metadata)
@@ -95,6 +95,9 @@ cp %{SOURCE2} LICENSE.MIT
 %doc LICENSE LICENSE.MIT
 
 %changelog
+* Mon Aug  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.3-6
+- Fix build-requires on plexus-compiler-pom
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.3-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
