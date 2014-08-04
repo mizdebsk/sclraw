@@ -20,9 +20,9 @@ BuildRequires:  mvn(junit:junit)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-gpg-plugin)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-api)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-compilers)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-compilers:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-component-metadata)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-components)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-components:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 BuildRequires:  mvn(org.eclipse.tycho:org.eclipse.jdt.core)
@@ -96,7 +96,7 @@ cp %{SOURCE2} LICENSE.MIT
 
 %changelog
 * Mon Aug  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.3-6
-- Fix build-requires on plexus-compiler-pom
+- Fix build-requires on POM packages
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.3-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
