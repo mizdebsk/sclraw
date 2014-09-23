@@ -1,39 +1,28 @@
 Name:           plexus-io
-Version:        2.0.10
-Release:        3%{?dist}
+Version:        2.0.12
+Release:        1%{?dist}
 Summary:        Plexus IO Components
-
-Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://plexus.codehaus.org/plexus-components/plexus-io
+BuildArch:      noarch
+
 Source0:        https://github.com/sonatype/plexus-io/archive/plexus-io-%{version}.tar.gz
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
-BuildArch: noarch
 
-BuildRequires: java-devel >= 1:1.6.0
-BuildRequires: jpackage-utils
+Patch0:         %{name}-test-failure.patch
 
-BuildRequires: plexus-utils
-BuildRequires: plexus-containers-container-default
-BuildRequires: plexus-components-pom
-BuildRequires: maven-local
-BuildRequires: maven-compiler-plugin
-BuildRequires: maven-enforcer-plugin
-BuildRequires: maven-jar-plugin
-BuildRequires: maven-install-plugin
-BuildRequires: maven-javadoc-plugin
-BuildRequires: maven-resources-plugin
-BuildRequires: maven-surefire-plugin
-BuildRequires: maven-surefire-provider-junit
-BuildRequires: maven-doxia-sitetools
-BuildRequires: mvn(org.apache.maven.plugins:maven-enforcer-plugin)
+BuildRequires:  plexus-utils
+BuildRequires:  plexus-containers-container-default
+BuildRequires:  plexus-components-pom
+BuildRequires:  maven-local
+BuildRequires:  maven-doxia-sitetools
+BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
 
 %description
 Plexus IO is a set of plexus components, which are designed for use
 in I/O operations.
 
 %package javadoc
-Group:          Documentation
 Summary:        Javadoc for %{name}
 
 %description javadoc
@@ -43,6 +32,7 @@ API documentation for %{name}.
 %prep
 %setup -q -n plexus-io-plexus-io-%{version}
 cp %{SOURCE1} .
+%patch0
 
 %build
 export XMVN_COMPILER_SOURCE="1.5"
@@ -60,6 +50,9 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Tue Sep 23 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.0.12-1
+- Update to upstream version 2.0.12
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.10-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

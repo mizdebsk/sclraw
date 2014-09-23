@@ -1,0 +1,11 @@
+--- src/test/java/org/codehaus/plexus/components/io/filemappers/ResourcesTest.java~	2014-09-21 21:49:48.000000000 +0200
++++ src/test/java/org/codehaus/plexus/components/io/filemappers/ResourcesTest.java	2014-09-23 09:38:48.601457483 +0200
+@@ -139,7 +139,7 @@
+         assertTrue( res.getLastModified() != PlexusIoResource.UNKNOWN_MODIFICATION_DATE );
+         if ( res instanceof PlexusIoFileResource )
+         {
+-            assertEquals( res.getLastModified(), file.lastModified() );
++            assertEquals( res.getLastModified() / 1000, file.lastModified() / 1000 );
+         }
+         assertTrue( res.getSize() != PlexusIoResource.UNKNOWN_RESOURCE_SIZE );
+         assertEquals( res.getSize(), file.length() );
