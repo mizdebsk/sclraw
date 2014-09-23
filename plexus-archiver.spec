@@ -1,3 +1,7 @@
+# DO NOT UPDATE TO 2.5 - BREAKS TYCHO
+# This is due to problem with symlinks, which should be fixed in 2.5.1
+# Ask mizdebsk for more info.
+
 Name:           plexus-archiver
 Version:        2.4.4
 Release:        4%{?dist}
