@@ -4,13 +4,9 @@
 %global parent plexus
 %global subname containers
 
-# this needs to be exact version of maven-javadoc-plugin for
-# integration tests
-%global javadoc_plugin_version 2.9.1
-
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
@@ -30,7 +26,6 @@ BuildArch:      noarch
 
 BuildRequires:  maven-local
 BuildRequires:  maven-invoker-plugin
-BuildRequires:  maven-javadoc-plugin = %{javadoc_plugin_version}
 BuildRequires:  maven-resources-plugin
 BuildRequires:  maven-site-plugin
 BuildRequires:  maven-shared-invoker
@@ -162,6 +157,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Wed Sep 24 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-19
+- Remove verioned build-requires on maven-javadoc-plugin
+
 * Fri Jul 04 2014 Mat Booth <mat.booth@redhat.com> - 1.5.5-18
 - Port to lastest objectweb-asm
 
