@@ -9,7 +9,7 @@ BuildArch:      noarch
 Source0:        https://github.com/sonatype/plexus-io/archive/plexus-io-%{version}.tar.gz
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 
-# Submitted upstream: http://jira.codehaus.org/browse/PLXCOMP-241
+# Accepted upstream: http://jira.codehaus.org/browse/PLXCOMP-241
 Patch0:         %{name}-test-failure.patch
 
 BuildRequires:  plexus-utils
