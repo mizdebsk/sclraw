@@ -1,8 +1,6 @@
-%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^mvn\\(org\\.codehaus\\.plexus:plexus-io:2.1.1\\)$
-
 Name:           plexus-archiver
 Version:        2.6.1
-Release:        0.1%{?dist}
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
@@ -10,7 +8,6 @@ URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
 BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
-Source1:        plexus-io-2.1.1.jar
 
 BuildRequires:  maven-local
 BuildRequires:  plexus-containers-container-default
@@ -38,10 +35,6 @@ Javadoc for %{name}.
 %setup -q -n %{name}-%{name}-%{version}
 %mvn_file :%{name} plexus/archiver
 
-dir=.m2/org/codehaus/plexus/plexus-io/2.1.1/
-mkdir -p $dir
-cp %{SOURCE1} $dir/
-
 %build
 %mvn_build -f
 
@@ -55,9 +48,6 @@ cp %{SOURCE1} $dir/
 %doc LICENSE
 
 %changelog
-* Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.6.1-0.1
-- Bootstrap build
-
 * Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.6.1-1
 - Update to upstream version 2.6.1
 - Remove patch for PLXCOMP-64 and PLXCOMP-113
