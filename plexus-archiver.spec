@@ -1,6 +1,4 @@
-# DO NOT UPDATE TO 2.5 - BREAKS TYCHO
-# This is due to problem with symlinks, which should be fixed in 2.5.1
-# Ask mizdebsk for more info.
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^mvn\\(org\\.codehaus\\.plexus:plexus-io:2.1.1\\)$
 
 Name:           plexus-archiver
 Version:        2.6.1
