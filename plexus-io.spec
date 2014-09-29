@@ -9,7 +9,7 @@ BuildArch:      noarch
 Source0:        https://github.com/sonatype/plexus-io/archive/plexus-io-%{version}.tar.gz
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 
-# Forwarded upstream: http://jira.codehaus.org/browse/PLXCOMP-244
+# Accepted upstream: http://jira.codehaus.org/browse/PLXCOMP-244
 # https://github.com/sonatype/plexus-io/pull/6
 Patch0:         0001-Don-t-try-to-set-attributes-of-symbolic-links.patch
 
