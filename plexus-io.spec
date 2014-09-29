@@ -1,5 +1,5 @@
 Name:           plexus-io
-Version:        2.0.12
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Plexus IO Components
 License:        ASL 2.0
@@ -8,9 +8,6 @@ BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/plexus-io/archive/plexus-io-%{version}.tar.gz
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
-
-# Accepted upstream: http://jira.codehaus.org/browse/PLXCOMP-241
-Patch0:         %{name}-test-failure.patch
 
 BuildRequires:  plexus-utils
 BuildRequires:  plexus-containers-container-default
@@ -33,7 +30,6 @@ API documentation for %{name}.
 %prep
 %setup -q -n plexus-io-plexus-io-%{version}
 cp %{SOURCE1} .
-%patch0
 
 %build
 export XMVN_COMPILER_SOURCE="1.5"
@@ -51,6 +47,10 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.1-1
+- Update to upstream version 2.1.1
+- Remove patch for PLXCOMP-241: accepted upstream
+
 * Tue Sep 23 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.0.12-1
 - Update to upstream version 2.0.12
 
