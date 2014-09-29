@@ -3,8 +3,8 @@
 # Ask mizdebsk for more info.
 
 Name:           plexus-archiver
-Version:        2.4.4
-Release:        4%{?dist}
+Version:        2.6.1
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
@@ -12,10 +12,6 @@ URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
 BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
-
-# PLXCOMP-64 and PLXCOMP-113: Add support for extracting zip and tar symbolic links
-# Forwarded upstream: https://github.com/sonatype/plexus-archiver/pull/14
-Patch0:         0001-Fix-PLXCOMP-113-and-PLXCOMP-64.patch
 
 BuildRequires:  maven-local
 BuildRequires:  plexus-containers-container-default
@@ -41,7 +37,6 @@ Javadoc for %{name}.
 
 %prep
 %setup -q -n %{name}-%{name}-%{version}
-%patch0 -p1
 %mvn_file :%{name} plexus/archiver
 
 %build
@@ -57,6 +52,10 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.6.1-1
+- Update to upstream version 2.6.1
+- Remove patch for PLXCOMP-64 and PLXCOMP-113
+
 * Tue Sep  2 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.4.4-4
 - Add patch for extracting symbolic links
 
