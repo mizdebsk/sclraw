@@ -1,12 +1,10 @@
 Name:           apache-parent
-Version:        14
-Release:        3%{?dist}
-Summary:        Parent pom file for Apache projects
-Group:          Development/Libraries
+Version:        15
+Release:        1%{?dist}
+Summary:        Parent POM file for Apache projects
 License:        ASL 2.0
 URL:            http://apache.org/
-Source0:        http://svn.apache.org/repos/asf/maven/pom/tags/apache-%{version}/pom.xml#/%{name}-%{version}.pom
-Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
+Source0:        http://repo1.maven.org/maven2/org/apache/apache/%{version}/apache-%{version}-source-release.zip
 BuildArch:      noarch
 
 BuildRequires:  maven-local
@@ -19,11 +17,8 @@ Requires:       apache-resource-bundles
 %description
 This package contains the parent pom file for apache projects.
 
-
 %prep
-%setup -n %{name}-%{version} -Tc
-cp %{SOURCE0} pom.xml
-cp %{SOURCE1} LICENSE
+%setup -n apache-%{version}
 
 %pom_remove_plugin :maven-site-plugin pom.xml
 
@@ -34,9 +29,12 @@ cp %{SOURCE1} LICENSE
 %mvn_install
 
 %files -f .mfiles
-%doc LICENSE
+%doc LICENSE NOTICE
 
 %changelog
+* Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 15-1
+- Update to upstream version 15
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 14-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
