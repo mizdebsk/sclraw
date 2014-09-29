@@ -1,0 +1,30 @@
+From 2566bd476a0036f91b610679eb5cc15aeae99612 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Mon, 29 Sep 2014 07:30:29 +0200
+Subject: [PATCH] Don't try to set attributes of symbolic links
+
+---
+ .../plexus/components/io/attributes/Java7AttributeUtils.java       | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/src/main/java/org/codehaus/plexus/components/io/attributes/Java7AttributeUtils.java b/src/main/java/org/codehaus/plexus/components/io/attributes/Java7AttributeUtils.java
+index 25bd452..e43f738 100644
+--- a/src/main/java/org/codehaus/plexus/components/io/attributes/Java7AttributeUtils.java
++++ b/src/main/java/org/codehaus/plexus/components/io/attributes/Java7AttributeUtils.java
+@@ -52,11 +52,8 @@ public static void chmod( File file, int mode )
+         throws IOException
+     {
+         final Path path = file.toPath();
+-        if (Files.isSymbolicLink( path )){
+-            if (Files.readSymbolicLink( path ).toFile().exists()){
+-                Files.setPosixFilePermissions( path, getPermissions( mode ) );
+-            }
+-        } else {
++        if ( !Files.isSymbolicLink( path ) )
++        {
+             Files.setPosixFilePermissions( path, getPermissions( mode ) );
+         }
+     }
+-- 
+1.9.3
+

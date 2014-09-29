@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        2.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus IO Components
 License:        ASL 2.0
 URL:            http://plexus.codehaus.org/plexus-components/plexus-io
@@ -8,6 +8,10 @@ BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/plexus-io/archive/plexus-io-%{version}.tar.gz
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
+
+# Forwarded upstream: http://jira.codehaus.org/browse/PLXCOMP-244
+# https://github.com/sonatype/plexus-io/pull/6
+Patch0:         0001-Don-t-try-to-set-attributes-of-symbolic-links.patch
 
 BuildRequires:  plexus-utils
 BuildRequires:  plexus-containers-container-default
@@ -30,6 +34,7 @@ API documentation for %{name}.
 %prep
 %setup -q -n plexus-io-plexus-io-%{version}
 cp %{SOURCE1} .
+%patch0 -p1
 
 %build
 export XMVN_COMPILER_SOURCE="1.5"
@@ -47,6 +52,9 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.1-2
+- Don't try to set attributes of symbolic links
+
 * Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.1-1
 - Update to upstream version 2.1.1
 - Remove patch for PLXCOMP-241: accepted upstream
