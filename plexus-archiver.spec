@@ -1,5 +1,5 @@
 Name:           plexus-archiver
-Version:        2.6.1
+Version:        2.6.2
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
@@ -48,6 +48,9 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Wed Oct  1 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.6.2-1
+- Update to upstream version 2.6.2
+
 * Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.6.1-1
 - Update to upstream version 2.6.1
 - Remove patch for PLXCOMP-64 and PLXCOMP-113
