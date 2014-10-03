@@ -1,5 +1,5 @@
 Name:           plexus-io
-Version:        2.1.2
+Version:        2.1.3
 Release:        1%{?dist}
 Summary:        Plexus IO Components
 License:        ASL 2.0
@@ -47,6 +47,9 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Fri Oct  3 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.3-1
+- Update to upstream version 2.1.3
+
 * Wed Oct  1 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.2-1
 - Update to upstream version 2.1.2
 - Remove patch for PLXCOMP-244 (accepted upstream)
