@@ -6,7 +6,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
@@ -73,6 +73,7 @@ Summary:        Component API from %{name}
 
 %package container-default
 Summary:        Default Container from %{name}
+Obsoletes:      plexus-container-default < 1.0-1
 Provides:       plexus-containers-component-api = %{version}-%{release}
 
 %description container-default
@@ -157,6 +158,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Mon Oct  6 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-20
+- Obsolete plexus-container-default
+
 * Wed Sep 24 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-19
 - Remove verioned build-requires on maven-javadoc-plugin
 
