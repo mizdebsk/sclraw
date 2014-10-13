@@ -1,13 +1,15 @@
 Name:           maven-plugin-tools
 Version:        3.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
-
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugin-tools/
-Source0:        http://repo2.maven.org/maven2/org/apache/maven/plugin-tools/%{name}/%{version}/%{name}-%{version}-source-release.zip
 BuildArch:      noarch
+
+Source0:        http://repo2.maven.org/maven2/org/apache/maven/plugin-tools/%{name}/%{version}/%{name}-%{version}-source-release.zip
+
+Patch0:         0001-Avoid-duplicate-MOJO-parameters.patch
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(com.sun:tools)
@@ -168,6 +170,7 @@ API documentation for %{name}.
 
 %prep
 %setup -q
+%patch0 -p1
 
 # For easier installation
 ln -s maven-script/maven-script-{ant,beanshell} .
@@ -257,6 +260,9 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 
 
 %changelog
+* Mon Oct 13 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.3-2
+- Port to maven-reporting-impl 2.3
+
 * Thu Jun 19 2014 Michal Srb <msrb@redhat.com> - 0:3.3-1
 - Update to upstream version 3.3
 
