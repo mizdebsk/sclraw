@@ -1,8 +1,8 @@
 %global parent  plexus
 
 Name:       plexus-compiler
-Version:    2.3
-Release:    6%{?dist}
+Version:    2.4
+Release:    1%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -95,6 +95,9 @@ cp %{SOURCE2} LICENSE.MIT
 %doc LICENSE LICENSE.MIT
 
 %changelog
+* Mon Oct 13 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.4-1
+- Update to upstream version 2.4
+
 * Mon Aug  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.3-6
 - Fix build-requires on POM packages
 
