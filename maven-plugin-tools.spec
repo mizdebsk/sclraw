@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 License:        ASL 2.0
@@ -60,8 +60,6 @@ This package contains Java 5 annotations to use in Mojos.
 
 %package -n maven-plugin-plugin
 Summary:        Maven Plugin Plugin
-Obsoletes:      maven2-plugin-plugin < 0:%{version}-%{release}
-Provides:       maven2-plugin-plugin = 0:%{version}-%{release}
 
 %description -n maven-plugin-plugin
 The Plugin Plugin is used to create a Maven plugin descriptor for any Mojo's
@@ -260,6 +258,9 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 
 
 %changelog
+* Tue Oct 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.3-3
+- Remove legacy Obsoletes/Provides for maven2 plugin
+
 * Mon Oct 13 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.3-2
 - Port to maven-reporting-impl 2.3
 
