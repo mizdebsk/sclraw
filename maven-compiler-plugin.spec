@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
 Version:        3.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
@@ -19,9 +19,6 @@ BuildRequires:  maven-doxia-sitetools
 BuildRequires:  maven-plugin-testing-harness
 BuildRequires:  maven-toolchain
 BuildRequires:  plexus-compiler >= 2.0
-
-Provides:       maven2-plugin-compiler = %{version}-%{release}
-Obsoletes:      maven2-plugin-compiler <= 0:2.0.8
 
 %description
 The Compiler Plugin is used to compile the sources of your project.
@@ -50,6 +47,9 @@ API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Oct 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2-2
+- Remove legacy Obsoletes/Provides for maven2 plugin
+
 * Tue Oct 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2-1
 - Update to upstream version 3.2
 
