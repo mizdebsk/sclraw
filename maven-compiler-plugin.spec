@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
-Version:        3.1
-Release:        6%{?dist}
+Version:        3.2
+Release:        1%{?dist}
 Summary:        Maven Compiler Plugin
 
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Oct 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2-1
+- Update to upstream version 3.2
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
