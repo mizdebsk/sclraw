@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.17
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -52,37 +52,23 @@ BuildRequires:  plexus-containers-component-api >= 1.0-0.a34
 BuildRequires:  maven-plugin-testing-harness
 BuildRequires:  javacc-maven-plugin
 
-Obsoletes:      maven-surefire-booter <= 0:1.5.3
-Provides:       maven-surefire-booter = %{epoch}:%{version}-%{release}
-
 %description
 Surefire is a test framework project.
 
 %package plugin
 Summary:                Surefire plugin for maven
-Obsoletes:              maven2-plugin-surefire <= 0:2.0.4
-Provides:               maven2-plugin-surefire = %{epoch}:%{version}-%{release}
-Obsoletes:              maven-surefire-maven-plugin < 0:2.6
-Provides:               maven-surefire-maven-plugin = %{epoch}:%{version}-%{release}
 
 %description plugin
 Maven surefire plugin for running tests via the surefire framework.
 
 %package report-plugin
 Summary:                Surefire reports plugin for maven
-Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4
-Provides:               maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
-Obsoletes:              maven-surefire-report-maven-plugin < 0:2.6
-Provides:               maven-surefire-report-maven-plugin = %{epoch}:%{version}-%{release}
 
 %description report-plugin
 Plugin for generating reports from surefire test runs.
 
-
 %package provider-junit
 Summary:                JUnit provider for Maven Surefire
-Obsoletes:              maven2-plugin-surefire-report <= 0:2.0.4O
-Provides:               maven2-plugin-surefire-report = %{epoch}:%{version}-%{release}
 
 %description provider-junit
 JUnit provider for Maven Surefire.
@@ -169,6 +155,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Tue Oct 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.17-6
+- Remove legacy Obsoletes/Provides for maven2 plugin
+
 * Thu Jun 19 2014 Michal Srb <msrb@redhat.com> - 0:2.17-5
 - Fix maven-parent BR
 
