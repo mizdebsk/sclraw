@@ -1,8 +1,8 @@
 %global short_name maven-plugins
 
 Name:           %{short_name}-pom
-Version:        25
-Release:        3%{?dist}
+Version:        26
+Release:        1%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -11,7 +11,7 @@ URL:            http://maven.apache.org/plugins/
 Source:         http://repo.maven.apache.org/maven2/org/apache/maven/plugins/%{short_name}/%{version}/%{short_name}-%{version}-source-release.zip
 
 BuildRequires:  maven-local
-BuildRequires:  maven-parent
+BuildRequires:  maven-parent >= 25
 
 %description
 This package provides Maven Plugins parent POM used by different
@@ -34,6 +34,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Oct 23 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 26-1
+- Update to upstream version 26
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 25-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
