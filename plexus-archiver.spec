@@ -1,9 +1,6 @@
-%global __requires_exclude_from .
-#global __provides_exclude_from .
-
 Name:           plexus-archiver
 Version:        2.8
-Release:        0.1%{?dist}
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
@@ -11,7 +8,6 @@ URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
 BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
-Source1:        https://github.com/sonatype/plexus-io/archive/plexus-io-2.3.tar.gz
 
 BuildRequires:  maven-local
 BuildRequires:  plexus-containers-container-default
@@ -36,24 +32,7 @@ Javadoc for %{name}.
 
 
 %prep
-%setup -qcT
-tar xf %{SOURCE0}
-tar xf %{SOURCE1}
-cat <<EOF >pom.xml
-<project>
-<modelVersion>4.0.0</modelVersion>
-<groupId>plexus-archiver-boot</groupId>
-<artifactId>plexus-archiver-boot</artifactId>
-<version>1</version>
-<packaging>pom</packaging>
-<modules>
-<module>plexus-archiver-plexus-archiver-2.8</module>
-<module>plexus-io-plexus-io-2.3</module>
-</modules>
-</project>
-EOF
-%mvn_package :%{name}
-%mvn_package : __noinstall
+%setup -q -n %{name}-%{name}-%{version}
 %mvn_file :%{name} plexus/archiver
 
 %build
@@ -63,10 +42,10 @@ EOF
 %mvn_install
 
 %files -f .mfiles
-%doc plexus-archiver-plexus-archiver-2.8/LICENSE
+%doc LICENSE
 
 %files javadoc -f .mfiles-javadoc
-%doc plexus-archiver-plexus-archiver-2.8/LICENSE
+%doc LICENSE
 
 %changelog
 * Fri Oct 24 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.8-1
