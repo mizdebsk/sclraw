@@ -1,28 +1,12 @@
-
-%global with_maven 1
-
-%global parent plexus
-%global subname containers
-
-Name:           %{parent}-%{subname}
-Version:        1.5.5
-Release:        20%{?dist}
+Name:           plexus-containers
+Version:        1.6
+Release:        1%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
-# svn export \
-#  http://svn.codehaus.org/plexus/plexus-containers/tags/plexus-containers-1.5.5
-# tar caf plexus-containers-1.5.5.tar.xz plexus-containers-1.5.5
-Source0:        %{name}-%{version}.tar.xz
-Source1:        plexus-container-default-build.xml
-Source2:        plexus-component-annotations-build.xml
-Source3:        plexus-containers-settings.xml
-
-Patch0:         0001-Fix-test-oom.patch
-Patch1:         0002-Update-to-Plexus-Classworlds-2.5.patch
-Patch2:         0003-Port-to-objectweb-asm-5.patch
-
 BuildArch:      noarch
+
+Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
 
 BuildRequires:  maven-local
 BuildRequires:  maven-invoker-plugin
@@ -37,12 +21,7 @@ BuildRequires:  plexus-cli
 BuildRequires:  xbean >= 3.14
 BuildRequires:  guava
 BuildRequires:  objectweb-asm >= 5.0.2
-
-Requires:       plexus-classworlds >= 2.5
-Requires:       plexus-utils
-Requires:       xbean >= 3.14
-Requires:       guava
-Requires:       objectweb-asm >= 5.0.2
+BuildRequires:  qdox >= 2.0
 
 
 %description
@@ -95,19 +74,12 @@ Obsoletes:      %{name}-container-default-javadoc < %{version}-%{release}
 %{summary}.
 
 %prep
-%setup -q -n plexus-containers-%{version}
-
-cp %{SOURCE1} plexus-container-default/build.xml
-cp %{SOURCE2} plexus-component-annotations/build.xml
-
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%setup -q -n %{name}-%{name}-%{version}
 
 # For Maven 3 compat
 %pom_add_dep org.apache.maven:maven-core plexus-component-metadata
 
-# OpenJDK7 compatibility
+%pom_remove_dep com.sun:tools plexus-component-javadoc
 %pom_add_dep com.sun:tools plexus-component-javadoc
 
 # Generate OSGI info
@@ -158,6 +130,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Mon Oct 27 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-1
+- Update to upstream version 1.6
+
 * Mon Oct  6 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-20
 - Obsolete plexus-container-default
 
