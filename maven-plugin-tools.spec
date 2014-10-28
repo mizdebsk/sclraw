@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 License:        ASL 2.0
@@ -10,10 +10,11 @@ BuildArch:      noarch
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/plugin-tools/%{name}/%{version}/%{name}-%{version}-source-release.zip
 
 Patch0:         0001-Avoid-duplicate-MOJO-parameters.patch
+Patch1:         0002-Port-to-QDox-2.0.patch
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(com.sun:tools)
-BuildRequires:  mvn(com.thoughtworks.qdox:qdox)
+BuildRequires:  mvn(com.thoughtworks.qdox:qdox) >= 2.0
 BuildRequires:  mvn(net.sf.jtidy:jtidy)
 BuildRequires:  mvn(org.apache.ant:ant)
 BuildRequires:  mvn(org.apache.ant:ant-launcher)
@@ -169,6 +170,7 @@ API documentation for %{name}.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 # For easier installation
 ln -s maven-script/maven-script-{ant,beanshell} .
@@ -258,6 +260,9 @@ ln -s maven-script/maven-script-{ant,beanshell} .
 
 
 %changelog
+* Tue Oct 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.3-4
+- Port to QDox 2.0
+
 * Tue Oct 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.3-3
 - Remove legacy Obsoletes/Provides for maven2 plugin
 
