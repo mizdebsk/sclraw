@@ -1,6 +1,6 @@
 Name:           modello
-Version:        1.8.1
-Release:        5%{?dist}
+Version:        1.8.2
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 # The majority of files are under MIT license, but some of them are
@@ -9,9 +9,6 @@ License:        ASL 2.0 and BSD and MIT
 URL:            http://modello.codehaus.org/
 Source0:        http://repo2.maven.org/maven2/org/codehaus/%{name}/%{name}/%{version}/%{name}-%{version}-source-release.zip
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
-
-Patch0001:      0001-MODELLO-284-Fix-handling-of-Boolean-fields-in-StAX-r.patch
-Patch0002:      0002-MODELLO-285-Fix-StAX-reader-in-case-no-field-adder-i.patch
 
 BuildArch:      noarch
 
@@ -53,8 +50,6 @@ API documentation for %{name}.
 
 %prep
 %setup -q
-%patch0001 -p1
-%patch0002 -p1
 cp -p %{SOURCE1} LICENSE
 # We don't generate site; don't pull extra dependencies.
 %pom_remove_plugin :maven-site-plugin
@@ -79,6 +74,9 @@ sed -i s/maven-project/maven-core/ modello-maven-plugin/pom.xml
 %doc LICENSE
 
 %changelog
+* Mon Nov  3 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.2-1
+- Update to upstream version 1.8.2
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.8.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
