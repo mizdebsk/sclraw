@@ -1,5 +1,5 @@
 Name:           apache-parent
-Version:        15
+Version:        16
 Release:        1%{?dist}
 Summary:        Parent POM file for Apache projects
 License:        ASL 2.0
@@ -32,6 +32,9 @@ This package contains the parent pom file for apache projects.
 %doc LICENSE NOTICE
 
 %changelog
+* Mon Nov 17 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 16-1
+- Update to upstream version 16
+
 * Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 15-1
 - Update to upstream version 15
 
