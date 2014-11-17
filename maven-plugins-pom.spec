@@ -1,7 +1,7 @@
 %global short_name maven-plugins
 
 Name:           %{short_name}-pom
-Version:        26
+Version:        27
 Release:        1%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
@@ -34,6 +34,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Mon Nov 17 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 27-1
+- Update to upstream version 27
+
 * Thu Oct 23 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 26-1
 - Update to upstream version 26
 
