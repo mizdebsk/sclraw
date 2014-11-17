@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.1
-Release:          6%{?dist}
+Release:          7%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -83,6 +83,9 @@ build-jar-repository %{buildroot}%{_javadir}/javax.enterprise.inject/ \
 %files javadoc -f api/.mfiles-javadoc
 
 %changelog
+* Mon Nov 17 2014 Alexander Kurtakov <akurtako@redhat.com> 1.1-7
+- Rebuild to fix broken symlink to jboss-interceptors.
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
