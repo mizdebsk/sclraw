@@ -1,6 +1,6 @@
 Name:           plexus-containers
 Version:        1.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
@@ -79,6 +79,10 @@ Obsoletes:      %{name}-container-default-javadoc < %{version}-%{release}
 # For Maven 3 compat
 %pom_add_dep org.apache.maven:maven-core plexus-component-metadata
 
+# ASM dependency was changed to "provided" in XBean 4.x, so we need to provide ASM
+%pom_add_dep org.ow2.asm:asm:5.0.3:runtime plexus-container-default
+%pom_add_dep org.ow2.asm:asm-commons:5.0.3:runtime plexus-container-default
+
 %pom_remove_dep com.sun:tools plexus-component-javadoc
 %pom_add_dep com.sun:tools plexus-component-javadoc
 
@@ -130,6 +134,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Thu Feb  5 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-2
+- Add runtime dependenty on ASM5
+
 * Mon Oct 27 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-1
 - Update to upstream version 1.6
 
