@@ -2,7 +2,7 @@
 
 Name:           %{short_name}-pom
 Version:        27
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -12,6 +12,7 @@ Source:         http://repo.maven.apache.org/maven2/org/apache/maven/plugins/%{s
 
 BuildRequires:  maven-local
 BuildRequires:  maven-parent >= 25
+BuildRequires:  maven-site-plugin
 
 %description
 This package provides Maven Plugins parent POM used by different
@@ -34,6 +35,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Feb  5 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 27-2
+- Add missing BR on maven-site-plugin
+
 * Mon Nov 17 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 27-1
 - Update to upstream version 27
 
