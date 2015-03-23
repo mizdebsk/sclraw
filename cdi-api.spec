@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.1
-Release:          7%{?dist}
+Release:          8%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -21,7 +21,7 @@ BuildRequires:    maven-surefire-provider-testng
 BuildRequires:    maven-enforcer-plugin
 BuildRequires:    testng
 BuildRequires:    jboss-el-2.2-api
-BuildRequires:    jboss-interceptors-1.1-api
+BuildRequires:    jboss-interceptors-1.2-api
 BuildRequires:    jboss-ejb-3.1-api
 BuildRequires:    geronimo-annotation
 BuildRequires:    geronimo-parent-poms
@@ -65,6 +65,10 @@ cd api
 # J2EE API directory
 %mvn_file :{cdi-api} %{name}/@1 javax.enterprise.inject/@1
 
+# Use newer version of interceptors API
+%pom_remove_dep "org.jboss.spec.javax.interceptor:jboss-interceptors-api_1.1_spec"
+%pom_add_dep "org.jboss.spec.javax.interceptor:jboss-interceptors-api_1.2_spec"
+
 %build
 cd api
 %mvn_build
@@ -83,6 +87,9 @@ build-jar-repository %{buildroot}%{_javadir}/javax.enterprise.inject/ \
 %files javadoc -f api/.mfiles-javadoc
 
 %changelog
+* Mon Mar 23 2015 Marek Goldmann <mgoldman@redhat.com> - 1.1-8
+- Switch to interceptors 1.2
+
 * Mon Nov 17 2014 Alexander Kurtakov <akurtako@redhat.com> 1.1-7
 - Rebuild to fix broken symlink to jboss-interceptors.
 
