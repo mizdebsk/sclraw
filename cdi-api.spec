@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.1
-Release:          8%{?dist}
+Release:          9%{?dist}
 Summary:          CDI API
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -78,7 +78,7 @@ cd api
 %mvn_install
 
 build-jar-repository %{buildroot}%{_javadir}/javax.enterprise.inject/ \
-                     jboss-interceptors-1.1-api geronimo-annotation javax.inject
+                     jboss-interceptors-1.2-api geronimo-annotation javax.inject
 
 %files -f api/.mfiles
 %dir %{_javadir}/%{name}
@@ -87,6 +87,9 @@ build-jar-repository %{buildroot}%{_javadir}/javax.enterprise.inject/ \
 %files javadoc -f api/.mfiles-javadoc
 
 %changelog
+* Tue Mar 24 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.1-9
+- Fix interceptors symlink
+
 * Mon Mar 23 2015 Marek Goldmann <mgoldman@redhat.com> - 1.1-8
 - Switch to interceptors 1.2
 
