@@ -1,9 +1,9 @@
 Name:           plexus-io
-Version:        2.3.3
+Version:        2.5
 Release:        1%{?dist}
 Summary:        Plexus IO Components
 License:        ASL 2.0
-URL:            http://plexus.codehaus.org/plexus-components/plexus-io
+URL:            https://github.com/sonatype/plexus-io
 BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/plexus-io/archive/plexus-io-%{version}.tar.gz
@@ -31,6 +31,8 @@ API documentation for %{name}.
 %setup -q -n plexus-io-plexus-io-%{version}
 cp %{SOURCE1} .
 
+%pom_remove_plugin :animal-sniffer-maven-plugin
+
 %build
 export XMVN_COMPILER_SOURCE="1.5"
 %mvn_file  : plexus/io
@@ -47,6 +49,9 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Tue Mar 24 2015 Michael Simacek <msimacek@redhat.com> - 2.5-1
+- Update to upstream version 2.5
+
 * Mon Nov  3 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.3-1
 - Update to upstream version 2.3.3
 
