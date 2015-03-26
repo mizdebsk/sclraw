@@ -1,5 +1,5 @@
 Name:           modello
-Version:        1.8.2
+Version:        1.8.3
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
@@ -74,6 +74,9 @@ sed -i s/maven-project/maven-core/ modello-maven-plugin/pom.xml
 %doc LICENSE
 
 %changelog
+* Thu Mar 26 2015 Michael Simacek <msimacek@redhat.com> - 0:1.8.3-1
+- Update to upstream version 1.8.3
+
 * Mon Nov  3 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.2-1
 - Update to upstream version 1.8.2
 
