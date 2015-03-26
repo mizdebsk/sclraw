@@ -1,5 +1,5 @@
 Name:           plexus-archiver
-Version:        2.8.2
+Version:        3.0
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
@@ -14,6 +14,10 @@ BuildRequires:  plexus-containers-container-default
 BuildRequires:  plexus-io
 BuildRequires:  plexus-utils
 BuildRequires:  apache-commons-compress
+BuildRequires:  snappy-java
+
+# XXX temporary
+BuildRequires: takari-lifecycle
 
 %description
 The Plexus project seeks to create end-to-end developer tools for
@@ -35,6 +39,15 @@ Javadoc for %{name}.
 %setup -q -n %{name}-%{name}-%{version}
 %mvn_file :%{name} plexus/archiver
 
+# XXX temporary, maven-jar-plugin will be broken until plexus-archiver is
+# updated to a version compatible with current plexus-io
+%pom_xpath_inject pom:project '<groupId>org.codehaus.plexus</groupId><packaging>takari-jar</packaging>'
+%pom_remove_parent
+%pom_add_plugin io.takari.maven.plugins:takari-lifecycle-plugin '
+<extensions>true</extensions>'
+rm -r src/test
+# end temporary section
+
 %build
 %mvn_build -f
 
@@ -48,6 +61,9 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Tue Feb 17 2015 Michael Simacek <msimacek@redhat.com> - 0:3.0-1
+- Update to upstream version 3.0
+
 * Mon Nov  3 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.8.2-1
 - Update to upstream version 2.8.2
 
