@@ -1,30 +1,33 @@
 Name:           maven-compiler-plugin
-Version:        3.2
-Release:        2%{?dist}
+Version:        3.3
+Release:        1%{?dist}
 Summary:        Maven Compiler Plugin
-
-Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-compiler-plugin
+BuildArch:      noarch
+
 Source0:        http://repo1.maven.org/maven2/org/apache/maven/plugins/%{name}/%{version}/%{name}-%{version}-source-release.zip
 
-BuildArch: noarch
-
-BuildRequires:  java-devel >= 1:1.6.0
 BuildRequires:  maven-local
-BuildRequires:  maven-plugin-plugin
-BuildRequires:  maven-shared-incremental
-BuildRequires:  maven-surefire-provider-junit
-BuildRequires:  maven-doxia-sitetools
-BuildRequires:  maven-plugin-testing-harness
-BuildRequires:  maven-toolchain
-BuildRequires:  plexus-compiler >= 2.0
+BuildRequires:  mvn(junit:junit)
+BuildRequires:  mvn(org.apache.maven:maven-artifact)
+BuildRequires:  mvn(org.apache.maven:maven-core)
+BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
+BuildRequires:  mvn(org.apache.maven:maven-toolchain)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-plugins:pom:)
+BuildRequires:  mvn(org.apache.maven.plugin-testing:maven-plugin-testing-harness)
+BuildRequires:  mvn(org.apache.maven.plugin-tools:maven-plugin-annotations)
+BuildRequires:  mvn(org.apache.maven.shared:maven-shared-incremental)
+BuildRequires:  mvn(org.apache.maven.shared:maven-shared-utils)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-api) >= 2.0
+BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-manager)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
+BuildRequires:  mvn(org.mockito:mockito-core)
 
 %description
 The Compiler Plugin is used to compile the sources of your project.
 
 %package javadoc
-Group:          Documentation
 Summary:        Javadoc for %{name}
 
 %description javadoc
@@ -40,13 +43,15 @@ API documentation for %{name}.
 %mvn_install
 
 %files -f .mfiles
-%dir %{_javadir}/%{name}
-%doc LICENSE NOTICE
+%license LICENSE NOTICE
 
 %files javadoc -f .mfiles-javadoc
-%doc LICENSE NOTICE
+%license LICENSE NOTICE
 
 %changelog
+* Thu Mar 26 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3-1
+- Update to upstream version 3.3
+
 * Tue Oct 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2-2
 - Remove legacy Obsoletes/Provides for maven2 plugin
 
