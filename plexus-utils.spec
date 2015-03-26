@@ -2,7 +2,7 @@
 %global subname utils
 
 Name:           plexus-utils
-Version:        3.0.18
+Version:        3.0.21
 Release:        1%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
@@ -71,6 +71,9 @@ cp %{SOURCE1} .
 %doc NOTICE.txt LICENSE-2.0.txt
 
 %changelog
+* Tue Mar 24 2015 Michael Simacek <msimacek@redhat.com> - 3.0.21-1
+- Update to upstream version 3.0.21
+
 * Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0.18-1
 - Update to upstream version 3.0.18
 - Update to current packaging guidelines
