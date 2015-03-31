@@ -3,7 +3,7 @@
 
 Name:           plexus-utils
 Version:        3.0.21
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
 # xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
@@ -15,9 +15,14 @@ Summary:        Plexus Common Utilities
 # rest is ASL 2.0
 License:        ASL 1.1 and ASL 2.0 and xpp and BSD and Public Domain
 URL:            http://plexus.codehaus.org/
+BuildArch:      noarch
+
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
 Source1:        http://apache.org/licenses/LICENSE-2.0.txt
-BuildArch:      noarch
+
+# https://github.com/sonatype/plexus-utils/issues/18
+# patch not submitted as it's just a workaround
+Patch0:         0001-Don-t-use-NioFiles.copy.patch
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
@@ -38,7 +43,10 @@ Javadoc for %{name}.
 
 %prep
 %setup -q -n %{name}-%{name}-%{version}
+
 cp %{SOURCE1} .
+
+%patch0 -p1
 
 %mvn_file : plexus/utils
 %mvn_alias : plexus:plexus-utils
@@ -71,6 +79,9 @@ cp %{SOURCE1} .
 %doc NOTICE.txt LICENSE-2.0.txt
 
 %changelog
+* Mon Mar 30 2015 Michael Simacek <msimacek@redhat.com> - 3.0.21-2
+- Don't use NioFiles.copy as it doesn't follow symlinks
+
 * Tue Mar 24 2015 Michael Simacek <msimacek@redhat.com> - 3.0.21-1
 - Update to upstream version 3.0.21
 

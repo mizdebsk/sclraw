@@ -1,0 +1,38 @@
+From f9d81b7f32f11c2446e6392c09e2655e803a758a Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Mon, 30 Mar 2015 17:10:07 +0200
+Subject: [PATCH] Don't use NioFiles.copy
+
+---
+ src/main/java/org/codehaus/plexus/util/FileUtils.java | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/src/main/java/org/codehaus/plexus/util/FileUtils.java b/src/main/java/org/codehaus/plexus/util/FileUtils.java
+index 3a036a7..8f05b76 100644
+--- a/src/main/java/org/codehaus/plexus/util/FileUtils.java
++++ b/src/main/java/org/codehaus/plexus/util/FileUtils.java
+@@ -1081,14 +1081,14 @@ public static void copyFile( final File source, final File destination )
+             return;
+         }
+         mkdirsFor( destination );
+-        if (Java7Detector.isJava7())
+-        {
+-            NioFiles.copy( source, destination );
+-        }
+-        else
+-        {
++        // if (Java7Detector.isJava7())
++        // {
++        //     NioFiles.copy( source, destination );
++        // }
++        // else
++        // {
+             doCopyFile( source, destination );
+-        }
++        // }
+ 
+         if ( source.length() != destination.length() )
+         {
+-- 
+2.1.0
+
