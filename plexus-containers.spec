@@ -1,9 +1,9 @@
 Name:           plexus-containers
 Version:        1.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
-URL:            http://plexus.codehaus.org/
+URL:            https://github.com/codehaus-plexus/plexus-containers
 BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
@@ -134,6 +134,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Wed Apr  1 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-3
+- Update upstream URL
+
 * Thu Feb  5 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-2
 - Add runtime dependenty on ASM5
 
