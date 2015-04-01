@@ -2,13 +2,13 @@
 
 Name:       plexus-compiler
 Version:    2.4
-Release:    1%{?dist}
+Release:    2%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
 # parts of compiler-api are ASL2.0/MIT
 License:    MIT and ASL 2.0
-URL:        http://plexus.codehaus.org/
+URL:        https://github.com/codehaus-plexus/plexus-compiler
 
 Source0:    https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
 Source1:    http://www.apache.org/licenses/LICENSE-2.0.txt
@@ -95,6 +95,9 @@ cp %{SOURCE2} LICENSE.MIT
 %doc LICENSE LICENSE.MIT
 
 %changelog
+* Wed Apr  1 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.4-2
+- Update upstream URL
+
 * Mon Oct 13 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.4-1
 - Update to upstream version 2.4
 
