@@ -3,7 +3,7 @@
 
 Name:           plexus-utils
 Version:        3.0.21
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
 # xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
@@ -14,7 +14,7 @@ Summary:        Plexus Common Utilities
 # Public domain: src/main/java/org/codehaus/plexus/util/TypeFormat.java
 # rest is ASL 2.0
 License:        ASL 1.1 and ASL 2.0 and xpp and BSD and Public Domain
-URL:            http://plexus.codehaus.org/
+URL:            https://github.com/codehaus-plexus/plexus-utils
 BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
@@ -79,6 +79,9 @@ cp %{SOURCE1} .
 %doc NOTICE.txt LICENSE-2.0.txt
 
 %changelog
+* Wed Apr  1 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0.21-3
+- Update upstream URL
+
 * Mon Mar 30 2015 Michael Simacek <msimacek@redhat.com> - 3.0.21-2
 - Don't use NioFiles.copy as it doesn't follow symlinks
 
