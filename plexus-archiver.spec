@@ -1,10 +1,10 @@
 Name:           plexus-archiver
 Version:        3.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
-URL:            http://plexus.codehaus.org/plexus-components/plexus-archiver/
+URL:            https://github.com/codehaus-plexus/plexus-archiver
 BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
@@ -49,6 +49,9 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Wed Apr  1 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.0-3
+- Update upstream URL
+
 * Thu Mar 26 2015 Michael Simacek <msimacek@redhat.com> - 0:3.0-2
 - Remove temporary bootstrap part
 
