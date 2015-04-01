@@ -1,9 +1,9 @@
 Name:           plexus-io
 Version:        2.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus IO Components
 License:        ASL 2.0
-URL:            https://github.com/sonatype/plexus-io
+URL:            https://github.com/codehaus-plexus/plexus-io
 BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/plexus-io/archive/plexus-io-%{version}.tar.gz
@@ -49,6 +49,9 @@ export XMVN_COMPILER_SOURCE="1.5"
 
 
 %changelog
+* Wed Apr  1 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.5-2
+- Update upstream URL
+
 * Tue Mar 24 2015 Michael Simacek <msimacek@redhat.com> - 2.5-1
 - Update to upstream version 2.5
 
