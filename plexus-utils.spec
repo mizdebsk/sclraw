@@ -1,9 +1,6 @@
-%global parent plexus
-%global subname utils
-
 Name:           plexus-utils
-Version:        3.0.21
-Release:        3%{?dist}
+Version:        3.0.22
+Release:        1%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
 # xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
@@ -17,12 +14,8 @@ License:        ASL 1.1 and ASL 2.0 and xpp and BSD and Public Domain
 URL:            https://github.com/codehaus-plexus/plexus-utils
 BuildArch:      noarch
 
-Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
+Source0:        https://github.com/codehaus-plexus/%{name}/archive/%{name}-%{version}.tar.gz
 Source1:        http://apache.org/licenses/LICENSE-2.0.txt
-
-# https://github.com/sonatype/plexus-utils/issues/18
-# patch not submitted as it's just a workaround
-Patch0:         0001-Don-t-use-NioFiles.copy.patch
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
@@ -45,8 +38,6 @@ Javadoc for %{name}.
 %setup -q -n %{name}-%{name}-%{version}
 
 cp %{SOURCE1} .
-
-%patch0 -p1
 
 %mvn_file : plexus/utils
 %mvn_alias : plexus:plexus-utils
@@ -79,6 +70,9 @@ cp %{SOURCE1} .
 %doc NOTICE.txt LICENSE-2.0.txt
 
 %changelog
+* Thu Apr 09 2015 Michael Simacek <msimacek@redhat.com> - 3.0.22-1
+- Update to upstream version 3.0.22
+
 * Wed Apr  1 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0.21-3
 - Update upstream URL
 
