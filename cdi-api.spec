@@ -3,30 +3,26 @@
 
 Name:             cdi-api
 Version:          1.1
-Release:          9%{?dist}
+Release:          10%{?dist}
 Summary:          CDI API
-Group:            Development/Libraries
 License:          ASL 2.0
 URL:              http://seamframework.org/Weld
 Source0:          https://github.com/cdi-spec/cdi/archive/%{version}.tar.gz
 
 BuildArch:        noarch
-
 BuildRequires:    maven-local
-BuildRequires:    maven-compiler-plugin
-BuildRequires:    maven-install-plugin
-BuildRequires:    maven-jar-plugin
-BuildRequires:    maven-javadoc-plugin
-BuildRequires:    maven-surefire-provider-testng
-BuildRequires:    maven-enforcer-plugin
-BuildRequires:    testng
-BuildRequires:    jboss-el-2.2-api
-BuildRequires:    jboss-interceptors-1.2-api
-BuildRequires:    jboss-ejb-3.1-api
-BuildRequires:    geronimo-annotation
-BuildRequires:    geronimo-parent-poms
-BuildRequires:    weld-parent
-BuildRequires:    maven-plugin-build-helper
+# geronimo-annotation
+BuildRequires:    mvn(javax.annotation:jsr250-api)
+BuildRequires:    mvn(javax.el:javax.el-api)
+BuildRequires:    mvn(javax.inject:javax.inject)
+BuildRequires:    mvn(org.apache.geronimo.specs:specs:pom:)
+BuildRequires:    mvn(org.apache.maven.plugins:maven-enforcer-plugin)
+BuildRequires:    mvn(org.apache.maven.surefire:surefire-testng)
+BuildRequires:    mvn(org.codehaus.mojo:build-helper-maven-plugin)
+BuildRequires:    mvn(org.jboss.spec.javax.interceptor:jboss-interceptors-api_1.2_spec)
+BuildRequires:    mvn(org.jboss.spec.javax.ejb:jboss-ejb-api_3.1_spec)
+BuildRequires:    mvn(org.jboss.weld:weld-parent:pom:)
+BuildRequires:    mvn(org.testng:testng::jdk15:)
 
 Provides:         javax.enterprise.inject
 
@@ -34,7 +30,7 @@ Provides:         javax.enterprise.inject
 APIs for JSR-299: Contexts and Dependency Injection for Java EE
 
 %package javadoc
-Summary:          Javadocs for %{name}
+Summary:          Javadoc for %{name}
 
 %description javadoc
 This package contains the API documentation for %{name}.
@@ -60,6 +56,8 @@ This package contains the API documentation for %{name}.
         </plugin>
       </plugins>
     </build>" api
+
+%pom_xpath_set "pom:dependency[pom:groupId = 'javax.el']/pom:artifactId" javax.el-api api
 
 cd api
 # J2EE API directory
@@ -87,6 +85,12 @@ build-jar-repository %{buildroot}%{_javadir}/javax.enterprise.inject/ \
 %files javadoc -f api/.mfiles-javadoc
 
 %changelog
+* Wed May 20 2015 gil cattaneo <puntogil@libero.it> 1.1-10
+- rebuilt for upgrade el apis gid:aid (rhbz#1223468)
+- adapt to current guideline
+- use mvn()-like BRs
+- fix rpmlint problem in changelog entries
+
 * Tue Mar 24 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.1-9
 - Fix interceptors symlink
 
@@ -140,7 +144,7 @@ build-jar-repository %{buildroot}%{_javadir}/javax.enterprise.inject/ \
 * Sun Mar 25 2012 Asaf Shakarchi <asaf@redhat.com> 1.0-3.SP4
 - Fixed changelog versions.
 
-* Wed Mar 16 2012 Asaf Shakarchi <asaf@redhat.com> 1.0-2.SP4
+* Fri Mar 16 2012 Asaf Shakarchi <asaf@redhat.com> 1.0-2.SP4
 - Added required dependencies, modified patches and cleaned spec.
 
 * Mon Feb 20 2012 Marek Goldmann <mgoldman@redhat.com> 1.0-1.SP4
