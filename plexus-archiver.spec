@@ -1,15 +1,16 @@
+%global commit dc873a4d3eb1ae1e55d661dff8ed85ec3d8eb936
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
 Name:           plexus-archiver
-Version:        3.0
-Release:        4%{?dist}
+Version:        3.0.1
+Release:        0.1.git%{shortcommit}%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
 URL:            https://github.com/codehaus-plexus/plexus-archiver
 BuildArch:      noarch
 
-Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
-
-Patch0:         0001-Added-overload-with-encoding.patch
+Source0:        https://github.com/codehaus-plexus/plexus-archiver/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 
 BuildRequires:  maven-local
 BuildRequires:  plexus-containers-container-default
@@ -35,8 +36,8 @@ Javadoc for %{name}.
 
 
 %prep
-%setup -q -n %{name}-%{name}-%{version}
-%patch0 -p1
+%setup -q -n %{name}-%{commit}
+%pom_remove_plugin :maven-shade-plugin
 %mvn_file :%{name} plexus/archiver
 
 %build
@@ -52,6 +53,9 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Tue Jun  9 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.0.1-0.1.gitdc873a4
+- Update to latest 3.0.1 upstream snapshot
+
 * Tue Jun  9 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.0-4
 - Backport overloaded Charset methods from 2.x
 
