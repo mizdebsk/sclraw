@@ -1,6 +1,6 @@
 Name:           plexus-archiver
 Version:        3.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
@@ -8,6 +8,8 @@ URL:            https://github.com/codehaus-plexus/plexus-archiver
 BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
+
+Patch0:         0001-Added-overload-with-encoding.patch
 
 BuildRequires:  maven-local
 BuildRequires:  plexus-containers-container-default
@@ -34,6 +36,7 @@ Javadoc for %{name}.
 
 %prep
 %setup -q -n %{name}-%{name}-%{version}
+%patch0 -p1
 %mvn_file :%{name} plexus/archiver
 
 %build
@@ -49,6 +52,9 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Tue Jun  9 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.0-4
+- Backport overloaded Charset methods from 2.x
+
 * Wed Apr  1 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.0-3
 - Update upstream URL
 
