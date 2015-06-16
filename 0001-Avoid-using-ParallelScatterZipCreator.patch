@@ -1,0 +1,444 @@
+From 985837ac90d01d7cb82ba66e2edcd54e1a138c9f Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@redhat.com>
+Date: Tue, 16 Jun 2015 11:00:41 +0100
+Subject: [PATCH] Avoid using ParallelScatterZipCreator
+
+---
+ .../codehaus/plexus/archiver/ear/EarArchiver.java  |   6 +-
+ .../codehaus/plexus/archiver/jar/JarArchiver.java  |  26 ++--
+ .../codehaus/plexus/archiver/war/WarArchiver.java  |   6 +-
+ .../plexus/archiver/zip/AbstractZipArchiver.java   | 137 ++++++++++++---------
+ 4 files changed, 97 insertions(+), 78 deletions(-)
+
+diff --git a/src/main/java/org/codehaus/plexus/archiver/ear/EarArchiver.java b/src/main/java/org/codehaus/plexus/archiver/ear/EarArchiver.java
+index 951f10c..4b49a46 100644
+--- a/src/main/java/org/codehaus/plexus/archiver/ear/EarArchiver.java
++++ b/src/main/java/org/codehaus/plexus/archiver/ear/EarArchiver.java
+@@ -17,7 +17,7 @@
+  *
+  */
+ 
+-import org.apache.commons.compress.archivers.zip.ParallelScatterZipCreator;
++import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+ import org.codehaus.plexus.archiver.ArchiveEntry;
+ import org.codehaus.plexus.archiver.ArchiverException;
+ import org.codehaus.plexus.archiver.jar.JarArchiver;
+@@ -79,7 +79,7 @@ public void addArchives( File directoryName, String[] includes, String[] exclude
+         addDirectory( directoryName, "/", includes, excludes );
+     }
+ 
+-    protected void initZipOutputStream( ParallelScatterZipCreator zOut )
++    protected void initZipOutputStream( ZipArchiveOutputStream zOut )
+         throws ArchiverException, IOException
+     {
+         // If no webxml file is specified, it's an error.
+@@ -94,7 +94,7 @@ protected void initZipOutputStream( ParallelScatterZipCreator zOut )
+     /**
+      * Overridden from ZipArchiver class to deal with application.xml
+      */
+-    protected void zipFile( ArchiveEntry entry, ParallelScatterZipCreator zOut, String vPath, int mode )
++    protected void zipFile( ArchiveEntry entry, ZipArchiveOutputStream zOut, String vPath, int mode )
+         throws IOException, ArchiverException
+     {
+         // If the file being added is META-INF/application.xml, we
+diff --git a/src/main/java/org/codehaus/plexus/archiver/jar/JarArchiver.java b/src/main/java/org/codehaus/plexus/archiver/jar/JarArchiver.java
+index 362dc0c..1dc3c9a 100644
+--- a/src/main/java/org/codehaus/plexus/archiver/jar/JarArchiver.java
++++ b/src/main/java/org/codehaus/plexus/archiver/jar/JarArchiver.java
+@@ -17,7 +17,6 @@
+  *  limitations under the License.
+  */
+ 
+-import org.apache.commons.compress.archivers.zip.ParallelScatterZipCreator;
+ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+ import org.codehaus.plexus.archiver.ArchiverException;
+@@ -286,7 +285,7 @@ public void addConfiguredIndexJars( File indexJar )
+         indexJars.add( indexJar.getAbsolutePath() );
+     }
+ 
+-    protected void initZipOutputStream( ParallelScatterZipCreator zOut )
++    protected void initZipOutputStream( ZipArchiveOutputStream zOut )
+         throws ArchiverException, IOException
+     {
+         if ( !skipWriting )
+@@ -336,7 +335,7 @@ private Manifest createManifest()
+         return finalManifest;
+     }
+ 
+-    private void writeManifest( ParallelScatterZipCreator zOut, Manifest manifest )
++    private void writeManifest( ZipArchiveOutputStream zOut, Manifest manifest )
+         throws IOException, ArchiverException
+     {
+         for ( Enumeration e = manifest.getWarnings(); e.hasMoreElements(); )
+@@ -354,7 +353,7 @@ private void writeManifest( ParallelScatterZipCreator zOut, Manifest manifest )
+         super.initZipOutputStream( zOut );
+     }
+ 
+-    protected void finalizeZipOutputStream( ParallelScatterZipCreator zOut )
++    protected void finalizeZipOutputStream( ZipArchiveOutputStream zOut )
+         throws IOException, ArchiverException
+     {
+         if ( index )
+@@ -375,7 +374,7 @@ protected void finalizeZipOutputStream( ParallelScatterZipCreator zOut )
+      * @throws org.codehaus.plexus.archiver.ArchiverException
+      *                     .
+      */
+-    private void createIndexList( ParallelScatterZipCreator zOut )
++    private void createIndexList( ZipArchiveOutputStream zOut )
+         throws IOException, ArchiverException
+     {
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+@@ -457,7 +456,7 @@ private void createIndexList( ParallelScatterZipCreator zOut )
+     /**
+      * Overridden from Zip class to deal with manifests and index lists.
+      */
+-    protected void zipFile( @WillClose InputStream is, ParallelScatterZipCreator zOut, String vPath, long lastModified, File fromArchive,
++    protected void zipFile( @WillClose InputStream is, ZipArchiveOutputStream zOut, String vPath, long lastModified, File fromArchive,
+                             int mode, String symlinkDestination )
+         throws IOException, ArchiverException
+     {
+@@ -539,20 +538,19 @@ protected boolean createEmptyZip( File zipFile )
+         try
+         {
+             getLogger().debug( "Building MANIFEST-only jar: " + getDestFile().getAbsolutePath() );
+-            zipArchiveOutputStream = new ZipArchiveOutputStream( bufferedOutputStream( fileOutputStream( getDestFile(), "jar" ) ));
++            zOut = new ZipArchiveOutputStream( bufferedOutputStream( fileOutputStream( getDestFile(), "jar" ) ));
+ 
+-            zipArchiveOutputStream.setEncoding(getEncoding());
++            zOut.setEncoding(getEncoding());
+             if ( isCompress() )
+             {
+-                zipArchiveOutputStream.setMethod(ZipArchiveOutputStream.DEFLATED);
++                zOut.setMethod(ZipArchiveOutputStream.DEFLATED);
+             }
+             else
+             {
+-                zipArchiveOutputStream.setMethod(ZipArchiveOutputStream.STORED);
++                zOut.setMethod(ZipArchiveOutputStream.STORED);
+             }
+-            ParallelScatterZipCreator ps = new ParallelScatterZipCreator();
+-            initZipOutputStream( ps );
+-            finalizeZipOutputStream( ps );
++            initZipOutputStream( zOut );
++            finalizeZipOutputStream( zOut );
+         }
+         catch ( IOException ioe )
+         {
+@@ -561,7 +559,7 @@ protected boolean createEmptyZip( File zipFile )
+         finally
+         {
+             // Close the output stream.
+-            //IOUtil.close( zOut );
++            IOUtil.close( zOut );
+             createEmpty = false;
+         }
+         return true;
+diff --git a/src/main/java/org/codehaus/plexus/archiver/war/WarArchiver.java b/src/main/java/org/codehaus/plexus/archiver/war/WarArchiver.java
+index 00c9ddd..527219f 100644
+--- a/src/main/java/org/codehaus/plexus/archiver/war/WarArchiver.java
++++ b/src/main/java/org/codehaus/plexus/archiver/war/WarArchiver.java
+@@ -17,7 +17,7 @@
+  *
+  */
+ 
+-import org.apache.commons.compress.archivers.zip.ParallelScatterZipCreator;
++import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+ import org.codehaus.plexus.archiver.ArchiveEntry;
+ import org.codehaus.plexus.archiver.ArchiverException;
+ import org.codehaus.plexus.archiver.jar.JarArchiver;
+@@ -154,7 +154,7 @@ public void addWebinf( File directoryName, String[] includes, String[] excludes
+      * before initializing the output stream.
+      * @param zOut
+      */
+-    protected void initZipOutputStream( ParallelScatterZipCreator zOut )
++    protected void initZipOutputStream( ZipArchiveOutputStream zOut )
+         throws ArchiverException, IOException
+     {
+         // If no webxml file is specified, it's an error.
+@@ -168,7 +168,7 @@ protected void initZipOutputStream( ParallelScatterZipCreator zOut )
+     /**
+      * Overridden from ZipArchiver class to deal with web.xml
+      */
+-    protected void zipFile( ArchiveEntry entry, ParallelScatterZipCreator zOut, String vPath )
++    protected void zipFile( ArchiveEntry entry, ZipArchiveOutputStream zOut, String vPath )
+         throws IOException, ArchiverException
+     {
+         // If the file being added is WEB-INF/web.xml, we warn if it's
+diff --git a/src/main/java/org/codehaus/plexus/archiver/zip/AbstractZipArchiver.java b/src/main/java/org/codehaus/plexus/archiver/zip/AbstractZipArchiver.java
+index 795b8dd..5c415b7 100755
+--- a/src/main/java/org/codehaus/plexus/archiver/zip/AbstractZipArchiver.java
++++ b/src/main/java/org/codehaus/plexus/archiver/zip/AbstractZipArchiver.java
+@@ -17,15 +17,12 @@
+  *  limitations under the License.
+  */
+ 
+-import org.apache.commons.compress.archivers.zip.ParallelScatterZipCreator;
+ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+ import org.apache.commons.compress.archivers.zip.ZipEncoding;
+ import org.apache.commons.compress.archivers.zip.ZipEncodingHelper;
+-import java.util.concurrent.ExecutionException;
+ import java.util.zip.CRC32;
+ 
+-import org.apache.commons.compress.parallel.InputStreamSupplier;
+ import org.codehaus.plexus.archiver.AbstractArchiver;
+ import org.codehaus.plexus.archiver.ArchiveEntry;
+ import org.codehaus.plexus.archiver.Archiver;
+@@ -130,9 +127,7 @@
+ 
+     private boolean success;
+ 
+-    private ParallelScatterZipCreator zOut;
+-
+-    protected ZipArchiveOutputStream zipArchiveOutputStream;
++    protected ZipArchiveOutputStream zOut;
+ 
+     public String getComment()
+     {
+@@ -225,7 +220,7 @@ protected void execute()
+         finalizeZipOutputStream( zOut );
+     }
+ 
+-    protected void finalizeZipOutputStream( ParallelScatterZipCreator zOut )
++    protected void finalizeZipOutputStream( ZipArchiveOutputStream zOut )
+         throws IOException, ArchiverException
+     {
+     }
+@@ -305,15 +300,13 @@ private void createArchiveMain()
+ 
+         if ( !skipWriting )
+         {
+-            zipArchiveOutputStream =
++        	zOut =
+                 new ZipArchiveOutputStream( bufferedOutputStream( fileOutputStream( zipFile, "zip" ) ) );
+-            zipArchiveOutputStream.setEncoding( encoding );
+-            zipArchiveOutputStream.setCreateUnicodeExtraFields(
++        	zOut.setEncoding( encoding );
++        	zOut.setCreateUnicodeExtraFields(
+                 ZipArchiveOutputStream.UnicodeExtraFieldPolicy.NOT_ENCODEABLE );
+-            zipArchiveOutputStream.setMethod(
++        	zOut.setMethod(
+                 doCompress ? ZipArchiveOutputStream.DEFLATED : ZipArchiveOutputStream.STORED );
+-
+-            zOut = new ParallelScatterZipCreator();
+         }
+         initZipOutputStream( zOut );
+ 
+@@ -339,7 +332,7 @@ private void createArchiveMain()
+      * @param zOut      the stream to write to
+      */
+     @SuppressWarnings( { "JavaDoc" } )
+-    protected final void addResources( ResourceIterator resources, ParallelScatterZipCreator zOut )
++    protected final void addResources( ResourceIterator resources, ZipArchiveOutputStream zOut )
+         throws IOException, ArchiverException
+     {
+         while ( resources.hasNext() )
+@@ -379,7 +372,7 @@ protected final void addResources( ResourceIterator resources, ParallelScatterZi
+      * be impossible and is not really supported.
+      */
+     @SuppressWarnings( { "JavaDoc" } )
+-    private void addParentDirs(ArchiveEntry archiveEntry, File baseDir, String entry, ParallelScatterZipCreator zOut)
++    private void addParentDirs(ArchiveEntry archiveEntry, File baseDir, String entry, ZipArchiveOutputStream zOut)
+         throws IOException
+     {
+         if ( !doFilesonly && getIncludeEmptyDirs() )
+@@ -417,7 +410,7 @@ private void addParentDirs(ArchiveEntry archiveEntry, File baseDir, String entry
+      * @param symlinkDestination
+      */
+     @SuppressWarnings( { "JavaDoc" } )
+-    protected void zipFile( @WillClose InputStream in, ParallelScatterZipCreator zOut, String vPath, long lastModified,
++    protected void zipFile( @WillClose InputStream in, ZipArchiveOutputStream zOut, String vPath, long lastModified,
+                             File fromArchive, int mode, String symlinkDestination )
+         throws IOException, ArchiverException
+     {
+@@ -445,16 +438,37 @@ protected void zipFile( @WillClose InputStream in, ParallelScatterZipCreator zOu
+             InputStream payload;
+             if ( ze.isUnixSymlink() )
+             {
++                zOut.putArchiveEntry( ze );
+                 ZipEncoding enc = ZipEncodingHelper.getZipEncoding( getEncoding() );
+                 final byte[] bytes = enc.encode( symlinkDestination ).array();
+-                payload = new ByteArrayInputStream( bytes );
+-            }
+-            else
+-            {
+-                payload = maybeSequence( header, read, in );
++                zOut.write( bytes, 0, bytes.length);
++            } else if (zOut.isSeekable() || compressThis) {
++                zOut.putArchiveEntry( ze );
++                if (read > 0) zOut.write(header, 0, read);
++                IOUtil.copy( in, zOut, 8 * 1024);
++            } else {
++                if (in.markSupported())
++                {
++                    in.mark( Integer.MAX_VALUE );
++                    readWithZipStats(in, header, read, ze, null);
++                    in.reset();
++                    zOut.putArchiveEntry( ze);
++                    if (read > 0) zOut.write(header, 0, read);
++                    IOUtil.copy(in, zOut, 8 * 1024);
++                }
++                else
++                {
++                    // Store data into a byte[]
++                    // todo: explain how on earth this code works with zip streams > 128KB ???
++                    ByteArrayOutputStream bos = new ByteArrayOutputStream(128 * 1024);
++                    readWithZipStats(in, header,read, ze, bos);
++                    zOut.putArchiveEntry(ze);
++                    if (read > 0) zOut.write(header, 0, read);
++                    bos.writeTo( zOut);
++                }
+             }
+-            zOut.addArchiveEntry( ze, createInputStreamSupplier( payload ) );
+ 
++            zOut.closeArchiveEntry();
+         }
+     }
+ 
+@@ -468,6 +482,33 @@ private boolean isZipHeader( byte[] header )
+         return header[0] == 0x50 && header[1] == 0x4b && header[2] == 3 && header[3] == 4;
+     }
+ 
++	private void readWithZipStats(InputStream in, byte[] header,
++			int headerRead, ZipArchiveEntry ze, ByteArrayOutputStream bos)
++			throws IOException {
++		byte[] buffer = new byte[8 * 1024];
++
++		CRC32 cal2 = new CRC32();
++
++		long size = 0;
++
++		for (int i = 0; i < headerRead; i++) {
++			cal2.update(header[i]);
++			size++;
++		}
++
++		int count = 0;
++		do {
++			size += count;
++			cal2.update(buffer, 0, count);
++			if (bos != null) {
++				bos.write(buffer, 0, count);
++			}
++			count = in.read(buffer, 0, buffer.length);
++		} while (count != -1);
++		ze.setSize(size);
++		ze.setCrc(cal2.getValue());
++	}
++
+     /**
+      * Method that gets called when adding from java.io.File instances.
+      * <p/>
+@@ -478,7 +519,7 @@ private boolean isZipHeader( byte[] header )
+      * @param vPath the name this entry shall have in the archive
+      */
+     @SuppressWarnings( { "JavaDoc" } )
+-    protected void zipFile( ArchiveEntry entry, ParallelScatterZipCreator zOut, String vPath )
++    protected void zipFile( ArchiveEntry entry, ZipArchiveOutputStream zOut, String vPath )
+         throws IOException, ArchiverException
+     {
+         final PlexusIoResource resource = entry.getResource();
+@@ -498,6 +539,10 @@ protected void zipFile( ArchiveEntry entry, ParallelScatterZipCreator zOut, Stri
+         {
+             throw new ArchiverException( "IOException when zipping r" + entry.getName() + ": " + e.getMessage(), e );
+         }
++        finally
++        {
++            IOUtil.close( in );
++        }
+     }
+ 
+     private void setTime( java.util.zip.ZipEntry zipEntry, long lastModified )
+@@ -518,7 +563,7 @@ private void setTime( java.util.zip.ZipEntry zipEntry, long lastModified )
+         */
+     }
+ 
+-    protected void zipDir( PlexusIoResource dir, ParallelScatterZipCreator zOut, String vPath, int mode,
++    protected void zipDir( PlexusIoResource dir, ZipArchiveOutputStream zOut, String vPath, int mode,
+                            String encodingToUse )
+         throws IOException
+     {
+@@ -571,30 +616,20 @@ protected void zipDir( PlexusIoResource dir, ParallelScatterZipCreator zOut, Str
+             }
+             ze.setUnixMode( mode );
+ 
+-            if ( !isSymlink )
+-            {
+-                zOut.addArchiveEntry( ze, createInputStreamSupplier( new ByteArrayInputStream( "".getBytes() ) ) );
+-            }
+-            else
++            zOut.putArchiveEntry( ze );
++
++            if ( isSymlink )
+             {
+                 String symlinkDestination = ( (SymlinkDestinationSupplier) dir ).getSymlinkDestination();
+                 ZipEncoding enc = ZipEncodingHelper.getZipEncoding( encodingToUse );
+                 final byte[] bytes = enc.encode( symlinkDestination ).array();
+                 ze.setMethod( ZipArchiveEntry.DEFLATED );
+-                zOut.addArchiveEntry( ze, createInputStreamSupplier( new ByteArrayInputStream( bytes ) ) );
+-            }
+-        }
+-    }
++                zOut.write( bytes, 0, bytes.length );
+ 
+-    private InputStreamSupplier createInputStreamSupplier( final InputStream inputStream )
+-    {
+-        return new InputStreamSupplier()
+-        {
+-            public InputStream get()
+-            {
+-                return inputStream;
+             }
+-        };
++
++            zOut.closeArchiveEntry();
++        }
+     }
+ 
+     /**
+@@ -685,7 +720,7 @@ public void reset()
+      *
+      * @param zOut The output stream
+      */
+-    protected void initZipOutputStream( ParallelScatterZipCreator zOut )
++    protected void initZipOutputStream( ZipArchiveOutputStream zOut )
+         throws ArchiverException, IOException
+     {
+     }
+@@ -731,10 +766,9 @@ protected void close()
+         // Close the output stream.
+         try
+         {
+-            if ( zipArchiveOutputStream != null )
++            if ( zOut != null )
+             {
+-                zOut.writeTo( zipArchiveOutputStream );
+-                zipArchiveOutputStream.close();
++                zOut.close();
+             }
+         }
+         catch ( IOException ex )
+@@ -752,19 +786,6 @@ protected void close()
+             {
+                 throw ex;
+             }
+-
+-        }
+-        catch ( InterruptedException e )
+-        {
+-            IOException ex = new IOException( "InterruptedException exception" );
+-            ex.initCause( e.getCause() );
+-            throw ex;
+-        }
+-        catch ( ExecutionException e )
+-        {
+-            IOException ex = new IOException( "Execution exception" );
+-            ex.initCause( e.getCause() );
+-            throw ex;
+         }
+     }
+ 
+-- 
+2.1.0
+

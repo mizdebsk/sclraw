@@ -3,7 +3,7 @@
 
 Name:           plexus-archiver
 Version:        3.0.1
-Release:        0.1.git%{shortcommit}%{?dist}
+Release:        0.2.git%{shortcommit}%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
@@ -11,6 +11,10 @@ URL:            https://github.com/codehaus-plexus/plexus-archiver
 BuildArch:      noarch
 
 Source0:        https://github.com/codehaus-plexus/plexus-archiver/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
+
+# This prevents "Too many open files" when building Eclipse documentation
+# bundles inside a slow VM/mock environment
+Patch0:         0001-Avoid-using-ParallelScatterZipCreator.patch
 
 BuildRequires:  maven-local
 BuildRequires:  plexus-containers-container-default
@@ -40,6 +44,8 @@ Javadoc for %{name}.
 %pom_remove_plugin :maven-shade-plugin
 %mvn_file :%{name} plexus/archiver
 
+%patch0 -p1
+
 %build
 %mvn_build -f
 
@@ -53,6 +59,9 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Tue Jun 16 2015 Mat Booth <mat.booth@redhat.com> - 0:3.0.1-0.2.gitdc873a4
+- Patch out use of ParallelScatterZipCreator
+
 * Tue Jun  9 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.0.1-0.1.gitdc873a4
 - Update to latest 3.0.1 upstream snapshot
 
