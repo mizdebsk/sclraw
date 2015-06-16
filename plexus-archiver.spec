@@ -14,6 +14,7 @@ Source0:        https://github.com/codehaus-plexus/plexus-archiver/archive/%{com
 
 # This prevents "Too many open files" when building Eclipse documentation
 # bundles inside a slow VM/mock environment
+# This problem is reported upstream: https://github.com/codehaus-plexus/plexus-archiver/issues/6
 Patch0:         0001-Avoid-using-ParallelScatterZipCreator.patch
 
 BuildRequires:  maven-local
