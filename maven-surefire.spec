@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.17
-Release:        6%{?dist}
+Release:        7%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -155,6 +155,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.17-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Tue Oct 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.17-6
 - Remove legacy Obsoletes/Provides for maven2 plugin
 
