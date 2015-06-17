@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.1
-Release:          10%{?dist}
+Release:          11%{?dist}
 Summary:          CDI API
 License:          ASL 2.0
 URL:              http://seamframework.org/Weld
@@ -85,6 +85,9 @@ build-jar-repository %{buildroot}%{_javadir}/javax.enterprise.inject/ \
 %files javadoc -f api/.mfiles-javadoc
 
 %changelog
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Wed May 20 2015 gil cattaneo <puntogil@libero.it> 1.1-10
 - rebuilt for upgrade el apis gid:aid (rhbz#1223468)
 - adapt to current guideline
