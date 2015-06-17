@@ -2,7 +2,7 @@
 
 Name:           %{short_name}-pom
 Version:        27
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -35,6 +35,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 27-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Thu Feb  5 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 27-2
 - Add missing BR on maven-site-plugin
 
