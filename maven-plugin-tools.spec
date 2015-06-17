@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 License:        ASL 2.0
@@ -257,6 +257,9 @@ API documentation for %{name}.
 
 
 %changelog
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:3.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Mon Mar 16 2015 Michael Simacek <msimacek@redhat.com> - 0:3.4-2
 - Prevent NPE when setting description element
 
