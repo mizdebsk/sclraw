@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        2.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus IO Components
 License:        ASL 2.0
 URL:            https://github.com/codehaus-plexus/plexus-io
@@ -48,6 +48,9 @@ cp %{SOURCE1} .
 
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Tue Jun  9 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.6-1
 - Update to upstream version 2.6
 
