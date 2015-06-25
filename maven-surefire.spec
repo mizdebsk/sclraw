@@ -1,6 +1,6 @@
 Name:           maven-surefire
-Version:        2.17
-Release:        7%{?dist}
+Version:        2.18.1
+Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -10,47 +10,37 @@ Source2:        http://junit.sourceforge.net/cpl-v10.html
 BuildArch:      noarch
 
 BuildRequires:  maven-local
+BuildRequires:  mvn(org.apache.maven:maven-artifact:2.2.1)
+BuildRequires:  mvn(org.apache.maven:maven-model:2.2.1)
+BuildRequires:  mvn(com.github.stephenc.jcip:jcip-annotations)
 BuildRequires:  mvn(com.google.code.findbugs:jsr305)
 BuildRequires:  mvn(commons-io:commons-io)
+BuildRequires:  mvn(junit:junit)
 BuildRequires:  mvn(org.apache.commons:commons-lang3)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-core)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-decoration-model)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-sink-api)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-site-renderer)
+BuildRequires:  mvn(org.apache.maven:maven-core)
+BuildRequires:  mvn(org.apache.maven:maven-parent:pom:)
+BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
+BuildRequires:  mvn(org.apache.maven:maven-plugin-descriptor)
+BuildRequires:  mvn(org.apache.maven:maven-project)
+BuildRequires:  mvn(org.apache.maven:maven-toolchain)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-failsafe-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-invoker-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-plugin-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-shade-plugin)
 BuildRequires:  mvn(org.apache.maven.plugin-tools:maven-plugin-annotations)
 BuildRequires:  mvn(org.apache.maven.reporting:maven-reporting-api)
 BuildRequires:  mvn(org.apache.maven.reporting:maven-reporting-impl)
 BuildRequires:  mvn(org.apache.maven.shared:maven-common-artifact-filters)
 BuildRequires:  mvn(org.apache.maven.shared:maven-shared-utils)
 BuildRequires:  mvn(org.apache.maven.shared:maven-verifier)
-BuildRequires:  mvn(org.apache.maven:maven-artifact)
-BuildRequires:  mvn(org.apache.maven:maven-core)
-BuildRequires:  mvn(org.apache.maven:maven-model)
-BuildRequires:  mvn(org.apache.maven:maven-parent:pom:)
-BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
-BuildRequires:  mvn(org.apache.maven:maven-plugin-descriptor)
-BuildRequires:  mvn(org.apache.maven:maven-project)
-BuildRequires:  mvn(org.apache.maven:maven-toolchain)
+BuildRequires:  mvn(org.codehaus.mojo:javacc-maven-plugin)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
-BuildRequires:  mvn(org.testng:testng)
-
-BuildRequires:  maven-invoker-plugin
-BuildRequires:  maven-plugin-annotations
-BuildRequires:  maven-plugin-plugin
-BuildRequires:  maven-resources-plugin
-BuildRequires:  maven-shade-plugin
-BuildRequires:  maven-shared-utils
-BuildRequires:  maven-shared-verifier
-BuildRequires:  maven-enforcer-plugin
-BuildRequires:  maven-failsafe-plugin
-BuildRequires:  maven-surefire-plugin >= 0:2.12-1
-BuildRequires:  maven-toolchain
-BuildRequires:  maven-project
-BuildRequires:  maven-shared-common-artifact-filters
-BuildRequires:  modello
-BuildRequires:  plexus-containers-component-api >= 1.0-0.a34
-BuildRequires:  maven-plugin-testing-harness
-BuildRequires:  javacc-maven-plugin
+BuildRequires:  mvn(org.testng:testng::jdk15:)
 
 %description
 Surefire is a test framework project.
@@ -116,17 +106,18 @@ Javadoc for %{name}.
 cp -p %{SOURCE2} .
 %pom_disable_module surefire-shadefire
 
-for module in maven-failsafe-plugin maven-surefire-common \
-        maven-surefire-plugin surefire-api surefire-booter \
-        surefire-grouper surefire-providers \
-        surefire-setup-integration-tests \
-        surefire-report-parser; do
-    %pom_remove_dep org.apache.maven.surefire:surefire-shadefire $module
-done
+%pom_remove_dep -r org.apache.maven.surefire:surefire-shadefire
 
 # Help plugin is needed only to evaluate effective Maven settings.
 # For building RPM package default settings will suffice.
 %pom_remove_plugin :maven-help-plugin surefire-setup-integration-tests
+
+# Not in Fedora
+%pom_remove_plugin :animal-sniffer-maven-plugin
+# Complains
+%pom_remove_plugin :apache-rat-plugin
+# We don't need site-source
+%pom_remove_plugin :maven-assembly-plugin maven-surefire-plugin
 
 %build
 %mvn_package ":*{surefire-plugin,report-plugin}*" @1
@@ -155,6 +146,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Thu Jun 25 2015 Michael Simacek <msimacek@redhat.com> - 0:2.18.1-1
+- Update to upstream version 2.18.1
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.17-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
