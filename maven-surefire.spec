@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.18.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -118,6 +118,7 @@ cp -p %{SOURCE2} .
 %pom_remove_plugin :apache-rat-plugin
 # We don't need site-source
 %pom_remove_plugin :maven-assembly-plugin maven-surefire-plugin
+%pom_remove_dep -r ::::site-source
 
 %build
 %mvn_package ":*{surefire-plugin,report-plugin}*" @1
@@ -146,6 +147,9 @@ cp -p %{SOURCE2} .
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Mon Jul 13 2015 Michael Simacek <msimacek@redhat.com> - 0:2.18.1-2
+- Fix FTBFS
+
 * Thu Jun 25 2015 Michael Simacek <msimacek@redhat.com> - 0:2.18.1-1
 - Update to upstream version 2.18.1
 
