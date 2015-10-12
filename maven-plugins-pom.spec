@@ -1,8 +1,8 @@
 %global short_name maven-plugins
 
 Name:           %{short_name}-pom
-Version:        27
-Release:        3%{?dist}
+Version:        28
+Release:        1%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -35,6 +35,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Mon Oct 12 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 28-1
+- Update to upstream version 28
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 27-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
