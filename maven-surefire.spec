@@ -1,5 +1,5 @@
 Name:           maven-surefire
-Version:        2.19
+Version:        2.19.1
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Test framework project
@@ -158,6 +158,9 @@ cp -p %{SOURCE2} .
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Mon Jan  4 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.19.1-1
+- Update to upstream version 2.19.1
+
 * Mon Oct 19 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.19-1
 - Update to upstream version 2.19
 
