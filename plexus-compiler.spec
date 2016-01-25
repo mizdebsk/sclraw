@@ -1,8 +1,8 @@
 %global parent  plexus
 
 Name:       plexus-compiler
-Version:    2.4
-Release:    3%{?dist}
+Version:    2.7
+Release:    1%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -10,7 +10,7 @@ Summary:    Compiler call initiators for Plexus
 License:    MIT and ASL 2.0
 URL:        https://github.com/codehaus-plexus/plexus-compiler
 
-Source0:    https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
+Source0:    https://github.com/codehaus-plexus/%{name}/archive/%{name}-%{version}.tar.gz
 Source1:    http://www.apache.org/licenses/LICENSE-2.0.txt
 Source2:    LICENSE.MIT
 
@@ -78,6 +78,8 @@ cp %{SOURCE2} LICENSE.MIT
 # don't generate requires on test dependency (see #1007498)
 %pom_xpath_remove "pom:dependency[pom:artifactId[text()='plexus-compiler-test']]" plexus-compilers
 
+%pom_remove_plugin :maven-site-plugin
+
 %build
 # Tests are skipped because of unavailable plexus-compiler-test artifact
 %mvn_build -f
@@ -95,6 +97,9 @@ cp %{SOURCE2} LICENSE.MIT
 %doc LICENSE LICENSE.MIT
 
 %changelog
+* Mon Jan 25 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.7-1
+- Update to upstream version 2.7
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:2.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
