@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
-Version:        3.3
-Release:        2%{?dist}
+Version:        3.5
+Release:        1%{?dist}
 Summary:        Maven Compiler Plugin
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-compiler-plugin
@@ -49,6 +49,9 @@ API documentation for %{name}.
 %license LICENSE NOTICE
 
 %changelog
+* Mon Jan 25 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.5-1
+- Update to upstream version 3.5
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
