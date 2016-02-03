@@ -3,7 +3,7 @@
 
 Name:             cdi-api
 Version:          1.1
-Release:          12%{?dist}
+Release:          13%{?dist}
 Summary:          CDI API
 License:          ASL 2.0
 URL:              http://seamframework.org/Weld
@@ -85,6 +85,9 @@ build-jar-repository %{buildroot}%{_javadir}/javax.enterprise.inject/ \
 %files javadoc -f api/.mfiles-javadoc
 
 %changelog
+* Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.1-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Wed Oct 28 2015 Mat Booth <mat.booth@redhat.com> - 1.1-12
 - Fix FTBFS due to enforcer plugin failure
 
