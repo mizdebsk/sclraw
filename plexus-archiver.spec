@@ -3,7 +3,7 @@
 
 Name:           plexus-archiver
 Version:        3.0.1
-Release:        0.2.git%{shortcommit}%{?dist}
+Release:        0.3.git%{shortcommit}%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
@@ -60,6 +60,9 @@ Javadoc for %{name}.
 %doc LICENSE
 
 %changelog
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0:3.0.1-0.3.gitdc873a4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Tue Jun 16 2015 Mat Booth <mat.booth@redhat.com> - 0:3.0.1-0.2.gitdc873a4
 - Patch out use of ParallelScatterZipCreator
 
