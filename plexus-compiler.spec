@@ -2,7 +2,7 @@
 
 Name:       plexus-compiler
 Version:    2.7
-Release:    1%{?dist}
+Release:    2%{?dist}
 Epoch:      0
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
@@ -97,6 +97,9 @@ cp %{SOURCE2} LICENSE.MIT
 %doc LICENSE LICENSE.MIT
 
 %changelog
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0:2.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Mon Jan 25 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.7-1
 - Update to upstream version 2.7
 
