@@ -1,6 +1,6 @@
 Name:           plexus-io
-Version:        2.6
-Release:        3%{?dist}
+Version:        2.7.1
+Release:        1%{?dist}
 Summary:        Plexus IO Components
 License:        ASL 2.0
 URL:            https://github.com/codehaus-plexus/plexus-io
@@ -9,12 +9,13 @@ BuildArch:      noarch
 Source0:        https://github.com/codehaus-plexus/plexus-io/archive/plexus-io-%{version}.tar.gz
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 
-BuildRequires:  plexus-utils
-BuildRequires:  plexus-containers-container-default
-BuildRequires:  plexus-components-pom
 BuildRequires:  maven-local
-BuildRequires:  maven-doxia-sitetools
+BuildRequires:  mvn(com.google.code.findbugs:jsr305)
+BuildRequires:  mvn(commons-io:commons-io)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
+BuildRequires:  mvn(org.codehaus.plexus:plexus:pom:)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 
 %description
 Plexus IO is a set of plexus components, which are designed for use
@@ -41,13 +42,16 @@ cp %{SOURCE1} .
 %mvn_install
 
 %files -f .mfiles
-%doc NOTICE.txt LICENSE-2.0.txt
+%license NOTICE.txt LICENSE-2.0.txt
 
 %files javadoc -f .mfiles-javadoc
-%doc NOTICE.txt LICENSE-2.0.txt
+%license NOTICE.txt LICENSE-2.0.txt
 
 
 %changelog
+* Wed Apr 20 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.7.1-1
+- Update to upstream version 2.7.1
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
