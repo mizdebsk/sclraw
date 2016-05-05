@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.19.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -10,7 +10,8 @@ BuildArch:      noarch
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/surefire/surefire/%{version}/surefire-%{version}-source-release.zip
 Source2:        http://junit.sourceforge.net/cpl-v10.html
 
-Patch0:         maven-surefire-maven3.patch
+Patch0:         0001-Maven-3.patch
+Patch1:         0002-Fix-test-with-doxia-1.7.patch
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(com.github.stephenc.jcip:jcip-annotations)
@@ -113,7 +114,9 @@ Javadoc for %{name}.
 %prep
 %setup -q -n surefire-%{version}
 cp -p %{SOURCE2} .
+
 %patch0 -p1
+%patch1 -p1
 
 %pom_disable_module surefire-shadefire
 
@@ -158,6 +161,9 @@ cp -p %{SOURCE2} .
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Thu May 05 2016 Michael Simacek <msimacek@redhat.com> - 0:2.19.1-3
+- Fix FTBFS after doxia 1.7 update
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0:2.19.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 

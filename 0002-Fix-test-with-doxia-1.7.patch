@@ -1,0 +1,51 @@
+From 2ba046249b2d31d91949aafba8561b8412c0434b Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Thu, 5 May 2016 11:19:09 +0200
+Subject: [PATCH 2/2] Fix test with doxia-1.7
+
+---
+ maven-surefire-report-plugin/pom.xml                             | 9 +++++++--
+ .../maven/plugins/surefire/report/SurefireReportGenerator.java   | 2 +-
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/maven-surefire-report-plugin/pom.xml b/maven-surefire-report-plugin/pom.xml
+index e7c48a7..880e211 100644
+--- a/maven-surefire-report-plugin/pom.xml
++++ b/maven-surefire-report-plugin/pom.xml
+@@ -86,12 +86,17 @@
+     <dependency>
+       <groupId>org.apache.maven.doxia</groupId>
+       <artifactId>doxia-sink-api</artifactId>
+-      <version>1.6</version>
++      <version>1.7</version>
+     </dependency>
+     <dependency>
+       <groupId>org.apache.maven.doxia</groupId>
+       <artifactId>doxia-site-renderer</artifactId>
+-      <version>1.6</version>
++      <version>1.7</version>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.maven.doxia</groupId>
++      <artifactId>doxia-core</artifactId>
++      <version>1.7</version>
+     </dependency>
+     <dependency> <!-- //todo Someone, somewhere is missing doxia own -pu dep -->
+       <groupId>org.codehaus.plexus</groupId>
+diff --git a/maven-surefire-report-plugin/src/main/java/org/apache/maven/plugins/surefire/report/SurefireReportGenerator.java b/maven-surefire-report-plugin/src/main/java/org/apache/maven/plugins/surefire/report/SurefireReportGenerator.java
+index a6e49cd..f62fd69 100644
+--- a/maven-surefire-report-plugin/src/main/java/org/apache/maven/plugins/surefire/report/SurefireReportGenerator.java
++++ b/maven-surefire-report-plugin/src/main/java/org/apache/maven/plugins/surefire/report/SurefireReportGenerator.java
+@@ -27,8 +27,8 @@ import java.util.Map;
+ import java.util.ResourceBundle;
+ import org.apache.maven.doxia.markup.HtmlMarkup;
+ import org.apache.maven.doxia.sink.Sink;
+-import org.apache.maven.doxia.sink.SinkEventAttributeSet;
+ import org.apache.maven.doxia.sink.SinkEventAttributes;
++import org.apache.maven.doxia.sink.impl.SinkEventAttributeSet;
+ import org.apache.maven.doxia.util.DoxiaUtils;
+ import org.apache.maven.reporting.MavenReportException;
+ 
+-- 
+2.5.5
+
