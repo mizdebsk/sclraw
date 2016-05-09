@@ -1,6 +1,6 @@
 Name:           plexus-utils
-Version:        3.0.22
-Release:        3%{?dist}
+Version:        3.0.24
+Release:        1%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
 # xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
@@ -70,6 +70,9 @@ cp %{SOURCE1} .
 %doc NOTICE.txt LICENSE-2.0.txt
 
 %changelog
+* Mon May  9 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0.24-1
+- Update to upstream version 3.0.24
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 3.0.22-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
