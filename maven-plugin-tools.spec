@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 License:        ASL 2.0
@@ -11,6 +11,7 @@ Source0:        http://repo2.maven.org/maven2/org/apache/maven/plugin-tools/%{na
 
 Patch0:         0001-Avoid-duplicate-MOJO-parameters.patch
 Patch1:         0002-Deal-with-nulls-from-getComment.patch
+Patch2:         0003-Port-to-plexus-utils-3.0.24.patch
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(com.sun:tools)
@@ -171,6 +172,7 @@ API documentation for %{name}.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 # For com.sun:tools use scope "compile" instead of "system"
 %pom_remove_dep com.sun:tools maven-plugin-tools-javadoc
@@ -257,6 +259,9 @@ API documentation for %{name}.
 
 
 %changelog
+* Thu May 12 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.4-5
+- Port to plexus-utils 3.0.24
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0:3.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 

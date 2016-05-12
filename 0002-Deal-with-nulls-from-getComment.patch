@@ -1,7 +1,7 @@
-From 9b30ecf988467f5310ef591f0a9f73ac989bb766 Mon Sep 17 00:00:00 2001
+From fddeb4bc426706363023ede3f635ea716990b980 Mon Sep 17 00:00:00 2001
 From: Michael Simacek <msimacek@redhat.com>
 Date: Mon, 16 Mar 2015 16:42:20 +0100
-Subject: [PATCH 2/2] Deal with nulls from getComment
+Subject: [PATCH 2/3] Deal with nulls from getComment
 
 ---
  .../annotations/JavaAnnotationsMojoDescriptorExtractor.java         | 6 +++---
@@ -62,5 +62,5 @@ index 7dbd0ef..1bc0158 100644
              DocletTag deprecationTag = field.getTagByName( JavadocMojoAnnotation.DEPRECATED );
  
 -- 
-2.1.0
+2.5.5
 
