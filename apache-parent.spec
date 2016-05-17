@@ -1,6 +1,6 @@
 Name:           apache-parent
-Version:        17
-Release:        3%{?dist}
+Version:        18
+Release:        1%{?dist}
 Summary:        Parent POM file for Apache projects
 License:        ASL 2.0
 URL:            http://apache.org/
@@ -32,6 +32,9 @@ This package contains the parent pom file for apache projects.
 %doc LICENSE NOTICE
 
 %changelog
+* Tue May 17 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 18-1
+- Update to upstream version 18
+
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 17-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
