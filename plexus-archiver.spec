@@ -1,24 +1,28 @@
 Name:           plexus-archiver
-Version:        3.1.1
+Version:        3.3
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
 License:        ASL 2.0
-URL:            https://github.com/codehaus-plexus/plexus-archiver
+URL:            http://codehaus-plexus.github.io/plexus-archiver
 BuildArch:      noarch
 
 Source0:        https://github.com/codehaus-plexus/plexus-archiver/archive/plexus-archiver-%{version}.tar.gz
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(com.google.code.findbugs:jsr305)
+BuildRequires:  mvn(commons-io:commons-io)
 BuildRequires:  mvn(org.apache.commons:commons-compress)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-component-metadata)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-io) >= 2.7
+BuildRequires:  mvn(org.codehaus.plexus:plexus-io)
 BuildRequires:  mvn(org.codehaus.plexus:plexus:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 BuildRequires:  mvn(org.iq80.snappy:snappy)
+
+# Missing from xmvn-builddep
+BuildRequires:  mvn(org.tukaani:xz)
 
 %description
 The Plexus project seeks to create end-to-end developer tools for
@@ -53,6 +57,9 @@ Javadoc for %{name}.
 %license LICENSE
 
 %changelog
+* Mon May 30 2016 Michael Simacek <msimacek@redhat.com> - 0:3.3-1
+- Update to upstream version 3.3
+
 * Tue Apr 19 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.1.1-1
 - Update to upstream version 3.1.1
 
