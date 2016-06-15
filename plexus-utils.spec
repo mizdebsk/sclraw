@@ -1,6 +1,6 @@
 Name:           plexus-utils
 Version:        3.0.24
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus Common Utilities
 # ASL 1.1: several files in src/main/java/org/codehaus/plexus/util/ 
 # xpp: src/main/java/org/codehaus/plexus/util/xml/pull directory
@@ -11,14 +11,16 @@ Summary:        Plexus Common Utilities
 # Public domain: src/main/java/org/codehaus/plexus/util/TypeFormat.java
 # rest is ASL 2.0
 License:        ASL 1.1 and ASL 2.0 and xpp and BSD and Public Domain
-URL:            https://github.com/codehaus-plexus/plexus-utils
+URL:            https://codehaus-plexus.github.io/plexus-utils/
 BuildArch:      noarch
 
 Source0:        https://github.com/codehaus-plexus/%{name}/archive/%{name}-%{version}.tar.gz
 Source1:        http://apache.org/licenses/LICENSE-2.0.txt
 
 BuildRequires:  maven-local
+BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
+BuildRequires:  mvn(org.codehaus.plexus:plexus:pom:)
 
 %description
 The Plexus project seeks to create end-to-end developer tools for
@@ -70,6 +72,10 @@ cp %{SOURCE1} .
 %doc NOTICE.txt LICENSE-2.0.txt
 
 %changelog
+* Wed Jun 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0.24-2
+- Add missing build-requires
+- Update upstream URL
+
 * Mon May  9 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.0.24-1
 - Update to upstream version 3.0.24
 
