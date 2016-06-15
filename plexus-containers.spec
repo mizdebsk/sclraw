@@ -1,6 +1,6 @@
 Name:           plexus-containers
 Version:        1.6
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            https://github.com/codehaus-plexus/plexus-containers
@@ -9,19 +9,25 @@ BuildArch:      noarch
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
 
 BuildRequires:  maven-local
-BuildRequires:  maven-invoker-plugin
-BuildRequires:  maven-resources-plugin
-BuildRequires:  maven-site-plugin
-BuildRequires:  maven-shared-invoker
-BuildRequires:  maven-release
-BuildRequires:  maven-plugin-plugin
-BuildRequires:  plexus-classworlds >= 2.5
-BuildRequires:  plexus-utils
-BuildRequires:  plexus-cli
-BuildRequires:  xbean >= 3.14
-BuildRequires:  guava
-BuildRequires:  objectweb-asm >= 5.0.2
-BuildRequires:  qdox >= 2.0
+BuildRequires:  mvn(com.google.collections:google-collections)
+BuildRequires:  mvn(commons-cli:commons-cli)
+BuildRequires:  mvn(com.sun:tools)
+BuildRequires:  mvn(com.thoughtworks.qdox:qdox)
+BuildRequires:  mvn(jdom:jdom)
+BuildRequires:  mvn(junit:junit)
+BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
+BuildRequires:  mvn(org.apache.maven:maven-core)
+BuildRequires:  mvn(org.apache.maven:maven-model)
+BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
+BuildRequires:  mvn(org.apache.maven:maven-project)
+BuildRequires:  mvn(org.apache.xbean:xbean-reflect)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-classworlds)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-cli)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-component-annotations)
+BuildRequires:  mvn(org.codehaus.plexus:plexus:pom:)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
+BuildRequires:  mvn(org.ow2.asm:asm-all)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-plugin-plugin)
 
 
 %description
@@ -60,7 +66,6 @@ Provides:       plexus-containers-component-api = %{version}-%{release}
 
 %package javadoc
 Summary:        API documentation for all plexus-containers packages
-Group:          Documentation
 Provides:       %{name}-component-annotations-javadoc = %{version}-%{release}
 Obsoletes:      %{name}-component-annotations-javadoc < %{version}-%{release}
 Provides:       %{name}-component-javadoc-javadoc = %{version}-%{release}
@@ -134,6 +139,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Wed Jun 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-6
+- Regenerate build-requires
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.6-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
