@@ -2,17 +2,19 @@
 
 Name:           %{short_name}-pom
 Version:        28
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Maven Plugins POM
-BuildArch:      noarch
-Group:          Development/Libraries
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/
+BuildArch:      noarch
+
 Source:         http://repo.maven.apache.org/maven2/org/apache/maven/plugins/%{short_name}/%{version}/%{short_name}-%{version}-source-release.zip
 
 BuildRequires:  maven-local
-BuildRequires:  maven-parent >= 25
-BuildRequires:  maven-site-plugin
+BuildRequires:  mvn(org.apache.maven:maven-parent:pom:)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-plugin-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-site-plugin)
+BuildRequires:  mvn(org.apache.maven.plugin-tools:maven-plugin-annotations)
 
 %description
 This package provides Maven Plugins parent POM used by different
@@ -35,6 +37,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Wed Jun 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 28-3
+- Regenerate build-requires
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 28-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
