@@ -1,6 +1,6 @@
 Name:           modello
 Version:        1.8.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 # The majority of files are under MIT license, but some of them are
@@ -17,20 +17,18 @@ BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-annotations)
 BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-core)
 BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-databind)
 BuildRequires:  mvn(junit:junit)
-BuildRequires:  mvn(org.apache.maven.plugin-tools:maven-plugin-annotations)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-dependency-plugin)
+BuildRequires:  mvn(org.apache.maven:maven-core)
 BuildRequires:  mvn(org.apache.maven:maven-model)
 BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
-BuildRequires:  mvn(org.apache.maven:maven-project)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-dependency-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-plugin-plugin)
+BuildRequires:  mvn(org.apache.maven.plugin-tools:maven-plugin-annotations)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-api)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-javac)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 BuildRequires:  mvn(org.sonatype.plexus:plexus-build-api)
 BuildRequires:  mvn(org.yaml:snakeyaml)
-
-Provides:       modello-maven-plugin = %{epoch}:%{version}-%{release}
-Obsoletes:      modello-maven-plugin < 0:1.0-0.a8.3jpp
 
 %description
 Modello is a Data Model toolkit in use by the Apache Maven Project.
@@ -74,6 +72,10 @@ sed -i s/maven-project/maven-core/ modello-maven-plugin/pom.xml
 %doc LICENSE
 
 %changelog
+* Wed Jun 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.3-4
+- Regenerate build-requires
+- Remove old obsoletes/provides
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0:1.8.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
