@@ -1,5 +1,5 @@
 Name:           plexus-archiver
-Version:        3.3
+Version:        3.4
 Release:        1%{?dist}
 Epoch:          0
 Summary:        Plexus Archiver Component
@@ -57,6 +57,9 @@ Javadoc for %{name}.
 %license LICENSE
 
 %changelog
+* Mon Jun 20 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.4-1
+- Update to upstream version 3.4
+
 * Mon May 30 2016 Michael Simacek <msimacek@redhat.com> - 0:3.3-1
 - Update to upstream version 3.3
 
