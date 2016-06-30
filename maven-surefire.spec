@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.19.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -134,6 +134,11 @@ cp -p %{SOURCE2} .
 %pom_remove_plugin :maven-assembly-plugin maven-surefire-plugin
 %pom_remove_dep -r ::::site-source
 
+%pom_xpath_set pom:mavenVersion 3.3.3
+%pom_remove_dep :maven-project maven-surefire-report-plugin
+%pom_remove_dep :maven-project maven-surefire-common
+%pom_remove_dep :maven-plugin-descriptor maven-surefire-common
+
 %build
 %mvn_package ":*{surefire-plugin,report-plugin}*" @1
 %mvn_package ":*{junit,testng,failsafe-plugin,report-parser}*"  @1
@@ -161,6 +166,9 @@ cp -p %{SOURCE2} .
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Thu Jun 30 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.19.1-4
+- Compile against Maven 3 APIs
+
 * Thu May 05 2016 Michael Simacek <msimacek@redhat.com> - 0:2.19.1-3
 - Fix FTBFS after doxia 1.7 update
 
