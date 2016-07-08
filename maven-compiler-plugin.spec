@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
 Version:        3.5.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Compiler Plugin
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-compiler-plugin
@@ -45,6 +45,9 @@ API documentation for %{name}.
 %license LICENSE NOTICE
 
 %changelog
+* Fri Jul  8 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.5.1-2
+- Remove unneeded build-requires
+
 * Tue Feb 16 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.5.1-1
 - Update to upstream version 3.5.1
 
