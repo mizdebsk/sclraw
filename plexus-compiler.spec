@@ -1,26 +1,22 @@
 %global parent  plexus
 
 Name:       plexus-compiler
-Version:    2.7
-Release:    2%{?dist}
 Epoch:      0
+Version:    2.7
+Release:    3%{?dist}
 Summary:    Compiler call initiators for Plexus
 # extras subpackage has a bit different licensing
 # parts of compiler-api are ASL2.0/MIT
 License:    MIT and ASL 2.0
 URL:        https://github.com/codehaus-plexus/plexus-compiler
+BuildArch:  noarch
 
 Source0:    https://github.com/codehaus-plexus/%{name}/archive/%{name}-%{version}.tar.gz
 Source1:    http://www.apache.org/licenses/LICENSE-2.0.txt
 Source2:    LICENSE.MIT
 
-BuildArch:      noarch
 BuildRequires:  maven-local
-BuildRequires:  mvn(junit:junit)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-gpg-plugin)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-api)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-compilers:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-component-metadata)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-components:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
@@ -97,6 +93,9 @@ cp %{SOURCE2} LICENSE.MIT
 %doc LICENSE LICENSE.MIT
 
 %changelog
+* Fri Jul  8 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.7-3
+- Remove unneeded build-requires
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0:2.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
