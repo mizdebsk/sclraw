@@ -1,6 +1,6 @@
 Name:           plexus-containers
 Version:        1.6
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            https://github.com/codehaus-plexus/plexus-containers
@@ -16,6 +16,7 @@ BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
 BuildRequires:  mvn(org.codehaus.plexus:plexus:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 BuildRequires:  mvn(org.ow2.asm:asm-all)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-plugin-plugin)
 
 
 %description
@@ -94,6 +95,9 @@ sed -i "s/new SourceComponentDescriptorExtractor(),//" plexus-component-metadata
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-8
+- Bump spec
+
 * Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-7
 - HACK HACK HACK Remove unneeded features
 
