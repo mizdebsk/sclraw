@@ -1,25 +1,25 @@
-From 6a2a63169b7b681decc03bfa36a3cbcd22b997b6 Mon Sep 17 00:00:00 2001
-From: Michael Simacek <msimacek@redhat.com>
-Date: Mon, 16 Mar 2015 14:29:21 +0100
-Subject: [PATCH 1/3] Avoid duplicate MOJO parameters
+From 883c04ab230c35aa7c020fae57d4e94ab1c4673a Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Fri, 15 Jul 2016 08:39:57 +0200
+Subject: [PATCH 5/5] Avoid duplicate MOJO parameters
 
 ---
  .../JavaAnnotationsMojoDescriptorExtractor.java    | 24 ++++++++++++++++++++--
  1 file changed, 22 insertions(+), 2 deletions(-)
 
 diff --git a/maven-plugin-tools-annotations/src/main/java/org/apache/maven/tools/plugin/extractor/annotations/JavaAnnotationsMojoDescriptorExtractor.java b/maven-plugin-tools-annotations/src/main/java/org/apache/maven/tools/plugin/extractor/annotations/JavaAnnotationsMojoDescriptorExtractor.java
-index a9c8ccf..7a7e70a 100644
+index fb29b8c..893e0a1 100644
 --- a/maven-plugin-tools-annotations/src/main/java/org/apache/maven/tools/plugin/extractor/annotations/JavaAnnotationsMojoDescriptorExtractor.java
 +++ b/maven-plugin-tools-annotations/src/main/java/org/apache/maven/tools/plugin/extractor/annotations/JavaAnnotationsMojoDescriptorExtractor.java
-@@ -29,6 +29,7 @@ import java.util.Collection;
+@@ -25,6 +25,7 @@ import java.util.Arrays;
+ import java.util.Collection;
  import java.util.Collections;
  import java.util.HashMap;
- import java.util.HashSet;
 +import java.util.Iterator;
  import java.util.List;
  import java.util.Map;
- import java.util.Set;
-@@ -573,7 +574,7 @@ public class JavaAnnotationsMojoDescriptorExtractor
+ import java.util.TreeSet;
+@@ -188,7 +189,7 @@ public class JavaAnnotationsMojoDescriptorExtractor
                  parameter.setSince( parameterAnnotationContent.getSince() );
                  parameter.setRequired( parameterAnnotationContent.required() );
  
@@ -28,7 +28,7 @@ index a9c8ccf..7a7e70a 100644
              }
  
              // Component annotations
-@@ -614,7 +615,7 @@ public class JavaAnnotationsMojoDescriptorExtractor
+@@ -229,7 +230,7 @@ public class JavaAnnotationsMojoDescriptorExtractor
                  //parameter.setRequired( ... );
                  parameter.setEditable( false );
  
@@ -37,7 +37,7 @@ index a9c8ccf..7a7e70a 100644
              }
  
              mojoDescriptor.setPluginDescriptor( pluginDescriptor );
-@@ -624,6 +625,25 @@ public class JavaAnnotationsMojoDescriptorExtractor
+@@ -239,6 +240,25 @@ public class JavaAnnotationsMojoDescriptorExtractor
          return mojoDescriptors;
      }
  
@@ -64,5 +64,5 @@ index a9c8ccf..7a7e70a 100644
                                                                   Map<String, MojoAnnotatedClass> mojoAnnotatedClasses )
      {
 -- 
-2.5.5
+2.7.4
 

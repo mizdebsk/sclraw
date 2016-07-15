@@ -1,0 +1,39 @@
+From 4a79b6c954d8c561721e7a3e8e90c619b0024e59 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Tue, 12 Jul 2016 15:14:50 +0200
+Subject: [PATCH 2/5] Remove plexus-velocity
+
+---
+ .../tools/plugin/generator/PluginDescriptorGenerator.java     | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginDescriptorGenerator.java b/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginDescriptorGenerator.java
+index 369194e..0b824cf 100644
+--- a/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginDescriptorGenerator.java
++++ b/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginDescriptorGenerator.java
+@@ -69,22 +69,11 @@ public class PluginDescriptorGenerator
+     public void execute( File destinationDirectory, PluginToolsRequest request )
+         throws GeneratorException
+     {
+-        // eventually rewrite help mojo class to match actual package name
+-        PluginHelpGenerator.rewriteHelpMojo( request, log );
+-
+         try
+         {
+             // write complete plugin.xml descriptor
+             File f = new File( destinationDirectory, "plugin.xml" );
+             writeDescriptor( f, request, false );
+-
+-            // write plugin-help.xml help-descriptor
+-            MavenProject mavenProject = request.getProject();
+-
+-            f = new File( mavenProject.getBuild().getOutputDirectory(),
+-                          PluginHelpGenerator.getPluginHelpPath( mavenProject ) );
+-
+-            writeDescriptor( f, request, true );
+         }
+         catch ( IOException e )
+         {
+-- 
+2.7.4
+

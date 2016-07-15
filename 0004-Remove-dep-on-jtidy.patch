@@ -1,0 +1,246 @@
+From 319f36d2d8aea6bff53af9835e58b7eee2a3aad4 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Wed, 13 Jul 2016 11:12:01 +0200
+Subject: [PATCH 4/5] Remove dep on jtidy
+
+---
+ .../tools/plugin/generator/GeneratorUtils.java     | 99 ----------------------
+ .../generator/PluginDescriptorGenerator.java       | 36 +++-----
+ 2 files changed, 11 insertions(+), 124 deletions(-)
+
+diff --git a/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/GeneratorUtils.java b/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/GeneratorUtils.java
+index 328ce31..d5b9675 100644
+--- a/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/GeneratorUtils.java
++++ b/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/GeneratorUtils.java
+@@ -50,7 +50,6 @@ import org.apache.maven.project.MavenProject;
+ import org.codehaus.plexus.component.repository.ComponentDependency;
+ import org.codehaus.plexus.util.StringUtils;
+ import org.codehaus.plexus.util.xml.XMLWriter;
+-import org.w3c.tidy.Tidy;
+ 
+ /**
+  * Convenience methods to play with Maven plugins.
+@@ -112,11 +111,6 @@ public final class GeneratorUtils
+         w.endElement();
+     }
+ 
+-    public static void element( XMLWriter w, String name, String value, boolean asText )
+-    {
+-        element( w, name, asText ? GeneratorUtils.toText( value ) : value );
+-    }
+-    
+     /**
+      * @param dependencies not null list of <code>Dependency</code>
+      * @return list of component dependencies
+@@ -255,99 +249,6 @@ public final class GeneratorUtils
+     }
+ 
+     /**
+-     * Fixes some javadoc comment to become a valid XHTML snippet.
+-     *
+-     * @param description Javadoc description with HTML tags, may be <code>null</code>.
+-     * @return The description with valid XHTML tags, never <code>null</code>.
+-     */
+-    public static String makeHtmlValid( String description )
+-    {
+-        if ( StringUtils.isEmpty( description ) )
+-        {
+-            return "";
+-        }
+-
+-        String commentCleaned = decodeJavadocTags( description );
+-
+-        // Using jTidy to clean comment
+-        Tidy tidy = new Tidy();
+-        tidy.setDocType( "loose" );
+-        tidy.setXHTML( true );
+-        tidy.setXmlOut( true );
+-        tidy.setInputEncoding( "UTF-8" );
+-        tidy.setOutputEncoding( "UTF-8" );
+-        tidy.setMakeClean( true );
+-        tidy.setNumEntities( true );
+-        tidy.setQuoteNbsp( false );
+-        tidy.setQuiet( true );
+-        tidy.setShowWarnings( false );
+-        try
+-        {
+-            ByteArrayOutputStream out = new ByteArrayOutputStream( commentCleaned.length() + 256 );
+-            tidy.parse( new ByteArrayInputStream( commentCleaned.getBytes( "UTF-8" ) ), out );
+-            commentCleaned = out.toString( "UTF-8" );
+-        }
+-        catch ( UnsupportedEncodingException e )
+-        {
+-            // cannot happen as every JVM must support UTF-8, see also class javadoc for java.nio.charset.Charset
+-        }
+-
+-        if ( StringUtils.isEmpty( commentCleaned ) )
+-        {
+-            return "";
+-        }
+-
+-        // strip the header/body stuff
+-        String ls = System.getProperty( "line.separator" );
+-        int startPos = commentCleaned.indexOf( "<body>" + ls ) + 6 + ls.length();
+-        int endPos = commentCleaned.indexOf( ls + "</body>" );
+-        commentCleaned = commentCleaned.substring( startPos, endPos );
+-
+-        return commentCleaned;
+-    }
+-
+-    /**
+-     * Converts a HTML fragment as extracted from a javadoc comment to a plain text string. This method tries to retain
+-     * as much of the text formatting as possible by means of the following transformations:
+-     * <ul>
+-     * <li>List items are converted to leading tabs (U+0009), followed by the item number/bullet, another tab and
+-     * finally the item contents. Each tab denotes an increase of indentation.</li>
+-     * <li>Flow breaking elements as well as literal line terminators in preformatted text are converted to a newline
+-     * (U+000A) to denote a mandatory line break.</li>
+-     * <li>Consecutive spaces and line terminators from character data outside of preformatted text will be normalized
+-     * to a single space. The resulting space denotes a possible point for line wrapping.</li>
+-     * <li>Each space in preformatted text will be converted to a non-breaking space (U+00A0).</li>
+-     * </ul>
+-     *
+-     * @param html The HTML fragment to convert to plain text, may be <code>null</code>.
+-     * @return A string with HTML tags converted into pure text, never <code>null</code>.
+-     * @since 2.4.3
+-     */
+-    public static String toText( String html )
+-    {
+-        if ( StringUtils.isEmpty( html ) )
+-        {
+-            return "";
+-        }
+-
+-        final StringBuilder sb = new StringBuilder();
+-
+-        HTMLEditorKit.Parser parser = new ParserDelegator();
+-        HTMLEditorKit.ParserCallback htmlCallback = new MojoParserCallback( sb );
+-
+-        try
+-        {
+-            parser.parse( new StringReader( makeHtmlValid( html ) ), htmlCallback, true );
+-        }
+-        catch ( IOException e )
+-        {
+-            throw new RuntimeException( e );
+-        }
+-
+-        return sb.toString().replace( '\"', '\'' ); // for CDATA
+-    }
+-
+-    /**
+      * ParserCallback implementation.
+      */
+     private static class MojoParserCallback
+diff --git a/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginDescriptorGenerator.java b/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginDescriptorGenerator.java
+index 0b824cf..b4a58d3 100644
+--- a/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginDescriptorGenerator.java
++++ b/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginDescriptorGenerator.java
+@@ -37,7 +37,6 @@ import org.apache.maven.plugin.descriptor.Parameter;
+ import org.apache.maven.plugin.descriptor.PluginDescriptor;
+ import org.apache.maven.plugin.descriptor.Requirement;
+ import org.apache.maven.plugin.logging.Log;
+-import org.apache.maven.project.MavenProject;
+ import org.apache.maven.tools.plugin.ExtendedMojoDescriptor;
+ import org.apache.maven.tools.plugin.PluginToolsRequest;
+ import org.apache.maven.tools.plugin.util.PluginUtils;
+@@ -73,7 +72,7 @@ public class PluginDescriptorGenerator
+         {
+             // write complete plugin.xml descriptor
+             File f = new File( destinationDirectory, "plugin.xml" );
+-            writeDescriptor( f, request, false );
++            writeDescriptor( f, request );
+         }
+         catch ( IOException e )
+         {
+@@ -92,7 +91,7 @@ public class PluginDescriptorGenerator
+         return ( version == null ) ? "SNAPSHOT" : version;
+     }
+ 
+-    public void writeDescriptor( File destinationFile, PluginToolsRequest request, boolean helpDescriptor )
++    public void writeDescriptor( File destinationFile, PluginToolsRequest request )
+         throws IOException, DuplicateMojoDescriptorException
+     {
+         PluginDescriptor pluginDescriptor = request.getPluginDescriptor();
+@@ -125,7 +124,7 @@ public class PluginDescriptorGenerator
+ 
+             GeneratorUtils.element( w, "name", pluginDescriptor.getName() );
+ 
+-            GeneratorUtils.element( w, "description", pluginDescriptor.getDescription(), helpDescriptor );
++            GeneratorUtils.element( w, "description", pluginDescriptor.getDescription() );
+ 
+             GeneratorUtils.element( w, "groupId", pluginDescriptor.getGroupId() );
+ 
+@@ -135,13 +134,10 @@ public class PluginDescriptorGenerator
+ 
+             GeneratorUtils.element( w, "goalPrefix", pluginDescriptor.getGoalPrefix() );
+ 
+-            if ( !helpDescriptor )
+-            {
+-                GeneratorUtils.element( w, "isolatedRealm", String.valueOf( pluginDescriptor.isIsolatedRealm() ) );
++            GeneratorUtils.element( w, "isolatedRealm", String.valueOf( pluginDescriptor.isIsolatedRealm() ) );
+ 
+-                GeneratorUtils.element( w, "inheritedByDefault",
+-                                        String.valueOf( pluginDescriptor.isInheritedByDefault() ) );
+-            }
++            GeneratorUtils.element( w, "inheritedByDefault",
++                                    String.valueOf( pluginDescriptor.isInheritedByDefault() ) );
+ 
+             w.startElement( "mojos" );
+ 
+@@ -153,16 +149,13 @@ public class PluginDescriptorGenerator
+ 
+                 for ( MojoDescriptor descriptor : descriptors )
+                 {
+-                    processMojoDescriptor( descriptor, w, helpDescriptor );
++                    processMojoDescriptor( descriptor, w );
+                 }
+             }
+ 
+             w.endElement();
+ 
+-            if ( !helpDescriptor )
+-            {
+-                GeneratorUtils.writeDependencies( w, pluginDescriptor );
+-            }
++            GeneratorUtils.writeDependencies( w, pluginDescriptor );
+ 
+             w.endElement();
+ 
+@@ -206,14 +199,7 @@ public class PluginDescriptorGenerator
+         if ( StringUtils.isNotEmpty( description ) )
+         {
+             w.startElement( "description" );
+-            if ( helpDescriptor )
+-            {
+-                w.writeText( GeneratorUtils.toText( mojoDescriptor.getDescription() ) );
+-            }
+-            else
+-            {
+-                w.writeText( mojoDescriptor.getDescription() );
+-            }
++            w.writeText( mojoDescriptor.getDescription() );
+             w.endElement();
+         }
+ 
+@@ -406,7 +392,7 @@ public class PluginDescriptorGenerator
+         // Parameters
+         // ----------------------------------------------------------------------
+ 
+-        @SuppressWarnings( "unchecked" ) List<Parameter> parameters = mojoDescriptor.getParameters();
++        List<Parameter> parameters = mojoDescriptor.getParameters();
+ 
+         w.startElement( "parameters" );
+ 
+@@ -501,7 +487,7 @@ public class PluginDescriptorGenerator
+ 
+                     GeneratorUtils.element( w, "editable", Boolean.toString( parameter.isEditable() ) );
+ 
+-                    GeneratorUtils.element( w, "description", parameter.getDescription(), helpDescriptor );
++                    GeneratorUtils.element( w, "description", parameter.getDescription() );
+ 
+                     if ( StringUtils.isNotEmpty( parameter.getDefaultValue() ) || StringUtils.isNotEmpty(
+                         parameter.getExpression() ) )
+-- 
+2.7.4
+

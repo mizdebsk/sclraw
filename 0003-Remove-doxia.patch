@@ -1,0 +1,91 @@
+From 062b6b70dcfe9a0d1dfa5a31f154d36a00beaf76 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Tue, 12 Jul 2016 15:18:51 +0200
+Subject: [PATCH 3/5] Remove doxia
+
+---
+ .../tools/plugin/generator/GeneratorUtils.java     | 63 ----------------------
+ 1 file changed, 63 deletions(-)
+
+diff --git a/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/GeneratorUtils.java b/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/GeneratorUtils.java
+index b36bc2c..328ce31 100644
+--- a/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/GeneratorUtils.java
++++ b/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/GeneratorUtils.java
+@@ -47,7 +47,6 @@ import org.apache.maven.model.Dependency;
+ import org.apache.maven.plugin.descriptor.MojoDescriptor;
+ import org.apache.maven.plugin.descriptor.PluginDescriptor;
+ import org.apache.maven.project.MavenProject;
+-import org.apache.maven.reporting.MavenReport;
+ import org.codehaus.plexus.component.repository.ComponentDependency;
+ import org.codehaus.plexus.util.StringUtils;
+ import org.codehaus.plexus.util.xml.XMLWriter;
+@@ -645,66 +644,4 @@ public final class GeneratorUtils
+ 
+         return packageName;
+     }
+-
+-    /**
+-     * @param impl a Mojo implementation, not null
+-     * @param project a MavenProject instance, could be null
+-     * @return <code>true</code> is the Mojo implementation implements <code>MavenReport</code>,
+-     * <code>false</code> otherwise.
+-     * @throws IllegalArgumentException if any
+-     */
+-    @SuppressWarnings( "unchecked" )
+-    public static boolean isMavenReport( String impl, MavenProject project )
+-        throws IllegalArgumentException
+-    {
+-        if ( impl == null )
+-        {
+-            throw new IllegalArgumentException( "mojo implementation should be declared" );
+-        }
+-
+-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+-        if ( project != null )
+-        {
+-            List<String> classPathStrings;
+-            try
+-            {
+-                classPathStrings = project.getCompileClasspathElements();
+-                if ( project.getExecutionProject() != null )
+-                {
+-                    classPathStrings.addAll( project.getExecutionProject().getCompileClasspathElements() );
+-                }
+-            }
+-            catch ( DependencyResolutionRequiredException e )
+-            {
+-                throw new IllegalArgumentException( e );
+-            }
+-
+-            List<URL> urls = new ArrayList<URL>( classPathStrings.size() );
+-            for ( String classPathString : classPathStrings )
+-            {
+-                try
+-                {
+-                    urls.add( new File( classPathString ).toURL() );
+-                }
+-                catch ( MalformedURLException e )
+-                {
+-                    throw new IllegalArgumentException( e );
+-                }
+-            }
+-
+-            classLoader = new URLClassLoader( urls.toArray( new URL[urls.size()] ), classLoader );
+-        }
+-
+-        try
+-        {
+-            Class<?> clazz = Class.forName( impl, false, classLoader );
+-
+-            return MavenReport.class.isAssignableFrom( clazz );
+-        }
+-        catch ( ClassNotFoundException e )
+-        {
+-            return false;
+-        }
+-    }
+-
+ }
+-- 
+2.7.4
+
