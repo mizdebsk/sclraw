@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        18
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Parent POM file for Apache projects
 License:        ASL 2.0
 URL:            http://apache.org/
@@ -8,11 +8,6 @@ Source0:        http://repo1.maven.org/maven2/org/apache/apache/%{version}/apach
 BuildArch:      noarch
 
 BuildRequires:  maven-local
-BuildRequires:  jpackage-utils
-BuildRequires:  apache-resource-bundles
-BuildRequires:  maven-remote-resources-plugin
-
-Requires:       apache-resource-bundles
 
 %description
 This package contains the parent pom file for apache projects.
@@ -20,7 +15,8 @@ This package contains the parent pom file for apache projects.
 %prep
 %setup -n apache-%{version}
 
-%pom_remove_plugin :maven-site-plugin pom.xml
+%pom_remove_plugin :maven-site-plugin
+%pom_remove_plugin :maven-remote-resources-plugin
 
 %build
 %mvn_build
@@ -32,6 +28,9 @@ This package contains the parent pom file for apache projects.
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 18-2
+- Remove uneeded plugin
+
 * Tue May 17 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 18-1
 - Update to upstream version 18
 
