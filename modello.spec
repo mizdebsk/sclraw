@@ -1,6 +1,6 @@
 Name:           modello
 Version:        1.8.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 # The majority of files are under MIT license, but some of them are
@@ -17,12 +17,10 @@ BuildRequires:  mvn(junit:junit)
 BuildRequires:  mvn(org.apache.maven:maven-core)
 BuildRequires:  mvn(org.apache.maven:maven-model)
 BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-dependency-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-plugin-plugin)
 BuildRequires:  mvn(org.apache.maven.plugin-tools:maven-plugin-annotations)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-api)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-javac)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 BuildRequires:  mvn(org.sonatype.plexus:plexus-build-api)
 
@@ -48,6 +46,11 @@ API documentation for %{name}.
 cp -p %{SOURCE1} LICENSE
 # We don't generate site; don't pull extra dependencies.
 %pom_remove_plugin :maven-site-plugin
+
+%pom_remove_plugin -r :maven-dependency-plugin
+%pom_remove_plugin -r :maven-plugin-plugin
+%pom_change_dep -r :plexus-container-default org.eclipse.sisu:org.eclipse.sisu.plexus
+
 # Avoid using Maven 2.x APIs
 sed -i s/maven-project/maven-core/ modello-maven-plugin/pom.xml
 
@@ -74,6 +77,9 @@ done
 %doc LICENSE
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.3-6
+- Fix build
+
 * Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.3-5
 - Remove uneeded modules
 
