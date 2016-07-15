@@ -1,6 +1,6 @@
 Name:           plexus-containers
 Version:        1.6
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            https://github.com/codehaus-plexus/plexus-containers
@@ -9,25 +9,13 @@ BuildArch:      noarch
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
 
 BuildRequires:  maven-local
-BuildRequires:  mvn(com.google.collections:google-collections)
-BuildRequires:  mvn(commons-cli:commons-cli)
-BuildRequires:  mvn(com.sun:tools)
-BuildRequires:  mvn(com.thoughtworks.qdox:qdox)
 BuildRequires:  mvn(jdom:jdom)
-BuildRequires:  mvn(junit:junit)
-BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
 BuildRequires:  mvn(org.apache.maven:maven-core)
 BuildRequires:  mvn(org.apache.maven:maven-model)
 BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
-BuildRequires:  mvn(org.apache.maven:maven-project)
-BuildRequires:  mvn(org.apache.xbean:xbean-reflect)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-classworlds)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-cli)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-component-annotations)
 BuildRequires:  mvn(org.codehaus.plexus:plexus:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 BuildRequires:  mvn(org.ow2.asm:asm-all)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-plugin-plugin)
 
 
 %description
@@ -44,24 +32,10 @@ Summary:        Component metadata from %{name}
 %description component-metadata
 %{summary}.
 
-%package component-javadoc
-Summary:        Javadoc component from %{name}
-
-%description component-javadoc
-%{summary}.
-
 %package component-annotations
 Summary:        Component API from %{name}
 
 %description component-annotations
-%{summary}.
-
-%package container-default
-Summary:        Default Container from %{name}
-Obsoletes:      plexus-container-default < 1.0-1
-Provides:       plexus-containers-component-api = %{version}-%{release}
-
-%description container-default
 %{summary}.
 
 %package javadoc
@@ -81,40 +55,23 @@ Obsoletes:      %{name}-container-default-javadoc < %{version}-%{release}
 %prep
 %setup -q -n %{name}-%{name}-%{version}
 
+%pom_disable_module plexus-component-javadoc
+%pom_disable_module plexus-container-default
+
 # For Maven 3 compat
-%pom_add_dep org.apache.maven:maven-core plexus-component-metadata
+sed s/2.0.9/3.3.9/ pom.xml
+%pom_change_dep :maven-project :maven-core plexus-component-metadata
 
-# ASM dependency was changed to "provided" in XBean 4.x, so we need to provide ASM
-%pom_add_dep org.ow2.asm:asm:5.0.3:runtime plexus-container-default
-%pom_add_dep org.ow2.asm:asm-commons:5.0.3:runtime plexus-container-default
+%pom_remove_dep :commons-cli plexus-component-metadata
+%pom_remove_dep :plexus-cli plexus-component-metadata
+rm -f plexus-component-metadata/src/main/java/org/codehaus/plexus/metadata/PlexusMetadataGeneratorCli.java
 
-%pom_remove_dep com.sun:tools plexus-component-javadoc
-%pom_add_dep com.sun:tools plexus-component-javadoc
+%pom_remove_dep :qdox plexus-component-metadata
+rm -f plexus-component-metadata/src/main/java/org/codehaus/plexus/metadata/SourceComponentDescriptorExtractor.java
+rm -f plexus-component-metadata/src/main/java/org/codehaus/plexus/metadata/gleaner/QDoxComponentGleaner.java
+rm -f plexus-component-metadata/src/main/java/org/codehaus/plexus/metadata/gleaner/SourceComponentGleaner.java
 
-# Generate OSGI info
-%pom_xpath_inject "pom:project" "
-    <packaging>bundle</packaging>
-    <build>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>maven-bundle-plugin</artifactId>
-          <extensions>true</extensions>
-          <configuration>
-            <instructions>
-              <_nouses>true</_nouses>
-              <Export-Package>org.codehaus.plexus.component.annotations.*</Export-Package>
-            </instructions>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>" plexus-component-annotations
-
-# to prevent ant from failing
-mkdir -p plexus-component-annotations/src/test/java
-
-# integration tests fix
-sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|" plexus-component-javadoc/src/it/basic/pom.xml
+sed -i "s/new SourceComponentDescriptorExtractor(),//" plexus-component-metadata/src/main/java/org/codehaus/plexus/metadata/DefaultMetadataGenerator.java
 
 # plexus-component-api has been merged into plexus-container-default
 %mvn_alias ":plexus-container-default" "org.codehaus.plexus:containers-component-api"
@@ -132,13 +89,14 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 # plexus-containers pom goes into main package
 %files -f .mfiles-plexus-containers
 %files component-annotations -f .mfiles-plexus-component-annotations
-%files container-default -f .mfiles-plexus-container-default
 %files component-metadata -f .mfiles-plexus-component-metadata
-%files component-javadoc -f .mfiles-plexus-component-javadoc
 
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-7
+- HACK HACK HACK Remove unneeded features
+
 * Wed Jun 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-6
 - Regenerate build-requires
 
