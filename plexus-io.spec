@@ -1,6 +1,6 @@
 Name:           plexus-io
 Version:        2.7.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plexus IO Components
 License:        ASL 2.0
 URL:            https://github.com/codehaus-plexus/plexus-io
@@ -12,8 +12,6 @@ Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 BuildRequires:  maven-local
 BuildRequires:  mvn(com.google.code.findbugs:jsr305)
 BuildRequires:  mvn(commons-io:commons-io)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
-BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
 BuildRequires:  mvn(org.codehaus.plexus:plexus:pom:)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 
@@ -33,10 +31,12 @@ API documentation for %{name}.
 cp %{SOURCE1} .
 
 %pom_remove_plugin :animal-sniffer-maven-plugin
+%pom_remove_plugin :maven-enforcer-plugin
+%pom_change_dep :plexus-container-default org.eclipse.sisu:org.eclipse.sisu.plexus
 
 %build
 %mvn_file  : plexus/io
-%mvn_build
+%mvn_build -f
 
 %install
 %mvn_install
@@ -49,6 +49,9 @@ cp %{SOURCE1} .
 
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.7.1-2
+- Fix build
+
 * Wed Apr 20 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.7.1-1
 - Update to upstream version 2.7.1
 
