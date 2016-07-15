@@ -1,6 +1,6 @@
 Name:           maven-compiler-plugin
 Version:        3.5.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Maven Compiler Plugin
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-compiler-plugin
@@ -12,7 +12,6 @@ BuildRequires:  maven-local
 BuildRequires:  mvn(org.apache.maven:maven-artifact)
 BuildRequires:  mvn(org.apache.maven:maven-core)
 BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
-BuildRequires:  mvn(org.apache.maven:maven-toolchain)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-plugins:pom:)
 BuildRequires:  mvn(org.apache.maven.plugin-tools:maven-plugin-annotations)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-plugin-plugin)
@@ -31,7 +30,8 @@ Summary:        Javadoc for %{name}
 API documentation for %{name}.
 
 %prep
-%setup -q 
+%setup -q
+%pom_remove_dep :maven-toolchain
 
 %build
 %mvn_build -f
@@ -46,6 +46,9 @@ API documentation for %{name}.
 %license LICENSE NOTICE
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.5.1-4
+- Remove dependency on Maven 2 toolchain
+
 * Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.5.1-3
 - Add missing BR on maven-plugin-plugin
 
