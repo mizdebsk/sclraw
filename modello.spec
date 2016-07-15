@@ -1,6 +1,6 @@
 Name:           modello
 Version:        1.8.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 # The majority of files are under MIT license, but some of them are
@@ -13,9 +13,6 @@ Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
 BuildArch:      noarch
 
 BuildRequires:  maven-local
-BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-annotations)
-BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-core)
-BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-databind)
 BuildRequires:  mvn(junit:junit)
 BuildRequires:  mvn(org.apache.maven:maven-core)
 BuildRequires:  mvn(org.apache.maven:maven-model)
@@ -28,7 +25,7 @@ BuildRequires:  mvn(org.codehaus.plexus:plexus-compiler-javac)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
 BuildRequires:  mvn(org.sonatype.plexus:plexus-build-api)
-BuildRequires:  mvn(org.yaml:snakeyaml)
+
 
 %description
 Modello is a Data Model toolkit in use by the Apache Maven Project.
@@ -54,6 +51,11 @@ cp -p %{SOURCE1} LICENSE
 # Avoid using Maven 2.x APIs
 sed -i s/maven-project/maven-core/ modello-maven-plugin/pom.xml
 
+for p in jackson jsonschema snakeyaml; do
+    %pom_disable_module modello-plugin-$p modello-plugins
+    %pom_remove_dep :modello-plugin-$p modello-maven-plugin
+done
+
 %build
 # skip tests because we have too old xmlunit in Fedora now (1.0.8)
 %mvn_build -f -- -Dmaven.version=3.1.1
@@ -72,6 +74,9 @@ sed -i s/maven-project/maven-core/ modello-maven-plugin/pom.xml
 %doc LICENSE
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.3-5
+- Remove uneeded modules
+
 * Wed Jun 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.8.3-4
 - Regenerate build-requires
 - Remove old obsoletes/provides
