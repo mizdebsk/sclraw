@@ -1,6 +1,6 @@
 Name:           maven-plugin-tools
 Version:        3.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Epoch:          0
 Summary:        Maven Plugin Tools
 License:        ASL 2.0
@@ -22,8 +22,6 @@ BuildRequires:  mvn(org.apache.maven:maven-core)
 BuildRequires:  mvn(org.apache.maven:maven-model)
 BuildRequires:  mvn(org.apache.maven:maven-parent:pom:)
 BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-enforcer-plugin)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
 BuildRequires:  mvn(org.codehaus.modello:modello-maven-plugin)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-component-annotations)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-component-metadata)
@@ -95,12 +93,16 @@ API documentation for %{name}.
 %patch0005 -p1
 
 %pom_remove_plugin :maven-plugin-plugin maven-plugin-plugin
+%pom_remove_plugin :maven-enforcer-plugin maven-plugin-plugin
+%pom_remove_plugin :maven-source-plugin maven-plugin-tools-annotations
 
 # Modules we don't need
 rm -rf maven-script maven-plugin-tools-java maven-plugin-tools-javadoc
 %pom_disable_module maven-script
 %pom_disable_module maven-plugin-tools-java
 %pom_disable_module maven-plugin-tools-javadoc
+
+%pom_remove_dep :maven-plugin-tools-java maven-plugin-plugin
 
 # These require doxia
 rm -f maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginXdocGenerator.java
@@ -166,6 +168,9 @@ rm -f maven-plugin-plugin/src/main/java/org/apache/maven/plugin/plugin/UpdatePlu
 
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.4-7
+- Remove uneeded plugins
+
 * Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:3.4-6
 - HACK HACK HACK Disable unneeded features
 
