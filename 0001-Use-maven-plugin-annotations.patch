@@ -1,31 +1,58 @@
-From 1ca4dd4d9aac144891948ee648970a033f167f00 Mon Sep 17 00:00:00 2001
+From 313b7bd1faeb8e99c180656fe613b35f137ffc17 Mon Sep 17 00:00:00 2001
 From: Mikolaj Izdebski <mizdebsk@redhat.com>
 Date: Fri, 15 Jul 2016 11:35:42 +0200
 Subject: [PATCH] Use maven-plugin-annotations
 
 ---
- plexus-component-metadata/pom.xml                    |  5 +++++
+ .../plexus/maven/plugin/AbstractDescriptorMojo.java  | 17 +++++++----------
  .../plexus/maven/plugin/PlexusDescriptorMojo.java    | 20 ++++++++------------
  .../plexus/maven/plugin/PlexusMergeMojo.java         | 16 ++++++++--------
  .../maven/plugin/PlexusTestDescriptorMojo.java       | 20 ++++++++------------
- 4 files changed, 29 insertions(+), 32 deletions(-)
+ 4 files changed, 31 insertions(+), 42 deletions(-)
 
-diff --git a/plexus-component-metadata/pom.xml b/plexus-component-metadata/pom.xml
-index 4ca8db2..faa0a2b 100644
---- a/plexus-component-metadata/pom.xml
-+++ b/plexus-component-metadata/pom.xml
-@@ -21,6 +21,11 @@
-       <artifactId>plexus-component-annotations</artifactId>
-     </dependency>
-     <dependency>
-+      <groupId>org.apache.maven.plugin-tools</groupId>
-+      <artifactId>maven-plugin-annotations</artifactId>
-+      <version>3.4</version>
-+    </dependency>
-+    <dependency>
-       <groupId>org.codehaus.plexus</groupId>
-       <artifactId>plexus-utils</artifactId>
-     </dependency>
+diff --git a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/AbstractDescriptorMojo.java b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/AbstractDescriptorMojo.java
+index aba59e4..cf2df79 100644
+--- a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/AbstractDescriptorMojo.java
++++ b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/AbstractDescriptorMojo.java
+@@ -22,6 +22,8 @@ package org.codehaus.plexus.maven.plugin;
+  */
+ 
+ import org.apache.maven.plugin.AbstractMojo;
++import org.apache.maven.plugins.annotations.Component;
++import org.apache.maven.plugins.annotations.Parameter;
+ import org.apache.maven.project.MavenProject;
+ import org.apache.maven.project.MavenProjectHelper;
+ import org.codehaus.plexus.metadata.MetadataGenerator;
+@@ -33,24 +35,19 @@ public abstract class AbstractDescriptorMojo
+     extends AbstractMojo
+ {
+ 
+-    /**
+-     * @parameter expression="${project}"
+-     * @required
+-     * @readonly
+-     */
+-    protected MavenProject mavenProject;
++    @Parameter( defaultValue = "${project}", required = true, readonly = true )
++	protected MavenProject mavenProject;
+ 
+     /**
+      * The file encoding of the source files.
+-     * 
+-     * @parameter default-value="${project.build.sourceEncoding}"
+      */
++    @Parameter( defaultValue = "${project.build.sourceEncoding}" )
+     protected String sourceEncoding;
+ 
+-    /** @component */
++    @Component
+     protected MavenProjectHelper mavenProjectHelper;
+ 
+-    /** @component */
++    @Component
+     protected MetadataGenerator metadataGenerator;
+ 
+ }
 diff --git a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java
 index 2e338c8..29780b3 100644
 --- a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java

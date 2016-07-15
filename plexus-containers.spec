@@ -1,6 +1,6 @@
 Name:           plexus-containers
 Version:        1.6
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            https://github.com/codehaus-plexus/plexus-containers
@@ -101,6 +101,9 @@ sed -i "s/new SourceComponentDescriptorExtractor(),//" plexus-component-metadata
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-11
+- Update maven-plugin-annotations patch, again
+
 * Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-10
 - Update maven-plugin-annotations patch
 
