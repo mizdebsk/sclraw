@@ -1,12 +1,13 @@
 Name:           plexus-containers
 Version:        1.6
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            https://github.com/codehaus-plexus/plexus-containers
 BuildArch:      noarch
 
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
+Patch0: 0001-Use-maven-plugin-annotations.patch
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(jdom:jdom)
@@ -55,12 +56,17 @@ Obsoletes:      %{name}-container-default-javadoc < %{version}-%{release}
 
 %prep
 %setup -q -n %{name}-%{name}-%{version}
+%patch0 -p1
 
 %pom_disable_module plexus-component-javadoc
 %pom_disable_module plexus-container-default
 
+%pom_remove_dep :plexus-container-default plexus-component-metadata
+
+%pom_add_dep org.apache.maven.plugin-tools:maven-plugin-annotations:3.4:provided plexus-component-metadata
+
 # For Maven 3 compat
-sed s/2.0.9/3.3.9/ pom.xml
+sed -i s/2.0.9/3.3.9/ pom.xml
 %pom_change_dep :maven-project :maven-core plexus-component-metadata
 
 %pom_remove_dep :commons-cli plexus-component-metadata
@@ -95,6 +101,9 @@ sed -i "s/new SourceComponentDescriptorExtractor(),//" plexus-component-metadata
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-9
+- Fix build
+
 * Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-8
 - Bump spec
 

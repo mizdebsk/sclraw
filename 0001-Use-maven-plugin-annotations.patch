@@ -1,0 +1,95 @@
+From ff4e4b36c9851a91966a2a28005f30101f1bfe67 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Fri, 15 Jul 2016 11:35:42 +0200
+Subject: [PATCH] Use maven-plugin-annotations
+
+---
+ .../org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java     | 7 ++++---
+ .../java/org/codehaus/plexus/maven/plugin/PlexusMergeMojo.java     | 5 +++--
+ .../org/codehaus/plexus/maven/plugin/PlexusTestDescriptorMojo.java | 7 ++++---
+ 3 files changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java
+index 2e338c8..a9bba93 100644
+--- a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java
++++ b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java
+@@ -22,19 +22,20 @@ package org.codehaus.plexus.maven.plugin;
+ import java.io.File;
+ 
+ import org.apache.maven.plugin.MojoExecutionException;
++import org.apache.maven.plugins.annotations.LifecyclePhase;
++import org.apache.maven.plugins.annotations.Mojo;
++import org.apache.maven.plugins.annotations.ResolutionScope;
+ import org.codehaus.plexus.metadata.MetadataGenerationRequest;
+ 
+ /**
+  * Generates a Plexus <tt>components.xml</tt> component descriptor file from source (javadoc) or
+  * class annotations.
+  * 
+- * @goal generate-metadata
+- * @phase process-classes
+- * @requiresDependencyResolution compile
+  * @author Jason van Zyl
+  * @author Trygve Laugst&oslash;l
+  * @version $Id$
+  */
++@Mojo( name = "generate-metadata", defaultPhase = LifecyclePhase.PROCESS_CLASSES, requiresDependencyResolution = ResolutionScope.COMPILE )
+ public class PlexusDescriptorMojo
+     extends AbstractDescriptorMojo
+ {
+diff --git a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusMergeMojo.java b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusMergeMojo.java
+index dec84fb..e8fb939 100644
+--- a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusMergeMojo.java
++++ b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusMergeMojo.java
+@@ -27,17 +27,18 @@ import java.util.List;
+ 
+ import org.apache.maven.plugin.AbstractMojo;
+ import org.apache.maven.plugin.MojoExecutionException;
++import org.apache.maven.plugins.annotations.LifecyclePhase;
++import org.apache.maven.plugins.annotations.Mojo;
+ import org.codehaus.plexus.metadata.merge.Merger;
+ 
+ /**
+  * Merges a set of Plexus descriptors into one descriptor file.
+  * 
+- * @goal merge-metadata
+- * @phase process-classes
+  * @author Jason van Zyl
+  * @author Trygve Laugst&oslash;l
+  * @version $Id$
+  */
++@Mojo( name = "merge-metadata", defaultPhase = LifecyclePhase.PROCESS_CLASSES )
+ public class PlexusMergeMojo
+     extends AbstractMojo
+ {
+diff --git a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusTestDescriptorMojo.java b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusTestDescriptorMojo.java
+index 366b0a1..44495ce 100644
+--- a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusTestDescriptorMojo.java
++++ b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusTestDescriptorMojo.java
+@@ -22,19 +22,20 @@ package org.codehaus.plexus.maven.plugin;
+ import java.io.File;
+ 
+ import org.apache.maven.plugin.MojoExecutionException;
++import org.apache.maven.plugins.annotations.LifecyclePhase;
++import org.apache.maven.plugins.annotations.Mojo;
++import org.apache.maven.plugins.annotations.ResolutionScope;
+ import org.codehaus.plexus.metadata.MetadataGenerationRequest;
+ 
+ /**
+  * Generates a Plexus <tt>components.xml</tt> component descriptor file from test source (javadoc)
+  * or test class annotations.
+  * 
+- * @goal generate-test-metadata
+- * @phase process-test-classes
+- * @requiresDependencyResolution test
+  * @author Jason van Zyl
+  * @author Trygve Laugst&oslash;l
+  * @version $Id$
+  */
++@Mojo( name = "generate-test-metadata", defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES, requiresDependencyResolution = ResolutionScope.TEST )
+ public class PlexusTestDescriptorMojo
+     extends AbstractDescriptorMojo
+ {
+-- 
+2.7.4
+
