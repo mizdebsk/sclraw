@@ -1,24 +1,42 @@
-From ff4e4b36c9851a91966a2a28005f30101f1bfe67 Mon Sep 17 00:00:00 2001
+From 1ca4dd4d9aac144891948ee648970a033f167f00 Mon Sep 17 00:00:00 2001
 From: Mikolaj Izdebski <mizdebsk@redhat.com>
 Date: Fri, 15 Jul 2016 11:35:42 +0200
 Subject: [PATCH] Use maven-plugin-annotations
 
 ---
- .../org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java     | 7 ++++---
- .../java/org/codehaus/plexus/maven/plugin/PlexusMergeMojo.java     | 5 +++--
- .../org/codehaus/plexus/maven/plugin/PlexusTestDescriptorMojo.java | 7 ++++---
- 3 files changed, 11 insertions(+), 8 deletions(-)
+ plexus-component-metadata/pom.xml                    |  5 +++++
+ .../plexus/maven/plugin/PlexusDescriptorMojo.java    | 20 ++++++++------------
+ .../plexus/maven/plugin/PlexusMergeMojo.java         | 16 ++++++++--------
+ .../maven/plugin/PlexusTestDescriptorMojo.java       | 20 ++++++++------------
+ 4 files changed, 29 insertions(+), 32 deletions(-)
 
+diff --git a/plexus-component-metadata/pom.xml b/plexus-component-metadata/pom.xml
+index 4ca8db2..faa0a2b 100644
+--- a/plexus-component-metadata/pom.xml
++++ b/plexus-component-metadata/pom.xml
+@@ -21,6 +21,11 @@
+       <artifactId>plexus-component-annotations</artifactId>
+     </dependency>
+     <dependency>
++      <groupId>org.apache.maven.plugin-tools</groupId>
++      <artifactId>maven-plugin-annotations</artifactId>
++      <version>3.4</version>
++    </dependency>
++    <dependency>
+       <groupId>org.codehaus.plexus</groupId>
+       <artifactId>plexus-utils</artifactId>
+     </dependency>
 diff --git a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java
-index 2e338c8..a9bba93 100644
+index 2e338c8..29780b3 100644
 --- a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java
 +++ b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusDescriptorMojo.java
-@@ -22,19 +22,20 @@ package org.codehaus.plexus.maven.plugin;
+@@ -22,46 +22,42 @@ package org.codehaus.plexus.maven.plugin;
  import java.io.File;
  
  import org.apache.maven.plugin.MojoExecutionException;
 +import org.apache.maven.plugins.annotations.LifecyclePhase;
 +import org.apache.maven.plugins.annotations.Mojo;
++import org.apache.maven.plugins.annotations.Parameter;
 +import org.apache.maven.plugins.annotations.ResolutionScope;
  import org.codehaus.plexus.metadata.MetadataGenerationRequest;
  
@@ -37,16 +55,48 @@ index 2e338c8..a9bba93 100644
  public class PlexusDescriptorMojo
      extends AbstractDescriptorMojo
  {
+     /**
+      * The output location for the generated descriptor.
+-     * 
+-     * @parameter default-value="${project.build.outputDirectory}/META-INF/plexus/components.xml"
+-     * @required
+      */
++    @Parameter( defaultValue = "${project.build.outputDirectory}/META-INF/plexus/components.xml", required = true )
+     protected File generatedMetadata;
+ 
+     /**
+      * The location of manually crafted component descriptors. The contents of the descriptor files in this directory is
+      * merged with the information extracted from the project's sources/classes.
+-     * 
+-     * @parameter default-value="${basedir}/src/main/resources/META-INF/plexus"
+-     * @required
+      */
++    @Parameter( defaultValue = "${basedir}/src/main/resources/META-INF/plexus", required = true )
+     protected File staticMetadataDirectory;
+ 
+     /**
+      * The output location for the intermediary descriptor. This descriptors contains only the information extracted
+      * from the project's sources/classes.
+-     * 
+-     * @parameter default-value="${project.build.directory}/components.xml"
+-     * @required
+      */
++    @Parameter( defaultValue = "${project.build.directory}/components.xml", required = true )
+     protected File intermediaryMetadata;
+ 
+     public void execute()
 diff --git a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusMergeMojo.java b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusMergeMojo.java
-index dec84fb..e8fb939 100644
+index dec84fb..20f3e4f 100644
 --- a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusMergeMojo.java
 +++ b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusMergeMojo.java
-@@ -27,17 +27,18 @@ import java.util.List;
+@@ -27,36 +27,36 @@ import java.util.List;
  
  import org.apache.maven.plugin.AbstractMojo;
  import org.apache.maven.plugin.MojoExecutionException;
++import org.apache.maven.plugins.annotations.Component;
 +import org.apache.maven.plugins.annotations.LifecyclePhase;
 +import org.apache.maven.plugins.annotations.Mojo;
++import org.apache.maven.plugins.annotations.Parameter;
  import org.codehaus.plexus.metadata.merge.Merger;
  
  /**
@@ -62,16 +112,39 @@ index dec84fb..e8fb939 100644
  public class PlexusMergeMojo
      extends AbstractMojo
  {
+     /**
+      * The destination for the merged descriptor.
+-     * 
+-     * @parameter default-value="${project.build.outputDirectory}/META-INF/plexus/components.xml"
+-     * @required
+      */
++    @Parameter( defaultValue = "${project.build.outputDirectory}/META-INF/plexus/components.xml", required = true )
+     private File output;
+ 
+     /**
+      * The paths of the input descriptors to merge.
+-     * 
+-     * @parameter
+      */
++    @Parameter
+     private File[] descriptors;
+ 
+-    /** @component role-hint="componentsXml" */
++    @Component( hint = "componentsXml" )
+     private Merger merger;
+ 
+     public void execute()
 diff --git a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusTestDescriptorMojo.java b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusTestDescriptorMojo.java
-index 366b0a1..44495ce 100644
+index 366b0a1..6700029 100644
 --- a/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusTestDescriptorMojo.java
 +++ b/plexus-component-metadata/src/main/java/org/codehaus/plexus/maven/plugin/PlexusTestDescriptorMojo.java
-@@ -22,19 +22,20 @@ package org.codehaus.plexus.maven.plugin;
+@@ -22,46 +22,42 @@ package org.codehaus.plexus.maven.plugin;
  import java.io.File;
  
  import org.apache.maven.plugin.MojoExecutionException;
 +import org.apache.maven.plugins.annotations.LifecyclePhase;
 +import org.apache.maven.plugins.annotations.Mojo;
++import org.apache.maven.plugins.annotations.Parameter;
 +import org.apache.maven.plugins.annotations.ResolutionScope;
  import org.codehaus.plexus.metadata.MetadataGenerationRequest;
  
@@ -90,6 +163,36 @@ index 366b0a1..44495ce 100644
  public class PlexusTestDescriptorMojo
      extends AbstractDescriptorMojo
  {
+     /**
+      * The output location for the generated descriptor.
+-     * 
+-     * @parameter default-value="${project.build.testOutputDirectory}/META-INF/plexus/components.xml"
+-     * @required
+      */
++    @Parameter( defaultValue = "${project.build.testOutputDirectory}/META-INF/plexus/components.xml", required = true )
+     protected File testGeneratedMetadata;
+ 
+     /**
+      * The location of manually crafted component descriptors. The contents of the descriptor files in this directory is
+      * merged with the information extracted from the project's sources/classes.
+-     * 
+-     * @parameter default-value="${basedir}/src/test/resources/META-INF/plexus"
+-     * @required
+      */
++    @Parameter( defaultValue = "${basedir}/src/test/resources/META-INF/plexus", required = true )
+     protected File testStaticMetadataDirectory;
+ 
+     /**
+      * The output location for the intermediary descriptor. This descriptors contains only the information extracted
+      * from the project's sources/classes.
+-     * 
+-     * @parameter default-value="${project.build.directory}/test-components.xml"
+-     * @required
+      */
++    @Parameter( defaultValue = "${project.build.directory}/test-components.xml", required = true )
+     protected File testIntermediaryMetadata;
+ 
+     public void execute()
 -- 
 2.7.4
 
