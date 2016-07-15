@@ -2,7 +2,7 @@
 
 Name:           %{short_name}-pom
 Version:        28
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Maven Plugins POM
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/
@@ -13,7 +13,6 @@ Source:         http://repo.maven.apache.org/maven2/org/apache/maven/plugins/%{s
 BuildRequires:  maven-local
 BuildRequires:  mvn(org.apache.maven:maven-parent:pom:)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-plugin-plugin)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-site-plugin)
 BuildRequires:  mvn(org.apache.maven.plugin-tools:maven-plugin-annotations)
 
 %description
@@ -26,6 +25,7 @@ Apache Maven plugins.
 %pom_remove_plugin :maven-enforcer-plugin
 # maven-scm-publish-plugin is not usable in Fedora.
 %pom_remove_plugin :maven-scm-publish-plugin
+%pom_remove_plugin :maven-site-plugin
 
 %build
 %mvn_build
@@ -37,6 +37,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Jul 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 28-4
+- Remove BR on maven-site-plugin
+
 * Wed Jun 15 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 28-3
 - Regenerate build-requires
 
